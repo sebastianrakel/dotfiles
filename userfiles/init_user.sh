@@ -7,9 +7,9 @@ if [ $BASEDIR == "." ]; then
 	BASEDIR=
 fi
 
-BASEDIR=$SCRIPTPATH/$BASEDIR
+BASEDIR=${SCRIPTPATH}/${BASEDIR}
 
-for file in ${BASEDIR}.*; do
+for file in ${BASEDIR}/.*; do
 	FILENAME=`basename $file`
 	if [ $FILENAME != "." ] && [ $FILENAME != ".." ]; then
 		if [ -a ~/$FILENAME  ]; then 
