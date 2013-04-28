@@ -1,8 +1,15 @@
 #!/bin/bash
 
 BASEDIR=$(dirname $0)
+SCRIPTPATH=`pwd -P`
 
-for file in $BASEDIR/.*; do
+if [ $BASEDIR == "." ]; then
+	BASEDIR=
+fi
+
+BASEDIR=$SCRIPTPATH/$BASEDIR
+
+for file in ${BASEDIR}.*; do
 	FILENAME=`basename $file`
 	if [ $FILENAME != "." ] && [ $FILENAME != ".." ]; then
 		if [ -a ~/$FILENAME  ]; then 
