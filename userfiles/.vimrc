@@ -7,6 +7,6 @@ set background=dark
 
 "COLORSCHEMES
 "colorscheme solarized
-colorscheme jellybeans
+"colorscheme jellybeans
 
 map <C-n> :NERDTreeToggle<CR>
