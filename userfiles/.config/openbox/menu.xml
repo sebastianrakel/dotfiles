@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openbox_menu xmlns="http://openbox.org/3.4/menu">
+	<menu id="apps-development-menu" label="Entwicklung">
+		<item label="VirtualBox">
+			<action name="Execute">
+				<execute>
+					VirtualBox
+				</execute>
+			</action>
+		</item>
+		<item label="MySQL Workbench">
+			<action name="Execute">
+				<execute>
+					mysql-workbench
+				</execute>
+			</action>
+		</item>
+		<item label="NetBeans">
+			<action name="Execute">
+				<execute>
+					netbeans
+				</execute>
+			</action>
+		</item>
+		<item label="PyCharm">
+			<action name="Execute">
+				<execute>
+					charm
+				</execute>
+			</action>
+		</item>
+	</menu>
+	<menu id="apps-office-menu" label="Office">
+		<item label="LibreOffice">
+			<action name="Execute">
+				<execute>
+					libreoffice
+				</execute>
+			</action>
+		</item>
+	</menu>
+	<menu id="apps-internet-menu" label="Internet">
+		<item label="Mail">
+			<action name="Execute">
+				<execute>
+					evolution
+				</execute>
+			</action>
+		</item>
+		<item label="Filezilla">
+			<action name="Execute">
+				<execute>
+					filezilla
+				</execute>
+			</action>
+		</item>
+		<item label="Pidgin">
+			<action name="Execute">
+				<execute>
+					pidgin
+				</execute>
+			</action>
+		</item>
+		<item label="Chromium">
+			<action name="Execute">
+				<execute>
+					chromium
+				</execute>
+			</action>
+		</item>
+		<item label="Skype">
+			<action name="Execute">
+				<execute>
+					skype
+				</execute>
+			</action>
+		</item>
+	</menu>
+	<menu id="apps-fileman-menu" label="File Managers">
+		<item label="SpaceFM">
+			<action name="Execute">
+				<execute>spacefm</execute>
+			</action>
+		</item>
+	</menu>
+	<menu id="system-menu" label="System">
+		<item label="Openbox Configuration Manager">
+			<action name="Execute">
+				<command>
+					obconf
+				</command>
+				<startupnotify>
+					<enabled>
+						yes
+					</enabled>
+				</startupnotify>
+			</action>
+		</item>
+		<item label="Openbox Menu">
+			<action name="Execute">
+				<execute>
+					obmenu
+				</execute>
+			</action>
+		</item>
+		<item label="Reconfigure Openbox">
+			<action name="Reconfigure"/>
+		</item>
+	</menu>
+	<menu id="root-menu" label="Openbox 3">
+		<item label="Terminal">
+			<action name="Execute">
+				<execute>
+					roxterm
+				</execute>
+			</action>
+		</item>
+		<item label="Dateimanager">
+			<action name="Execute">
+				<execute>spacefm</execute>
+			</action>
+		</item>
+		<item label="Ausführen">
+			<action name="Execute">
+				<execute>
+					dmenu_run
+				</execute>
+			</action>
+		</item>
+		<separator label="Applications"/>
+		<menu id="apps-internet-menu"/>
+		<menu id="apps-development-menu"/>
+		<menu id="apps-office-menu"/>
+		<separator label="System"/>
+		<menu id="system-menu"/>
+		<separator/>
+		<item label="Log Out">
+			<action name="Exit">
+				<prompt>
+					yes
+				</prompt>
+			</action>
+		</item>
+	</menu>
+</openbox_menu>
