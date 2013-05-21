@@ -10,7 +10,6 @@ set nohlsearch            " Don't continue to highlight searched phrases.
 set incsearch             " But do highlight as you type your search.
 set ignorecase            " Make searches case-insensitive.
 set ruler                 " Always show info along bottom.
-set autoindent            " auto-indent
 set tabstop=4             " tab spacing
 set softtabstop=4         " unify
 set shiftwidth=4          " indent/outdent by 4 columns
@@ -26,4 +25,6 @@ set nowrap                " don't wrap text
 "colorscheme solarized
 "colorscheme jellybeans
 
+" NERDTree Configuration
 map <C-n> :NERDTreeToggle<CR>
+let NERDTreeIgnore=['\.pyc$', '\~$']
