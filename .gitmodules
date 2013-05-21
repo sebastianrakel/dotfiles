@@ -1,0 +1,8 @@
+# Core
+[submodule "userfiles/.vim/bundle/pathogen"]
+        path = userfiles/.vim/bundle/vim-pathogen
+        url = https://github.com/tpope/vim-pathogen.git
+
+[submodule "userfiles/.vim/bundle/nerdtree"]
+        path = userfiles/.vim/bundle/nerdtree
+        url = https://github.com/scrooloose/nerdtree.git
