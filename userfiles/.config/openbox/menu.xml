@@ -75,11 +75,40 @@
 				</execute>
 			</action>
 		</item>
+		<item label="JDownloader">
+			<action name="Execute">
+				<execute>jdownloader</execute>
+			</action>
+		</item>
+	</menu>
+	<menu id="multi-menu" label="Multimedia">
+		<item label="Pavucontrol">
+			<action name="Execute">
+				<execute>pavucontrol</execute>
+			</action>
+		</item>
 	</menu>
 	<menu id="apps-fileman-menu" label="File Managers">
 		<item label="SpaceFM">
 			<action name="Execute">
 				<execute>spacefm</execute>
+			</action>
+		</item>
+	</menu>
+	<menu id="menu-shutdown" label="Shutdown">
+		<item label="Suspend">
+			<action name="Execute">
+				<execute>systemctl suspend</execute>
+			</action>
+		</item>
+		<item label="Reboot">
+			<action name="Execute">
+				<execute>systemctl restart</execute>
+			</action>
+		</item>
+		<item label="Shutdown">
+			<action name="Execute">
+				<execute>systemctl poweroff</execute>
 			</action>
 		</item>
 	</menu>
@@ -131,7 +160,9 @@
 		<menu id="apps-internet-menu"/>
 		<menu id="apps-development-menu"/>
 		<menu id="apps-office-menu"/>
+		<menu id="multi-menu"/>
 		<separator label="System"/>
+		<menu id="menu-shutdown"/>
 		<menu id="system-menu"/>
 		<separator/>
 		<item label="Log Out">

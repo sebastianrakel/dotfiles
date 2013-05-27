@@ -322,21 +322,19 @@
     </keybind>
     <keybind key="W-Left">
       <action name="UnmaximizeFull"/>
+      <action name="MaximizeVert"/>
       <action name="MoveResizeTo">
-        <x>0</x>
-        <y>0</y>
         <width>50%</width>
-        <height>98%</height>
       </action>
+      <action name="MoveToEdge"><direction>west</direction></action>
     </keybind>
     <keybind key="W-Right">
       <action name="UnmaximizeFull"/>
+      <action name="MaximizeVert"/>
       <action name="MoveResizeTo">
-        <x>50%</x>
-        <y>0</y>
         <width>50%</width>
-        <height>98%</height>
       </action>
+      <action name="MoveToEdge"><direction>east</direction></action>
     </keybind>
   </keyboard>
   <mouse>
