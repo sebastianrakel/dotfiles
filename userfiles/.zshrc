@@ -1,16 +1,8 @@
-# Lines configured by zsh-newuser-install
-HISTFILE=~/.histfile
-HISTSIZE=1000
-SAVEHIST=1000
-bindkey -e
-# End of lines configured by zsh-newuser-install
-# The following lines were added by compinstall
-zstyle :compinstall filename '/home/sebastian/.zshrc'
+export ZSH=~/.zsh
 
-autoload -Uz compinit
-compinit
-# End of lines added by compinstall
+# Load all of the config files in ~/oh-my-zsh that end in .zsh
+for config_file ($ZSH/*.zsh) source $config_file
 
-autoload -U colors && colors
-
-PROMPT="%{$fg[green]%}%n%{$reset_color%} at %m %{$fg_no_bold[yellow]%}%1~ %{$reset_color%}%# "
+# Load and run compinit
+autoload -U compinit
+compinit -i
