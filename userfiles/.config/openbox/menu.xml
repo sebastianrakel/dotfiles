@@ -29,6 +29,11 @@
 				</execute>
 			</action>
 		</item>
+		<item label="Sublime 2">
+			<action name="Execute">
+				<execute>subl</execute>
+			</action>
+		</item>
 	</menu>
 	<menu id="apps-office-menu" label="Office">
 		<item label="LibreOffice">
@@ -42,9 +47,7 @@
 	<menu id="apps-internet-menu" label="Internet">
 		<item label="Mail">
 			<action name="Execute">
-				<execute>
-					evolution
-				</execute>
+				<execute>claws-mail</execute>
 			</action>
 		</item>
 		<item label="Filezilla">
@@ -75,6 +78,11 @@
 				</execute>
 			</action>
 		</item>
+		<item label="Teamviewer">
+			<action name="Execute">
+				<execute>teamviewer</execute>
+			</action>
+		</item>
 		<item label="JDownloader">
 			<action name="Execute">
 				<execute>jdownloader</execute>
@@ -82,9 +90,26 @@
 		</item>
 	</menu>
 	<menu id="multi-menu" label="Multimedia">
+		<item label="GIMP">
+			<action name="Execute">
+				<execute>gimp</execute>
+			</action>
+		</item>
 		<item label="Pavucontrol">
 			<action name="Execute">
 				<execute>pavucontrol</execute>
+			</action>
+		</item>
+	</menu>
+	<menu id="game-menu" label="Games">
+		<item label="Minecraft">
+			<action name="Execute">
+				<execute>java -jar ~/Downloads/minecraft.jar</execute>
+			</action>
+		</item>
+		<item label="Steam">
+			<action name="Execute">
+				<execute>steam</execute>
 			</action>
 		</item>
 	</menu>
@@ -146,7 +171,7 @@
 		</item>
 		<item label="Dateimanager">
 			<action name="Execute">
-				<execute>spacefm</execute>
+				<execute>pcmanfm</execute>
 			</action>
 		</item>
 		<item label="Ausführen">
@@ -160,6 +185,7 @@
 		<menu id="apps-internet-menu"/>
 		<menu id="apps-development-menu"/>
 		<menu id="apps-office-menu"/>
+		<menu id="game-menu"/>
 		<menu id="multi-menu"/>
 		<separator label="System"/>
 		<menu id="menu-shutdown"/>
