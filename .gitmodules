@@ -4,3 +4,9 @@
 [submodule "userfiles/.vim/bundle/nerdtree"]
 	path = userfiles/.vim/bundle/nerdtree
 	url = https://github.com/scrooloose/nerdtree.git
+[submodule "userfiles/.vim/bundle/syntastic"]
+	path = userfiles/.vim/bundle/syntastic
+	url = https://github.com/scrooloose/syntastic.git
+[submodule "userfiles/.vim/bundle/airline"]
+	path = userfiles/.vim/bundle/airline
+	url = https://github.com/bling/vim-airline.git

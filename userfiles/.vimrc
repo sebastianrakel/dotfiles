@@ -23,8 +23,13 @@ set nowrap                " don't wrap text
 
 "COLORSCHEMES
 "colorscheme solarized
-"colorscheme jellybeans
+colorscheme jellybeans
 
 " NERDTree Configuration
 map <C-n> :NERDTreeToggle<CR>
 let NERDTreeIgnore=['\.pyc$', '\~$']
+
+let python_highlight_all = 1
+
+let g:airline_left_sep = ''
+let g:airline_right_sep = ''
