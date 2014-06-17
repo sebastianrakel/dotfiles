@@ -21,6 +21,10 @@ set nowrap                " don't wrap text
 " Setting Colorscheme of Vim
 "set background=dark
 
+" Keybindings
+map <F8> :bnext<CR>
+map <F7> :bprev<CR>
+
 "COLORSCHEMES
 "colorscheme solarized
 colorscheme jellybeans
