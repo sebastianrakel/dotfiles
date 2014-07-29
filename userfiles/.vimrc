@@ -21,6 +21,8 @@ set nowrap                " don't wrap text
 " Setting Colorscheme of Vim
 "set background=dark
 
+set pastetoggle=<F2>
+
 " Keybindings
 map <F8> :bnext<CR>
 map <F7> :bprev<CR>

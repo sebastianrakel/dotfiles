@@ -6,3 +6,5 @@ for config_file ($ZSH/*.zsh) source $config_file
 # Load and run compinit
 autoload -U compinit
 compinit -i
+
+export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=setting'
