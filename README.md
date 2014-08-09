@@ -1,3 +1,12 @@
+#git submodules
+at first usage, you have to load the submodules
+
+```
+git submodule init && git submodule update
+```
+
+#Usage
+```
 usage: init.py [-h] [--graphical] [--terminal] [--editor] [--print]
                [--verbose] [--check]
 
@@ -15,3 +24,4 @@ category:
 output:
   --print      only print link command
   --verbose    show output
+```
