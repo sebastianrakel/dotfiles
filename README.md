@@ -1,11 +1,11 @@
-#git submodules
+# git submodules
 at first usage, you have to load the submodules
 
 ```
 git submodule init && git submodule update
 ```
 
-#Usage
+# Usage
 ```
 usage: init.py [-h] [--graphical] [--terminal] [--editor] [--print]
                [--verbose] [--check]
