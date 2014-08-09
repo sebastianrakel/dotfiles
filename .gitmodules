@@ -1,12 +1,12 @@
 [submodule "userfiles/.vim/bundle/vim-pathogen"]
-	path = userfiles/.vim/bundle/vim-pathogen
+	path = editor/.vim/bundle/vim-pathogen
 	url = https://github.com/tpope/vim-pathogen.git
 [submodule "userfiles/.vim/bundle/nerdtree"]
-	path = userfiles/.vim/bundle/nerdtree
+	path = editor/.vim/bundle/nerdtree
 	url = https://github.com/scrooloose/nerdtree.git
 [submodule "userfiles/.vim/bundle/syntastic"]
-	path = userfiles/.vim/bundle/syntastic
+	path = editor/.vim/bundle/syntastic
 	url = https://github.com/scrooloose/syntastic.git
 [submodule "userfiles/.vim/bundle/airline"]
-	path = userfiles/.vim/bundle/airline
+	path = editor/.vim/bundle/airline
 	url = https://github.com/bling/vim-airline.git

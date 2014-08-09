@@ -1,2 +1,5 @@
 #ignore vim swp files
 *.swp
+
+#ignore pycharm stuff
+.idea/
