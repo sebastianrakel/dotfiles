@@ -118,7 +118,20 @@ bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+Shift+y exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+
+#Exit Mode
+mode "(E)xit, (R)eboot, (P)oweroff" {
+        bindsym r exec systemctl reboot
+        bindsym e exit
+        bindsym p exec systemctl poweroff
+
+        # back to normal: Enter or Escape
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+bindsym $mod+Shift+e mode "(E)xit, (R)eboot, (P)oweroff"
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -147,8 +160,8 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 #assiging applications
-assign [class="Aurora|Firefox|Navigator|Opera|Chromium|dwb"] 2:www
-assign [class="Spacefm|Thunar"] 3:stuff
+assign [class="Aurora|Firefox|Navigator|Opera|Chromium|dwb|Thunderbird"] 2:www
+assign [class="Spacefm|Thunar|pcmanfm"] 3:stuff
 assign [class="phpstorm|pycharm"] 5:dev
 assign [class="Keepassx"] 9
 assign [class="Spotify"] 4:media
