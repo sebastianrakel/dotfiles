@@ -1,5 +1,7 @@
 execute pathogen#infect()
 
+autocmd! bufwritepost ~/.vimrc source %
+
 set nocompatible          " get rid of Vi compatibility mode. SET FIRST!
 set t_Co=256              " enable 256-color mode.
 syntax enable             " enable syntax highlighting (previously syntax on).
@@ -17,6 +19,8 @@ set shiftround            " always indent/outdent to the nearest tabstop
 set expandtab             " use spaces instead of tabs
 set smarttab              " use tabs at the start of a line, spaces elsewhere
 set nowrap                " don't wrap text
+set backspace=indent,eol,start
+set cmdheight=2
 
 " Setting Colorscheme of Vim
 "set background=dark
@@ -26,6 +30,13 @@ set pastetoggle=<F2>
 " Keybindings
 map <F8> :bnext<CR>
 map <F7> :bprev<CR>
+map <F9> :tabprevious<CR>
+map <F10> :tabnext<CR>
+
+nmap <silent> <A-Up> :wincmd k<CR>
+nmap <silent> <A-Down> :wincmd j<CR>
+nmap <silent> <A-Left> :wincmd h<CR>
+nmap <silent> <A-Right> :wincmd l<CR>
 
 "COLORSCHEMES
 "colorscheme solarized
