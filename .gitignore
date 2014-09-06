@@ -3,3 +3,6 @@
 
 #ignore pycharm stuff
 .idea/
+
+#ignore bundles
+editor/.vim/bundle/
