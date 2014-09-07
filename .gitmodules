@@ -13,3 +13,9 @@
 [submodule "editor/.vim/bundle/subertab"]
 	path = editor/.vim/bundle/subertab
 	url = https://github.com/ervandew/supertab.git
+[submodule "editor/.vim/bundle/pydoc"]
+	path = editor/.vim/bundle/pydoc
+	url = https://github.com/fs111/pydoc.vim.git
+[submodule "editor/.vim/bundle/pep8"]
+	path = editor/.vim/bundle/pep8
+	url = https://github.com/vim-scripts/pep8.git

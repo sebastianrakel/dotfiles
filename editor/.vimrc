@@ -22,6 +22,9 @@ set nowrap                " don't wrap text
 set backspace=indent,eol,start
 set cmdheight=2
 
+filetype on
+filetype plugin indent on
+
 " Setting Colorscheme of Vim
 "set background=dark
 
@@ -50,3 +53,11 @@ let python_highlight_all = 1
 
 let g:airline_left_sep = ''
 let g:airline_right_sep = ''
+
+" pep8
+let g:pep8_map='<leader>8'
+
+" codecompletition for python
+au FileType python set omnifunc=pythoncomplete#Complete
+let g:SuperTabDefaultCompletionType = "context"
+set completeopt=menuone,longest,preview
