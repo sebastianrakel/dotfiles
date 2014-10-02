@@ -2,6 +2,9 @@ URxvt*background: black
 URxvt*foreground: white
 URxvt*scrollBar: false
 URxvt*termName:  screen-256color
+URxvt*keysym.Home: \033[1~
+URxvt*keysym.End: \033[4~
+URxvt*font: xft:Termsyn:pixelsize=12 
 
 xterm*background: black
 xterm*foreground: white
