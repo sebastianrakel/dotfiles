@@ -1,2 +1,7 @@
+URxvt*background: black
+URxvt*foreground: white
+URxvt*scrollBar: false
+URxvt*termName:  screen-256color
+
 xterm*background: black
 xterm*foreground: white

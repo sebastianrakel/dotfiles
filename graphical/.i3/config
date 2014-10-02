@@ -27,7 +27,7 @@ font pango:DejaVu Sans Mono 8
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec xterm
+bindsym $mod+Return exec urxvt 
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -166,7 +166,7 @@ assign [class="Spacefm|Thunar|pcmanfm"] 3:stuff
 assign [class="phpstorm|pycharm"] 5:dev
 assign [class="Keepassx"] 9
 assign [class="Spotify"] 4:media
-assign [instance="roxterm"] 1:terms
+assign [class="roxterm|xterm|URxvt"] 1:terms
 assign [class="Gimp"] 6:gfx
 assign [class="Skype"] 7:net
 
