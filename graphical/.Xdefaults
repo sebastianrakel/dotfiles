@@ -4,7 +4,7 @@ URxvt*scrollBar: false
 URxvt*termName:  screen-256color
 URxvt*keysym.Home: \033[1~
 URxvt*keysym.End: \033[4~
-URxvt*font: xft:Termsyn:pixelsize=12 
+URxvt*font: xft:DejaVu Sans Mono:pixelsize=10:antialias=true:hinting=true
 URxvt.perl-ext-common: default,matcher
 URxvt.url-launcher: /usr/bin/xdg-open
 URxvt.matcher.button: 1
