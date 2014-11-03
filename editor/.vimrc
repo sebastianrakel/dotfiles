@@ -36,10 +36,10 @@ map <F7> :bprev<CR>
 map <F9> :tabprevious<CR>
 map <F10> :tabnext<CR>
 
-nmap <silent> <A-Up> :wincmd k<CR>
-nmap <silent> <A-Down> :wincmd j<CR>
-nmap <silent> <A-Left> :wincmd h<CR>
-nmap <silent> <A-Right> :wincmd l<CR>
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
 
 "COLORSCHEMES
 "colorscheme solarized
