@@ -61,3 +61,11 @@ let g:pep8_map='<leader>8'
 au FileType python set omnifunc=pythoncomplete#Complete
 let g:SuperTabDefaultCompletionType = "context"
 set completeopt=menuone,longest,preview
+
+
+" Airline Stuff
+let g:airline#extensions#tabline#enabled = 1
+
+
+" Syntastics Stuff
+let g:syntastic_python_python_exec = '/usr/bin/python3'
