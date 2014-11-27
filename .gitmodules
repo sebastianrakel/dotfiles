@@ -25,3 +25,6 @@
 [submodule "editor/.vim/bundle/Omnisharp"]
 	path = editor/.vim/bundle/Omnisharp
 	url = https://github.com/nosami/Omnisharp.git
+[submodule "editor/.vim/bundle/nerdcommenter"]
+	path = editor/.vim/bundle/nerdcommenter
+	url = https://github.com/scrooloose/nerdcommenter.git

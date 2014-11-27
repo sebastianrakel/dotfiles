@@ -69,3 +69,10 @@ let g:airline#extensions#tabline#enabled = 1
 
 " Syntastics Stuff
 let g:syntastic_python_python_exec = '/usr/bin/python3'
+
+" NERDCommenter Stuff
+nmap <F4> :AuthorInfoDetect<cr> 
+
+let g:vimrc_author='Sebastian Rakel'
+let g:vimrc_email='sebastian@devunit.eu'
+let g:vimrc_homepage='https://sebastianrakel.de' 
