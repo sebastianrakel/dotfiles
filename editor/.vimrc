@@ -43,7 +43,8 @@ nnoremap <C-H> <C-W><C-H>
 
 "COLORSCHEMES
 "colorscheme solarized
-colorscheme jellybeans
+"colorscheme jellybeans
+colorscheme spacegray
 
 " NERDTree Configuration
 map <C-n> :NERDTreeToggle<CR>

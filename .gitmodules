@@ -31,3 +31,6 @@
 [submodule "editor/.vim/bundle/vim-markdown"]
 	path = editor/.vim/bundle/vim-markdown
 	url = https://github.com/plasticboy/vim-markdown.git
+[submodule "editor/.vim/bundle/spacegray"]
+	path = editor/.vim/bundle/spacegray
+	url = https://github.com/ajh17/Spacegray.vim
