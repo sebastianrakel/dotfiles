@@ -7,4 +7,7 @@ for config_file ($ZSH/*.zsh) source $config_file
 autoload -U compinit
 compinit -i
 
+# check dotfiles version
+dotfiles/checkStatus.sh ~/dotfiles/
+
 export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=setting'
