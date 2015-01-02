@@ -1,36 +1,6 @@
-[submodule "editor/.vim/bundle/vim-pathogen"]
-	path = editor/.vim/bundle/vim-pathogen
-	url = https://github.com/tpope/vim-pathogen.git
-[submodule "editor/.vim/bundle/nerdtree"]
-	path = editor/.vim/bundle/nerdtree
-	url = https://github.com/scrooloose/nerdtree.git
-[submodule "editor/.vim/bundle/syntastic"]
-	path = editor/.vim/bundle/syntastic
-	url = https://github.com/scrooloose/syntastic.git
-[submodule "editor/.vim/bundle/airline"]
-	path = editor/.vim/bundle/airline
-	url = https://github.com/bling/vim-airline.git
-[submodule "editor/.vim/bundle/subertab"]
-	path = editor/.vim/bundle/subertab
-	url = https://github.com/ervandew/supertab.git
-[submodule "editor/.vim/bundle/pydoc"]
-	path = editor/.vim/bundle/pydoc
-	url = https://github.com/fs111/pydoc.vim.git
-[submodule "editor/.vim/bundle/pep8"]
-	path = editor/.vim/bundle/pep8
-	url = https://github.com/vim-scripts/pep8.git
 [submodule "editor/.vim/bundle/vim-fugitive"]
 	path = editor/.vim/bundle/vim-fugitive
 	url = git://github.com/tpope/vim-fugitive.git
-[submodule "editor/.vim/bundle/Omnisharp"]
-	path = editor/.vim/bundle/Omnisharp
-	url = https://github.com/nosami/Omnisharp.git
-[submodule "editor/.vim/bundle/nerdcommenter"]
-	path = editor/.vim/bundle/nerdcommenter
-	url = https://github.com/scrooloose/nerdcommenter.git
-[submodule "editor/.vim/bundle/vim-markdown"]
-	path = editor/.vim/bundle/vim-markdown
-	url = https://github.com/plasticboy/vim-markdown.git
-[submodule "editor/.vim/bundle/spacegray"]
-	path = editor/.vim/bundle/spacegray
-	url = https://github.com/ajh17/Spacegray.vim
+[submodule "editor/.vim/bundle/vundle"]
+	path = editor/.vim/bundle/vundle
+	url = https://github.com/gmarik/vundle.git

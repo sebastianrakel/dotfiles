@@ -1,4 +1,18 @@
-execute pathogen#infect()
+" execute pathogen#infect()
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+"Vundles
+Bundle 'gmarik/vundle'
+Bundle 'scrooloose/nerdtree'
+Bundle 'scrooloose/syntastic'
+Bundle 'scrooloose/nerdcommenter'
+Bundle 'bling/vim-airline'
+Bundle 'ervandew/supertab'
+Bundle 'fs111/pydoc.vim'
+Bundle 'tpope/vim-fugitive'
+Bundle 'ajh17/Spacegray.vim'
+
 
 autocmd! bufwritepost ~/.vimrc source %
 
