@@ -1,6 +1,3 @@
-[submodule "editor/.vim/bundle/vim-fugitive"]
-	path = editor/.vim/bundle/vim-fugitive
-	url = git://github.com/tpope/vim-fugitive.git
 [submodule "editor/.vim/bundle/vundle"]
 	path = editor/.vim/bundle/vundle
 	url = https://github.com/gmarik/vundle.git
