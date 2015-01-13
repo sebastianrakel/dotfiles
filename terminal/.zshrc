@@ -11,3 +11,5 @@ compinit -i
 dotfiles/checkStatus.sh ~/dotfiles/
 
 export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=setting'
+
+PATH="`ruby -e 'print Gem.user_dir'`/bin:$PATH"
