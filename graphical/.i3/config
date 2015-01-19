@@ -97,7 +97,7 @@ bindsym $mod+4 workspace 4:media
 bindsym $mod+5 workspace 5:dev
 bindsym $mod+6 workspace 6:gfx
 bindsym $mod+7 workspace 7:net
-bindsym $mod+8 workspace 8
+bindsym $mod+8 workspace 8:3D
 bindsym $mod+9 workspace 9
 bindsym $mod+0 workspace 10
 
@@ -109,7 +109,7 @@ bindsym $mod+Shift+4 move container to workspace 4:media
 bindsym $mod+Shift+5 move container to workspace 5:dev
 bindsym $mod+Shift+6 move container to workspace 6:gfx
 bindsym $mod+Shift+7 move container to workspace 7:net
-bindsym $mod+Shift+8 move container to workspace 8
+bindsym $mod+Shift+8 move container to workspace 8:3D
 bindsym $mod+Shift+9 move container to workspace 9
 bindsym $mod+Shift+0 move container to workspace 10
 
@@ -169,6 +169,7 @@ assign [class="Spotify"] 4:media
 assign [class="roxterm|xterm|URxvt"] 1:terms
 assign [class="Gimp"] 6:gfx
 assign [class="Skype"] 7:net
+assign [class="Freecad"] 8:3D
 
 #project related stuff
 for_window [class="Brewpy"] floating enable
