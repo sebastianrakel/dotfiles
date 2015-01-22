@@ -1,6 +1,3 @@
 [submodule "editor/.vim/bundle/vundle"]
 	path = editor/.vim/bundle/vundle
 	url = https://github.com/gmarik/vundle.git
-[submodule "editor/.vim/bundle/Spacegray.vim"]
-	path = editor/.vim/bundle/Spacegray.vim
-	url = https://github.com/kkga/spacegray.git
