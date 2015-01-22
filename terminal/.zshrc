@@ -8,7 +8,7 @@ autoload -U compinit
 compinit -i
 
 # check dotfiles version
-dotfiles/checkStatus.sh ~/dotfiles/
+# dotfiles/checkStatus.sh ~/dotfiles/
 
 export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=setting'
 
