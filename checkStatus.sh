@@ -14,7 +14,7 @@ echo "Dotfiles Version Check v0.1"
 echo "Current Dir: $CURRENT_DIR"
 echo "Git Dir: $GIT_DIR"
 
-
+`git fetch`
 
 LOCAL_RESULT=$LOCAL
 REMOTE_RESULT=$REMOTE
