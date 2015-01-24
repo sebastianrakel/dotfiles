@@ -1,0 +1,22 @@
+((("python-mode-hook" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 \.\.\.])
+  ("pdb" .
+   [1 0 0])
+  ("python-mode" .
+   [0 0 0 0 0 0 0 0 0 1 1])
+  ("require" .
+   [3 0 0 0 0 0 0])
+  ("set" .
+   [1 0 0])
+  ("setq" .
+   [3 0 0 0])
+  ("x-select-enable-clipboard" .
+   [0 0 0 0 0 1 0 0 0 0 0 0 \.\.\.])
+  ("nil" .
+   [1 0 0])
+  ("ecb-activate" .
+   [0 0 0 0 0 0 0 0 0 0 0 1])
+  ("self" .
+   [1 0 0 0])
+  ("acceleration_servo" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0])))

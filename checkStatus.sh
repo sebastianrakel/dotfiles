@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 CURRENT_DIR=$(pwd)
 SCRIPT_PATH=$0
@@ -14,12 +14,18 @@ echo "Dotfiles Version Check v0.1"
 echo "Current Dir: $CURRENT_DIR"
 echo "Git Dir: $GIT_DIR"
 
-if [ $LOCAL = $REMOTE ]; then
+`git fetch`
+
+LOCAL_RESULT=$LOCAL
+REMOTE_RESULT=$REMOTE
+BASE_RESULT=$BASE
+
+if [ "$LOCAL_RESULT" ==  "$REMOTE_RESULT" ]; then
     echo "Up-to-date"
-    clear
-elif [ $LOCAL = $BASE ]; then
+    #clear
+elif [ "$LOCAL_RESULT" == "$BASE_RESULT" ]; then
     echo "Need to pull"
-elif [ $REMOTE = $BASE ]; then
+elif [ "$REMOTE_RESULT" == "$BASE_RESULT" ]; then
     echo "Need to push"
 else
     echo "Diverged"
