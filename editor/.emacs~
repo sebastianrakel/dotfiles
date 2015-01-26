@@ -41,31 +41,6 @@
 (setq x-select-enable-primary t)
 (setq x-select-enable-clipboard nil)
 
-; python stuff
-(require 'python-mode)
-(defun my-python-hook()  
-  (message "Python Mode")
-  (linum-mode 1)
-)
-
-(add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
-(add-to-list 'interpreter-mode-alist '("python" . python-mode))
-
-(add-hook 'python-mode-hook 'my-python-hook)
-
-; ruby stuff
-(require 'ruby-mode)
-(defun my-ruby-hook()
-  (message "Ruby Mode")
-  (linum-mode 1)
-)
-
-(add-to-list 'auto-mode-alist
-             '("\\.\\(?:gemspec\\|irbrc\\|gemrc\\|rake\\|rb\\|ru\\|thor\\)\\'" . ruby-mode))
-(add-to-list 'auto-mode-alist
-             '("\\(Capfile\\|Gemfile\\(?:\\.[a-zA-Z0-9._-]+\\)?\\|[rR]akefile\\)\\'" . ruby-mode))
-
-(add-hook 'ruby-mode-hook 'my-ruby-hook)
 
 
 (custom-set-variables
