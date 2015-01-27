@@ -46,12 +46,29 @@
 (defun my-python-hook()  
   (message "Python Mode")
   (linum-mode 1)
+  (jedi:setup)
 )
+(add-hook 'python-mode-hook 'my-python-hook)
 
 (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
 (add-to-list 'interpreter-mode-alist '("python" . python-mode))
 
-(add-hook 'python-mode-hook 'my-python-hook)
+(setq jedi:setup-keys t)
+(setq jedi:complete-on-dot t)
+
+(setq pdb-path '/usr/lib/python3.4/pdb.py
+gud-pdb-command-name (symbol-name pdb-path))
+
+(defadvice pdb (before gud-query-cmdline activate)
+"Provide a better default command line when called interactively."
+(interactive
+(list (gud-query-cmdline pdb-path
+(file-name-nondirectory buffer-file-name)))))
+
+(global-set-key [f10] 'gud-next)
+(global-set-key [f11] 'gud-step)
+(global-set-key [f5] 'gud-cont)
+(global-set-key [f12] 'gud-break)
 
 ; ruby stuff
 (require 'ruby-mode)
