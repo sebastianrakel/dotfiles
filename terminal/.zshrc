@@ -13,3 +13,5 @@ compinit -i
 export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=setting'
 
 PATH="`ruby -e 'print Gem.user_dir'`/bin:$PATH"
+PATH=$PATH:~/go/bin
+export GOPATH=~/go

@@ -84,6 +84,14 @@ gud-pdb-command-name (symbol-name pdb-path))
 
 (add-hook 'ruby-mode-hook 'my-ruby-hook)
 
+; c# stuff
+(require 'omnisharp-mode)
+(defun my-omnisharp-hook()
+  (message "Omnisharp Mode")
+  (linum-mode 1)
+)
+
+(add-hook 'csharp-mode-hook 'my-omnisharp-hook)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
