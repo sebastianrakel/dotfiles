@@ -1,28 +1,60 @@
-((("pdb-path" .
-   [0 0 0 0 0 0 0 1])
-  ("acceleration_servo" .
-   [0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0])
-  ("self" .
+((("value" .
+   [1 0 0 0 0])
+  ("setProcessProgress" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1])
+  ("duration_minutes" .
+   [0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("current_rast" .
+   [1 0 0 0 0 0 0 1 0 0 0 0])
+  ("max_value" .
+   [1 0 0 0 1 0 0 0 0])
+  ("start_time" .
+   [1 0 0 0 0 0 0 0 0 0])
+  ("s" .
+   [3])
+  ("get_current_time" .
+   [0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0])
+  ("finish_time" .
+   [2 0 0 0 0 0 0 0 0 0 0])
+  ("current_time" .
+   [2 0 0 0 0 0 0 0 0 0 0 0])
+  ("def" .
+   [1 0 0])
+  ("time_change" .
+   [2 0 0 0 0 0 0 0 0 0 0])
+  ("t" .
+   [2])
+  ("on" .
+   [1 0])
+  ("brewing" .
+   [5 0 0 0 0 0 0])
+  ("Brew" .
    [1 0 0 0])
-  ("ecb-activate" .
-   [0 0 0 0 0 0 0 0 0 0 0 1])
-  ("nil" .
-   [1 0 0])
-  ("x-select-enable-clipboard" .
-   [0 0 0 0 0 1 0 0 0 0 0 0 \.\.\.])
-  ("setq" .
-   [5 0 0 0])
-  ("set" .
-   [1 0 0])
-  ("require" .
-   [3 0 0 0 0 0 0])
-  ("python-mode" .
-   [0 0 0 0 0 0 0 0 0 1 1])
-  ("pdb" .
-   [1 0 0])
-  ("python-mode-hook" .
-   [0 0 0 0 0 0 0 0 0 0 0 0 \.\.\.])
+  ("message" .
+   [1 0 0 0 0 0 0])
   ("while" .
    [1 0 0 0 0])
-  ("message" .
-   [1 0 0 0 0 0 0])))
+  ("python-mode-hook" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 \.\.\.])
+  ("pdb" .
+   [1 0 0])
+  ("python-mode" .
+   [0 0 0 0 0 0 0 0 0 1 1])
+  ("require" .
+   [3 0 0 0 0 0 0])
+  ("set" .
+   [1 0 0])
+  ("setq" .
+   [5 0 0 0])
+  ("x-select-enable-clipboard" .
+   [0 0 0 0 0 1 0 0 0 0 0 0 \.\.\.])
+  ("nil" .
+   [1 0 0])
+  ("ecb-activate" .
+   [0 0 0 0 0 0 0 0 0 0 0 1])
+  ("self" .
+   [10 0 0 0])
+  ("acceleration_servo" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0])
+  ("pdb-path" .
+   [0 0 0 0 0 0 0 1])))

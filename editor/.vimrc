@@ -91,3 +91,8 @@ nmap <F4> :AuthorInfoDetect<cr>
 let g:vimrc_author='Sebastian Rakel'
 let g:vimrc_email='sebastian@devunit.eu'
 let g:vimrc_homepage='https://sebastianrakel.de' 
+
+set guioptions-=m  "remove menu bar
+set guioptions-=T  "remove toolbar
+set guioptions-=r  "remove right-hand scroll bar
+set guioptions-=L  "remove left-hand scroll bar
