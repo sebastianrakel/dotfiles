@@ -1,6 +1,7 @@
 " execute pathogen#infect()
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
+
 "Vundles
 Bundle 'gmarik/vundle'
 Bundle 'scrooloose/nerdtree'
@@ -12,6 +13,8 @@ Bundle 'fs111/pydoc.vim'
 Bundle 'tpope/vim-fugitive'
 Bundle 'ajh17/Spacegray.vim'
 autocmd! bufwritepost ~/.vimrc source %
+
+" default settings
 set nocompatible " get rid of Vi compatibility mode. SET FIRST!
 set t_Co=256 " enable 256-color mode.
 syntax enable " enable syntax highlighting (previously syntax on).
@@ -33,9 +36,11 @@ set backspace=indent,eol,start
 set cmdheight=2
 filetype on
 filetype plugin indent on
+
 " Setting Colorscheme of Vim
 "set background=dark
 set pastetoggle=<F2>
+
 " Keybindings
 map <F8> :bnext<CR>
 map <F7> :bprev<CR>
@@ -45,26 +50,34 @@ nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
+
+
 "COLORSCHEMES
 "colorscheme solarized
 "colorscheme jellybeans
 colorscheme spacegray
+
 " NERDTree Configuration
 map <C-n> :NERDTreeToggle<CR>
 let NERDTreeIgnore=['\.pyc$', '\~$']
 let python_highlight_all = 1
 let g:airline_left_sep = ''
 let g:airline_right_sep = ''
+
 " pep8
 let g:pep8_map='<leader>8'
+
 " codecompletition for python
 au FileType python set omnifunc=pythoncomplete#Complete
 let g:SuperTabDefaultCompletionType = "context"
 set completeopt=menuone,longest,preview
+
 " Airline Stuff
 let g:airline#extensions#tabline#enabled = 1
+
 " Syntastics Stuff
 let g:syntastic_python_python_exec = '/usr/bin/python3'
+
 " NERDCommenter Stuff
 nmap <F4> :AuthorInfoDetect<cr>
 let g:vimrc_author='Sebastian Rakel'
