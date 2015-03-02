@@ -4,3 +4,8 @@
 #ignore pycharm stuff
 .idea/
 
+editor/.vim/bundle/*
+!editor/.vim/bundle/vundle
+
+tools/.ssh/*
+!tools/.ssh/config
