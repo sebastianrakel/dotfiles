@@ -1,1 +1,4 @@
-alias ls='ls --color=auto'
+
+if [[ -a ~/.aliases ]]; then
+    source ~/.aliases
+fi
