@@ -1,4 +1,5 @@
 alias ls='ls --color=auto'
+alias tmux='tmux -2'
 alias mini_pulse='PULSE_SERVER=mini PULSE_LATENCY_MSEC=60 ' 
 alias chromium_temp='chromium --user-data-dir=/tmp/mini'
 

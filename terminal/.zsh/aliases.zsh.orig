@@ -1,0 +1,9 @@
+<<<<<<< HEAD
+
+if [[ -a ~/.aliases ]]; then
+    source ~/.aliases
+fi
+=======
+alias ls='ls --color=auto '
+alias tmux='tmux -2 '
+>>>>>>> 609dfaeb3f112e624f6627bd54a893c4f9c74d50
