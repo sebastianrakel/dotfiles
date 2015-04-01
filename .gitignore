@@ -1,6 +1,9 @@
 #ignore vim swp files
 *.swp
 
+#ignore emacs files
+*~
+
 #ignore pycharm stuff
 .idea/
 
@@ -9,3 +12,9 @@ editor/.vim/bundle/*
 
 tools/.ssh/*
 !tools/.ssh/config
+
+editor/.emacs.d/auto-save-list
+editor/.emacs.d/ac-comphist.dat
+editor/.emacs.d/.python-environments
+editor/.emacs.d/*elc
+
