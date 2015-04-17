@@ -16,6 +16,7 @@ def create_arguments():
     group.add_argument('--verbose', help='show output', action='store_true')
 
     parser.add_argument('--check', help='check if link allready set', action='store_true')
+    parser.add_argument('--test', help='only test', action='store_true')
 
     args = parser.parse_args()
     return args
@@ -31,10 +32,17 @@ def get_links():
     if args.graphical:
         graphical_dir = os.path.join(SCRIPT_DIR, 'graphical')
 
-        current_links, current_skipped_links = get_links_from_dir(graphical_dir)
+        current_links, current_skipped_links = get_links_from_dir(graphical_dir, ['.config'])
 
         links = dict(list(links.items()) + list(current_links.items()))
         skipped_links = dict(list(skipped_links.items()) + list(current_skipped_links.items()))
+
+        graphical_config_dir = os.path.join(SCRIPT_DIR, 'graphical', '.config')
+        current_links, current_skipped_links = get_links_from_dir(graphical_config_dir, destination_dir='.config')
+
+        links = dict(list(links.items()) + list(current_links.items()))
+        skipped_links = dict(list(skipped_links.items()) + list(current_skipped_links.items()))
+
 
     if args.terminal:
         terminal_dir = os.path.join(SCRIPT_DIR, 'terminal')
@@ -63,17 +71,24 @@ def get_links():
     return links, skipped_links
 
 
-def get_links_from_dir(dir_path):
+def get_links_from_dir(dir_path, excludes=[], destination_dir=None):
     links = {}
     skipped_links = {}
-    for item in os.listdir(dir_path):
-        source_file = os.path.join(dir_path, os.path.basename(item))
-        dest_file = os.path.join(USER_HOME_DIR, os.path.basename(item))
 
-        if not args.check or (args.check and not os.path.islink(dest_file)):
-            links[source_file] = dest_file
-        else:
-            skipped_links[source_file] = dest_file
+    destination_link_dir = USER_HOME_DIR
+
+    if destination_dir != None:
+        destination_link_dir = os.path.join(destination_link_dir, destination_dir)
+
+    for item in os.listdir(dir_path):
+        if item not in excludes:
+            source_file = os.path.join(dir_path, os.path.basename(item))
+            dest_file = os.path.join(destination_link_dir, os.path.basename(item))
+
+            if not args.check or (args.check and not os.path.islink(dest_file)):
+                links[source_file] = dest_file
+            else:
+                skipped_links[source_file] = dest_file
 
     return links, skipped_links
 
@@ -94,7 +109,9 @@ def link_files():
     for key, value in links.items():
         if args.verbose:
             print('linking ' + key + ' to ' + value)
-        os.symlink(key, value)
+
+        if not args.test:
+            os.symlink(key, value)
 
     if args.verbose:
         for key, value in skipped_links.items():
