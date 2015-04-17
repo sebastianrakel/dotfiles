@@ -18,3 +18,4 @@ editor/.emacs.d/ac-comphist.dat
 editor/.emacs.d/.python-environments
 editor/.emacs.d/*elc
 
+graphical/.config/openbox/autostart
