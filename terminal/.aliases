@@ -1,5 +1,12 @@
-alias ls='ls --color=auto'
 alias tmux='tmux -2'
+
+uname_string=`uname`
+
+if [[ "$uname_string" == 'OpenBSD' ]]; then
+
+else
+    alias ls='ls --color=auto'
+fi
 
 if [[ -a ~/.aliases_`hostname` ]]; then
     source ~/.aliases_`hostname`

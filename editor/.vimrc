@@ -12,6 +12,7 @@ Bundle 'ervandew/supertab'
 Bundle 'fs111/pydoc.vim'
 Bundle 'tpope/vim-fugitive'
 Bundle 'ajh17/Spacegray.vim'
+Bundle 'Townk/vim-autoclose'
 autocmd! bufwritepost ~/.vimrc source %
 
 " default settings
