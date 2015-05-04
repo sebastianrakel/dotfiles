@@ -126,8 +126,8 @@ mode "(E)xit, (R)eboot, (S)uspend, (P)oweroff, (L)ock" {
         bindsym r exec systemctl reboot
         bindsym e exit
         bindsym p exec systemctl poweroff
-        bindsym s exec systemctl suspend
-        bindsym l exec xscreensaver-command --lock 
+        bindsym s exec systemctl suspend; mode "default"
+        bindsym l exec xscreensaver-command --lock; mode "default"
 
         # back to normal: Enter or Escape
         bindsym Return mode "default"
