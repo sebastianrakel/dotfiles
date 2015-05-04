@@ -186,3 +186,6 @@ bindsym XF86AudioPlay exec mpc toggle
 bindsym XF86AudioNext exec mpc next
 bindsym XF86AudioPrev exec mpc prev
 
+bindsym XF86AudioRaiseVolume exec ~/dotfiles/pulse_volume_control.sh raise
+bindsym XF86AudioLowerVolume exec ~/dotfiles/pulse_volume_control.sh lower
+bindsym XF86AudioMute exec ~/dotfiles/pulse_volume_control.sh mute
