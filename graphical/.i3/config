@@ -171,7 +171,7 @@ assign [class="Spotify"] 4:media
 #assign [class="roxterm|xterm|URxvt"] 1:terms
 assign [class="Gimp"] 6:gfx
 assign [class="Skype"] 7:net
-assign [class="Freecad|kicad"] 8:3D
+##  assign [class=""] 8:3D
 
 #project related stuff
 for_window [class="Brewpy"] floating enable
