@@ -10,6 +10,7 @@ def create_arguments():
     group.add_argument('--terminal', help='terminal dotfiles like zsh', action='store_true')
     group.add_argument('--editor', help='editor dotfiles like vim', action='store_true')
     group.add_argument('--tools', help='configfiles for tools like ssh', action='store_true')
+    group.add_argument('--fonts', help='fonts for user', action='store_true')
 
     group = parser.add_argument_group('output')
     group.add_argument('--print', help='only print link command', action='store_true')
@@ -64,6 +65,20 @@ def get_links():
         tools_dir = os.path.join(SCRIPT_DIR, 'tools')
 
         current_links, current_skipped_links = get_links_from_dir(tools_dir)
+
+        links = dict(list(links.items()) + list(current_links.items()))
+        skipped_links = dict(list(skipped_links.items()) + list(current_skipped_links.items()))
+
+    if args.fonts:
+        fonts_dir = os.path.join(SCRIPT_DIR, 'fonts')
+
+        current_links, current_skipped_links = get_links_from_dir(fonts_dir, ['.local/share/fonts'])
+
+        links = dict(list(links.items()) + list(current_links.items()))
+        skipped_links = dict(list(skipped_links.items()) + list(current_skipped_links.items()))
+
+        font_config_dir = os.path.join(SCRIPT_DIR, 'fonts')
+        current_links, current_skipped_links = get_links_from_dir(font_config_dir, destination_dir='.local/share/fonts')
 
         links = dict(list(links.items()) + list(current_links.items()))
         skipped_links = dict(list(skipped_links.items()) + list(current_skipped_links.items()))
