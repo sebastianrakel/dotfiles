@@ -8,14 +8,16 @@ Bundle 'scrooloose/nerdtree'
 Bundle 'scrooloose/syntastic'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'bling/vim-airline'
-Bundle 'ervandew/supertab'
+" Bundle 'ervandew/supertab'
 Bundle 'fs111/pydoc.vim'
 Bundle 'tpope/vim-fugitive'
 Bundle 'ajh17/Spacegray.vim'
 Bundle 'Townk/vim-autoclose'
+Bundle 'davidhalter/jedi-vim'
 autocmd! bufwritepost ~/.vimrc source %
 
 " default settings
+set clipboard=unnamed
 set nocompatible " get rid of Vi compatibility mode. SET FIRST!
 set t_Co=256 " enable 256-color mode.
 syntax enable " enable syntax highlighting (previously syntax on).
@@ -35,6 +37,7 @@ set smarttab " use tabs at the start of a line, spaces elsewhere
 set nowrap " don't wrap text
 set backspace=indent,eol,start
 set cmdheight=2
+
 filetype on
 filetype plugin indent on
 
@@ -90,5 +93,12 @@ set guioptions-=m "remove menu bar
 set guioptions-=T "remove toolbar
 set guioptions-=r "remove right-hand scroll bar
 set guioptions-=L "remove left-hand scroll bar
+
+if has("autocmd") && exists("+omnifunc")
+    autocmd Filetype *
+        \   if &omnifunc == "" |
+        \       setlocal omnifunc=syntaxcomplete#Complete |
+        \   endif
+endif
 
 set guifont=yancfont\ 12px
