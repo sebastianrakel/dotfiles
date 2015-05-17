@@ -8,15 +8,16 @@ Bundle 'scrooloose/nerdtree'
 Bundle 'scrooloose/syntastic'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'bling/vim-airline'
-Bundle 'ervandew/supertab'
+" Bundle 'ervandew/supertab'
 Bundle 'fs111/pydoc.vim'
 Bundle 'tpope/vim-fugitive'
 Bundle 'ajh17/Spacegray.vim'
 Bundle 'Townk/vim-autoclose'
-Bundle 'python-rope/ropevim'
+Bundle 'davidhalter/jedi-vim'
 autocmd! bufwritepost ~/.vimrc source %
 
 " default settings
+set clipboard=unnamed
 set nocompatible " get rid of Vi compatibility mode. SET FIRST!
 set t_Co=256 " enable 256-color mode.
 set number " show line numbers
@@ -34,8 +35,6 @@ set smarttab " use tabs at the start of a line, spaces elsewhere
 set nowrap " don't wrap text
 set backspace=indent,eol,start
 set cmdheight=2
-set foldmethod=indent
-set foldlevel=99
 
 filetype on
 filetype plugin indent on
@@ -95,19 +94,16 @@ nmap <F4> :AuthorInfoDetect<cr>
 let g:vimrc_author='Sebastian Rakel'
 let g:vimrc_email='sebastian@devunit.eu'
 let g:vimrc_homepage='https://sebastianrakel.de'
+set guioptions-=m "remove menu bar
+set guioptions-=T "remove toolbar
+set guioptions-=r "remove right-hand scroll bar
+set guioptions-=L "remove left-hand scroll bar
 
-" Rope
-map <leader>j :RopeGotoDefinition<CR>
-map <leader>r :RopeRename<CR>
+if has("autocmd") && exists("+omnifunc")
+    autocmd Filetype *
+        \   if &omnifunc == "" |
+        \       setlocal omnifunc=syntaxcomplete#Complete |
+        \   endif
+endif
 
-" Python Virtuelenvs
-py << EOF
-import os.path
-import sys
-import vim
-if 'venv' in os.environ:
-    project_base_dir = os.environ['venv']
-    sys.path.insert(0, project_base_dir)
-    activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
-    execfile(activate_this, dict(__file__=activate_this))
-EOF
+set guifont=yancfont\ 12px
