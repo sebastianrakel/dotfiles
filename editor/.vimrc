@@ -1,4 +1,3 @@
-" execute pathogen#infect()
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
@@ -14,6 +13,7 @@ Bundle 'tpope/vim-fugitive'
 Bundle 'ajh17/Spacegray.vim'
 Bundle 'Townk/vim-autoclose'
 Bundle 'davidhalter/jedi-vim'
+Bundle 'klen/python-mode'
 autocmd! bufwritepost ~/.vimrc source %
 
 " default settings
@@ -73,14 +73,6 @@ map <C-n> :NERDTreeToggle<CR>
 let NERDTreeIgnore=['\.pyc$', '\~$']
 let python_highlight_all = 1
 
-" pep8
-let g:pep8_map='<leader>8'
-
-" codecompletition for python
-au FileType python set omnifunc=pythoncomplete#Complete
-let g:SuperTabDefaultCompletionType = "context"
-set completeopt=menuone,longest,preview
-
 " Airline Stuff
 let g:airline_left_sep = ''
 let g:airline_right_sep = ''
@@ -94,16 +86,11 @@ nmap <F4> :AuthorInfoDetect<cr>
 let g:vimrc_author='Sebastian Rakel'
 let g:vimrc_email='sebastian@devunit.eu'
 let g:vimrc_homepage='https://sebastianrakel.de'
-set guioptions-=m "remove menu bar
-set guioptions-=T "remove toolbar
-set guioptions-=r "remove right-hand scroll bar
-set guioptions-=L "remove left-hand scroll bar
 
+" autocomplete stuff
 if has("autocmd") && exists("+omnifunc")
     autocmd Filetype *
         \   if &omnifunc == "" |
         \       setlocal omnifunc=syntaxcomplete#Complete |
         \   endif
 endif
-
-set guifont=yancfont\ 12px
