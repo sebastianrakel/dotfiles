@@ -15,7 +15,7 @@ set $mod Mod4
 # is used in the bar {} block below.
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
-font pango:DejaVu Sans Mono 8
+font yanc-font 12 
 # Before i3 v4.8, we used to recommend this one as the default:
 # font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
 # The font above is very space-efficient, that is, it looks good, sharp and
@@ -166,7 +166,6 @@ bindsym $mod+r mode "resize"
 
 #assiging applications
 assign [class="Aurora|Firefox|Navigator|Opera|Chromium|dwb|Thunderbird"] 2:www
-assign [class="phpstorm|pycharm"] 5:dev
 assign [class="Keepassx|Steam"] 9:games
 assign [class="Spotify"] 4:media
 #assign [class="roxterm|xterm|URxvt"] 1:terms
