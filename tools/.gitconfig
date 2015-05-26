@@ -1,0 +1,18 @@
+[user]
+	email = sebastian@devunit.eu
+	name = Sebastian Rakel
+[push]
+	default = simple
+[merge]
+	tool = gvimdiff
+[core]
+	editor = vim
+[alias]
+    co = checkout
+    ci = commit
+    st = status
+    br = branch
+    hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+    type = cat-file -t
+    dump = cat-file -p
+    shist = log --graph --oneline --all --date=short

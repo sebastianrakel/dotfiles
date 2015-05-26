@@ -12,6 +12,3 @@ if [[ -a ~/.aliases_`hostname` ]]; then
     source ~/.aliases_`hostname`
 fi
 
-
-# GIT Aliases
-alias git-lg='git log --graph --oneline --all'
