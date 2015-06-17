@@ -9,6 +9,7 @@
 
 editor/.vim/bundle/*
 !editor/.vim/bundle/vundle
+!editor/.vim/bundle/neobundle.vim
 
 tools/.ssh/*
 !tools/.ssh/config

@@ -1,24 +1,34 @@
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+set nocompatible " get rid of Vi compatibility mode. SET FIRST!
 
-" Vundles
-Bundle 'gmarik/vundle'
-Bundle 'scrooloose/nerdtree'
-Bundle 'scrooloose/syntastic'
-Bundle 'scrooloose/nerdcommenter'
-Bundle 'bling/vim-airline'
-" Bundle 'ervandew/supertab'
-Bundle 'fs111/pydoc.vim'
-Bundle 'tpope/vim-fugitive'
-Bundle 'ajh17/Spacegray.vim'
-Bundle 'Townk/vim-autoclose'
-Bundle 'davidhalter/jedi-vim'
-Bundle 'klen/python-mode'
+set runtimepath+=~/.vim/bundle/neobundle.vim/
+
+" Required:
+call neobundle#begin(expand('~/.vim/bundle/'))
+
+" Required:
+NeoBundleFetch 'Shougo/neobundle.vim'
+
+" Bundles
+NeoBundle 'scrooloose/nerdtree'
+NeoBundle 'scrooloose/syntastic'
+NeoBundle 'scrooloose/nerdcommenter'
+NeoBundle 'bling/vim-airline'
+NeoBundle 'fs111/pydoc.vim'
+NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'ajh17/Spacegray.vim'
+NeoBundle 'Townk/vim-autoclose'
+NeoBundle 'davidhalter/jedi-vim'
+NeoBundle 'klen/python-mode'
+NeoBundle 'JamshedVesuna/vim-markdown-preview'
+
+call neobundle#end()
+
+NeoBundleCheck
+
 autocmd! bufwritepost ~/.vimrc source %
 
 " default settings
 set clipboard=unnamed
-set nocompatible " get rid of Vi compatibility mode. SET FIRST!
 set t_Co=256 " enable 256-color mode.
 set number " show line numbers
 set laststatus=2 " last window always has a statusline
@@ -36,18 +46,20 @@ set nowrap " don't wrap text
 set backspace=indent,eol,start
 set cmdheight=2
 
-filetype on
-filetype plugin indent on
-
-syntax enable " enable syntax highlighting (previously syntax on).
-
 " GUI Settings
 set guioptions-=m "remove menu bar
 set guioptions-=T "remove toolbar
 set guioptions-=r "remove right-hand scroll bar
 set guioptions-=L "remove left-hand scroll bar
-
 set guifont=yancfont\ 12px
+
+filetype on
+filetype plugin indent on
+
+syntax enable " enable syntax highlighting (previously syntax on).
+
+map ,f :set foldmethod=indent<cr>zM<cr>
+map ,F :set foldmethod=manual<cr>zR<cr>
 
 " Keybindings
 set pastetoggle=<F2>
