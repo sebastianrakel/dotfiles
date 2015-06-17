@@ -7,6 +7,7 @@
 	tool = gvimdiff
 [core]
 	editor = vim
+	excludesfile = /home/sebastian/.gitignore
 [alias]
     co = checkout
     ci = commit
