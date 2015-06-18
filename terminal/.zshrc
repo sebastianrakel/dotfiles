@@ -12,7 +12,11 @@ compinit -i
 
 export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=setting'
 
-PATH="`ruby -e 'print Gem.user_dir'`/bin:$PATH"
+if hash ruby 2>/dev/null; then
+    PATH="`ruby -e 'print Gem.user_dir'`/bin:$PATH"
+fi
+
 PATH=$PATH:~/go/bin
 export GOPATH=~/go
+
 export TERM=xterm-256color
