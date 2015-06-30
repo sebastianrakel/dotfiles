@@ -103,6 +103,11 @@ screen 1 do
   bottom [ ]
 end
 
+screen 2 do
+  top    [ :views, :title, :spacer, :keychain, :spacer, :tray, :sublets ]
+  bottom [ ]
+end
+
 # Example for a second screen:
 #screen 2 do
 #  top    [ :views, :title, :spacer ]
@@ -742,7 +747,7 @@ view "www" do
 end
 
 view "dev" do
-  match "editor"
+  match "editor|development"
   icon "~/.config/subtle/icons/bug.xbm"
 end
 
