@@ -425,10 +425,13 @@ grab "W-s", [ :center,       :center66,       :center33       ]
 grab "W-d", [ :right,        :right66,        :right33        ]
 #
 # QUERTZ
-grab "W-y", [ :bottom_left,  :bottom_left66,  :bottom_left33  ]
+if (host == "snotra")
+  grab "W-z", [ :bottom_left,  :bottom_left66,  :bottom_left33  ]
+else
+  grab "W-y", [ :bottom_left,  :bottom_left66,  :bottom_left33  ]
+end
 #
 # QWERTY
-#grab "W-z", [ :bottom_left,  :bottom_left66,  :bottom_left33  ]
 #
 grab "W-x", [ :bottom,       :bottom66,       :bottom33       ]
 grab "W-c", [ :bottom_right, :bottom_right66, :bottom_right33 ]
