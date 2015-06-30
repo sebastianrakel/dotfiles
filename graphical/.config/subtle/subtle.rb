@@ -103,6 +103,16 @@ screen 1 do
   bottom [ ]
 end
 
+screen 2 do
+  top    [ :views, :title, :spacer, :keychain, :spacer, :tray, :sublets ]
+  bottom [ ]
+end
+
+screen 3 do
+  top    [ :views, :title, :spacer, :keychain, :spacer, :tray, :sublets ]
+  bottom [ ]
+end
+
 # Example for a second screen:
 #screen 2 do
 #  top    [ :views, :title, :spacer ]
@@ -615,7 +625,10 @@ end
 
 # Simple tags
 tag "terms",   "xterm|[u]?rxvt|termite"
-tag "browser", "uzbl|opera|firefox|navigator|chromium"
+tag "browser" do
+  match "uzbl|opera|firefox|navigator|chromium"
+  border false
+end
 
 # Placement
 tag "editor" do
@@ -749,6 +762,10 @@ view "dev" do
   icon "~/.config/subtle/icons/bug.xbm"
 end
 
+view "media" do
+  match "media"
+  icon "~/.config/subtle/icons/headphones.xbm"
+end
 #
 # == Sublets
 #
