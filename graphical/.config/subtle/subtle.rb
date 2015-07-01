@@ -99,17 +99,17 @@ set :wmname, "LG3D"
 #
 
 screen 1 do
-  top    [ :views, :center, :title, :spacer, :keychain, :spacer, :tray, :sublets ]
-  bottom [ ]
-end
-
-screen 2 do
-  top    [ :views, :center, :title, :spacer, :keychain, :spacer, :tray, :sublets ]
-  bottom [ ]
-end
-
-screen 3 do
-  top    [ :views, :center, :title, :spacer, :keychain, :spacer, :tray, :sublets ]
+  top    [ :views, :spacer,:title, :spacer, :keychain, :spacer, :tray, :sublets ]
+  bottom [ ]               
+end                        
+                           
+screen 2 do                
+  top    [ :views, :spacer,:title, :spacer, :keychain, :spacer, :tray, :sublets ]
+  bottom [ ]               
+end                        
+                           
+screen 3 do                
+  top    [ :views, :spacer,:title, :spacer, :keychain, :spacer, :tray, :sublets ]
   bottom [ ]
 end
 
