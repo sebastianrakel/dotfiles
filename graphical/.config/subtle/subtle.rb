@@ -451,6 +451,9 @@ grab "W-c", [ :bottom_right, :bottom_right66, :bottom_right33 ]
 grab "W-Return", "termite"
 grab "W-F2", "rofi -show run"
 
+grab "A-Print", "teiler --quick area"
+grab "W-Print", "teiler --quick fullscreen"
+
 if (host == "WSL-RakelSebast")
   grab "W-S-l", "xscreensaver-command --lock"
 else
@@ -634,7 +637,10 @@ end
 #
 
 # Simple tags
-tag "terms",   "xterm|[u]?rxvt|termite"
+tag "terms" do
+  match "xterm|[u]?rxvt|termite"
+  gravity :center
+end
 tag "browser" do
   match "uzbl|opera|firefox|navigator|chromium"
   borderless false
