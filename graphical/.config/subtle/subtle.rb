@@ -99,17 +99,17 @@ set :wmname, "LG3D"
 #
 
 screen 1 do
-  top    [ :views, :title, :spacer, :keychain, :spacer, :tray, :sublets ]
+  top    [ :views, :center, :title, :spacer, :keychain, :spacer, :tray, :sublets ]
   bottom [ ]
 end
 
 screen 2 do
-  top    [ :views, :title, :spacer, :keychain, :spacer, :tray, :sublets ]
+  top    [ :views, :center, :title, :spacer, :keychain, :spacer, :tray, :sublets ]
   bottom [ ]
 end
 
 screen 3 do
-  top    [ :views, :title, :spacer, :keychain, :spacer, :tray, :sublets ]
+  top    [ :views, :center, :title, :spacer, :keychain, :spacer, :tray, :sublets ]
   bottom [ ]
 end
 
@@ -157,6 +157,7 @@ style :views do
   # Style for the active views
   style :focus do
     foreground  "#fecf35"
+    border_bottom "#fecf35", 3 
   end
 
   # Style for urgent window titles and views
@@ -450,7 +451,16 @@ grab "W-c", [ :bottom_right, :bottom_right66, :bottom_right33 ]
 grab "W-Return", "termite"
 grab "W-F2", "rofi -show run"
 
-grab "W-S-l", "xscreensaver-command --lock"
+if (host == "WSL-RakelSebast")
+  grab "W-S-l", "xscreensaver-command --lock"
+else
+  grab "W-S-l", "i3lock"
+end
+
+# MediaKeys
+grab "XF86AudioRaiseVolume",  "amixer -D pulse sset Master 5%+"
+grab "XF86AudioLowerVolume", "amixer -D pulse sset Master 5%-"
+grab "XF86AudioMute", "amixer -D pulse set Master Playback Switch toggle"
 
 # Run Ruby lambdas
 grab "S-F2" do |c|
@@ -627,7 +637,7 @@ end
 tag "terms",   "xterm|[u]?rxvt|termite"
 tag "browser" do
   match "uzbl|opera|firefox|navigator|chromium"
-  border false
+  borderless false
 end
 
 # Placement
@@ -638,6 +648,10 @@ end
 
 tag "development" do
   match "robomongo"
+end
+
+tag "virtual" do
+  match "virt-manager"
 end
 
 tag "fixed" do
@@ -750,21 +764,31 @@ end
 view "terms" do
   match "terms|default"
   icon "~/.config/subtle/icons/terminal.xbm"
+  icon_only true
 end
 
 view "www" do
   match "browser"
   icon "~/.config/subtle/icons/world.xbm"
+  icon_only true
 end
 
 view "dev" do
   match "editor|development"
   icon "~/.config/subtle/icons/bug.xbm"
+  icon_only true
 end
 
 view "media" do
   match "media"
   icon "~/.config/subtle/icons/headphones.xbm"
+  icon_only true
+end
+
+view "virt" do
+  match "virtual"
+  icon "~/.config/subtle/icons/screen.xbm"
+  icon_only true
 end
 #
 # == Sublets
