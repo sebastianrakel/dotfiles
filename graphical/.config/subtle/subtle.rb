@@ -108,6 +108,11 @@ screen 2 do
   bottom [ ]
 end
 
+screen 3 do
+  top    [ :views, :title, :spacer, :keychain, :spacer, :tray, :sublets ]
+  bottom [ ]
+end
+
 # Example for a second screen:
 #screen 2 do
 #  top    [ :views, :title, :spacer ]
@@ -430,10 +435,13 @@ grab "W-s", [ :center,       :center66,       :center33       ]
 grab "W-d", [ :right,        :right66,        :right33        ]
 #
 # QUERTZ
-grab "W-y", [ :bottom_left,  :bottom_left66,  :bottom_left33  ]
+if (host == "snotra")
+  grab "W-z", [ :bottom_left,  :bottom_left66,  :bottom_left33  ]
+else
+  grab "W-y", [ :bottom_left,  :bottom_left66,  :bottom_left33  ]
+end
 #
 # QWERTY
-#grab "W-z", [ :bottom_left,  :bottom_left66,  :bottom_left33  ]
 #
 grab "W-x", [ :bottom,       :bottom66,       :bottom33       ]
 grab "W-c", [ :bottom_right, :bottom_right66, :bottom_right33 ]
@@ -617,7 +625,10 @@ end
 
 # Simple tags
 tag "terms",   "xterm|[u]?rxvt|termite"
-tag "browser", "uzbl|opera|firefox|navigator|chromium"
+tag "browser" do
+  match "uzbl|opera|firefox|navigator|chromium"
+  border false
+end
 
 # Placement
 tag "editor" do
@@ -751,6 +762,10 @@ view "dev" do
   icon "~/.config/subtle/icons/bug.xbm"
 end
 
+view "media" do
+  match "media"
+  icon "~/.config/subtle/icons/headphones.xbm"
+end
 #
 # == Sublets
 #
