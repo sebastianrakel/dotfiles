@@ -98,20 +98,22 @@ set :wmname, "LG3D"
 # http://subforge.org/projects/subtle/wiki/Panel
 #
 
-screen 1 do
-  top    [ :views, :spacer,:title, :spacer, :keychain, :spacer, :tray, :sublets ]
-  bottom [ ]               
-end                        
-                           
-screen 2 do                
-  top    [ :views, :spacer,:title, :spacer, :keychain, :spacer, :tray, :sublets ]
-  bottom [ ]               
-end                        
-                           
-screen 3 do                
-  top    [ :views, :spacer,:title, :spacer, :keychain, :spacer, :tray, :sublets ]
-  bottom [ ]
+for i in 1..3
+  screen i do
+    top    [ :views, :spacer, :title, :spacer, :keychain, :spacer, :tray, :clock]
+    bottom [ :cpu, :memory, :spacer, :ipaddr, :battery, :wifi]                
+  end                         
 end
+                            
+#screen 2 do                 
+#  top    [ :views, :spacer, :title, :spacer, :keychain, :spacer, :tray, :clock]
+#  bottom [ :cpu, :memory, :spacer, :ipaddr, :battery, :wifi]                
+#end                         
+#                            
+#screen 3 do                 
+#  top    [ :views, :spacer, :title, :spacer, :keychain, :spacer, :tray, :clock]
+#  bottom [ :cpu, :memory, :spacer, :ipadd, :battery, :wifi]                
+#end
 
 # Example for a second screen:
 #screen 2 do
