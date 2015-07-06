@@ -653,7 +653,11 @@ tag "editor" do
 end
 
 tag "development" do
-  match "robomongo"
+  match "robomongo|code|MonoDevelop"
+end
+
+tag "filemanager" do
+  match "thunar|spacefm|pcmanfm"
 end
 
 tag "virtual" do
@@ -796,6 +800,12 @@ view "virt" do
   icon "~/.config/subtle/icons/screen.xbm"
   icon_only true
 end
+
+view "stuff" do
+  match "filemanager"
+  icon "~/.config/subtle/icons/file1.xbm"
+  icon_only true
+end  
 #
 # == Sublets
 #
@@ -836,16 +846,29 @@ end
 #    background    "#000000"
 #    format_string "%H:%M:%S"
 #  end
-   sublet :clock do
-     interval      1
-     format_string "%a, %d.%m.%Y | %H:%M:%S" 
-   end 
 
    sublet :pacman do
      interval 300
      repositories "core" => "!:", "extra" => "e:", "community" => "c:", "multilib" => "m:"
      serious false
      colors "pacman" => "#FF0", "core" => "#FFF", "extra" => "#FFF", "community" => "#FFF", "multilib" => "#FFF", "separator" => %w[#F00 #F781F3 #58FAF4 #58FA58]
+   end 
+
+   if(host == "snotra")
+     sublet :battery do
+         colors 10 => "#ff0000", 30 => "#fff000"
+     end
+   end
+
+   sublet :memory do
+   end
+
+   sublet :cpu do
+   end
+
+   sublet :clock do
+     interval      1
+     format_string "%a, %d.%m.%Y | %H:%M:%S" 
    end 
 #
 #  === Link
@@ -890,10 +913,5 @@ end
 #
 # http://subforge.org/projects/subtle/wiki/Hooks
 #
-
-if (host == "odin")
-elsif(host == "snotra")
-end
-
 
 # vim:ts=2:bs=2:sw=2:et:fdm=marker
