@@ -643,9 +643,15 @@ tag "terms" do
   match "xterm|[u]?rxvt|termite"
   gravity :center
 end
+
 tag "browser" do
   match "uzbl|opera|firefox|navigator|chromium"
   borderless false
+end
+
+tag "messenger" do
+  match "telegram"
+  borderless true
 end
 
 # Placement
@@ -655,7 +661,7 @@ tag "editor" do
 end
 
 tag "development" do
-  match "robomongo|code|MonoDevelop"
+  match "robomongo|code|MonoDevelop|flamerobin"
 end
 
 tag "filemanager" do
@@ -780,7 +786,7 @@ view "terms" do
 end
 
 view "www" do
-  match "browser"
+  match "browser|messenger"
   icon "~/.config/subtle/icons/world.xbm"
   icon_only true
 end
