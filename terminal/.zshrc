@@ -19,4 +19,6 @@ fi
 PATH=$PATH:~/go/bin
 export GOPATH=~/go
 
-export TERM=xterm-256color
+if [ -z "$TMUX" ]; then
+    export TERM=xterm-256color
+fi
