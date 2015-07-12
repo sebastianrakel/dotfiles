@@ -857,6 +857,11 @@ end
    end 
 
    if(host == "snotra")
+     sublet :wifi do
+         device "wlp2s0"
+         interval 10
+     end
+
      sublet :battery do
          colors 10 => "#ff0000", 30 => "#fff000"
      end
