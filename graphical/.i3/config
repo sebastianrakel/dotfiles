@@ -165,6 +165,7 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 #assiging applications
+assign [class="termite"] 1:terms
 assign [class="Aurora|Firefox|Navigator|Opera|Chromium|dwb|Thunderbird"] 2:www
 assign [class="Keepassx|Steam"] 9:games
 assign [class="Spotify"] 4:media
@@ -172,9 +173,6 @@ assign [class="Spotify"] 4:media
 assign [class="Gimp"] 6:gfx
 assign [class="Skype"] 7:net
 ##  assign [class=""] 8:3D
-
-#project related stuff
-for_window [class="Brewpy"] floating enable
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
