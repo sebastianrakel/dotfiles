@@ -646,30 +646,42 @@ end
 
 tag "browser" do
   match "uzbl|opera|firefox|navigator|chromium"
-  borderless false
+  gravity :center
 end
 
 tag "messenger" do
   match "telegram"
-  borderless true
+  gravity :center
+end
+
+tag "remote" do
+  match "rdesktop"
+  gravity :center
 end
 
 # Placement
 tag "editor" do
   match  "[g]?vim|atom|sublime"
-  resize true
+  gravity :center
 end
 
 tag "development" do
   match "robomongo|code|MonoDevelop|flamerobin"
+  gravity :center
 end
 
 tag "filemanager" do
   match "thunar|spacefm|pcmanfm"
+  gravity :center
 end
 
 tag "virtual" do
   match "virt-manager"
+  gravity :center
+end
+
+tag "media" do
+  match "spotify"
 end
 
 tag "fixed" do
@@ -804,7 +816,7 @@ view "media" do
 end
 
 view "virt" do
-  match "virtual"
+  match "virtual|remote"
   icon "~/.config/subtle/icons/screen.xbm"
   icon_only true
 end
