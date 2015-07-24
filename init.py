@@ -11,6 +11,7 @@ def create_arguments():
     group.add_argument('--editor', help='editor dotfiles like vim', action='store_true')
     group.add_argument('--tools', help='configfiles for tools like ssh', action='store_true')
     group.add_argument('--fonts', help='fonts for user', action='store_true')
+    group.add_argument('--bin', help='binaries/scripts', action='store_true')
 
     group = parser.add_argument_group('output')
     group.add_argument('--print', help='only print link command', action='store_true')
@@ -83,10 +84,16 @@ def get_links():
         links = dict(list(links.items()) + list(current_links.items()))
         skipped_links = dict(list(skipped_links.items()) + list(current_skipped_links.items()))
 
+    if args.bin:
+        binaries_dir = os.path.join(SCRIPT_DIR, 'bin')
+        current_links, current_skipped_links = get_links_from_dir(binaries_dir, destination_dir='.bin', link_subdirs=False)
+        links = dict(list(links.items()) + list(current_links.items()))
+        skipped_links = dict(list(skipped_links.items()) + list(current_skipped_links.items()))
+
     return links, skipped_links
 
 
-def get_links_from_dir(dir_path, excludes=[], destination_dir=None):
+def get_links_from_dir(dir_path, excludes=[], destination_dir=None, link_subdirs=True):
     links = {}
     skipped_links = {}
 
@@ -95,15 +102,25 @@ def get_links_from_dir(dir_path, excludes=[], destination_dir=None):
     if destination_dir != None:
         destination_link_dir = os.path.join(destination_link_dir, destination_dir)
 
-    for item in os.listdir(dir_path):
-        if item not in excludes:
-            source_file = os.path.join(dir_path, os.path.basename(item))
-            dest_file = os.path.join(destination_link_dir, os.path.basename(item))
+    if link_subdirs:
+        for item in os.listdir(dir_path):
+            if item not in excludes:
+                source_file = os.path.join(dir_path, os.path.basename(item))
+                dest_file = os.path.join(destination_link_dir, os.path.basename(item))
 
-            if not args.check or (args.check and not os.path.islink(dest_file)):
-                links[source_file] = dest_file
-            else:
-                skipped_links[source_file] = dest_file
+                if not args.check or (args.check and not os.path.islink(dest_file)):
+                    links[source_file] = dest_file
+                else:
+                    skipped_links[source_file] = dest_file
+    else:
+        source_file = dir_path
+        dest_file = destination_link_dir
+
+        if not args.check or (args.check and not os.path.islink(dest_file)):
+            links[source_file] = dest_file
+        else:
+            skipped_links[source_file] = dest_file
+
 
     return links, skipped_links
 

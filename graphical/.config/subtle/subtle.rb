@@ -453,8 +453,12 @@ grab "W-c", [ :bottom_right, :bottom_right66, :bottom_right33 ]
 grab "W-Return", "termite"
 grab "W-F2", "rofi -show run"
 
+grab "Print", "teiler"
+grab "W-S-Print", "teiler --togglecast"
 grab "A-Print", "teiler --quick area"
 grab "W-Print", "teiler --quick fullscreen"
+
+grag "W-m", "rofi-extension.sh subtle_change_view"
 
 if (host == "WSL-RakelSebast")
   grab "W-S-l", "xscreensaver-command --lock"
@@ -666,7 +670,7 @@ tag "editor" do
 end
 
 tag "development" do
-  match "robomongo|code|MonoDevelop|flamerobin"
+  match "robomongo|code|MonoDevelop|flamerobin|jetbrains-*"
   gravity :center
 end
 
@@ -684,30 +688,11 @@ tag "media" do
   match "spotify"
 end
 
-tag "fixed" do
-  geometry [ 10, 10, 100, 100 ]
-  stick    true
-end
-
-tag "resize" do
-  match  "sakura|gvim"
-  resize true
-end
-
-tag "gravity" do
-  gravity :center
-end
-
 # Modes
 tag "stick" do
   match "mplayer"
   float true
   stick true
-end
-
-tag "float" do
-  match "display"
-  float true
 end
 
 # Gimp
