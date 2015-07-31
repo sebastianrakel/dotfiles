@@ -6,4 +6,4 @@
 	url = https://github.com/Shougo/neobundle.vim.git
 [submodule "bin/rofi-extension"]
 	path = bin/rofi-extension
-	url = git@github.com:sebastianrakel/rofi-extensions.git
+	url = https://github.com/sebastianrakel/rofi-extensions.git
