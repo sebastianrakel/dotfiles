@@ -654,7 +654,7 @@ tag "browser" do
 end
 
 tag "messenger" do
-  match "telegram"
+  match "telegram|pidgin"
   gravity :center
 end
 
@@ -851,13 +851,6 @@ end
 #    background    "#000000"
 #    format_string "%H:%M:%S"
 #  end
-
-   sublet :pacman do
-     interval 300
-     repositories "core" => "!:", "extra" => "e:", "community" => "c:", "multilib" => "m:"
-     serious false
-     colors "pacman" => "#FF0", "core" => "#FFF", "extra" => "#FFF", "community" => "#FFF", "multilib" => "#FFF", "separator" => %w[#F00 #F781F3 #58FAF4 #58FA58]
-   end 
 
    if(host == "snotra")
      sublet :wifi do
