@@ -649,12 +649,12 @@ tag "terms" do
 end
 
 tag "browser" do
-  match "uzbl|opera|firefox|navigator|chromium"
+  match "uzbl|opera|firefox|navigator|chromium|Google-chrome*"
   gravity :center
 end
 
 tag "messenger" do
-  match "telegram|pidgin"
+  match "telegram|pidgin|ts3client_linux_amd64"
   gravity :center
 end
 
@@ -681,6 +681,11 @@ end
 
 tag "virtual" do
   match "virt-manager"
+  gravity :center
+end
+
+tag "games" do
+  match "steam"
   gravity :center
 end
 
@@ -809,6 +814,12 @@ end
 view "stuff" do
   match "filemanager"
   icon "~/.config/subtle/icons/file1.xbm"
+  icon_only true
+end  
+
+view "games" do
+  match "games"
+  icon "~/.config/subtle/icons/pacman.xbm"
   icon_only true
 end  
 #
