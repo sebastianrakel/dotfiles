@@ -17,3 +17,4 @@
     type = cat-file -t
     dump = cat-file -p
     shist = log --graph --oneline --all --date=short
+    l = log --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=iso --decorate=short
