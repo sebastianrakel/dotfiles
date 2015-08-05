@@ -242,6 +242,7 @@ gravity :top33,          [   0,   0, 100,  34 ]
 gravity :top_right,      [  50,   0,  50,  50 ]
 gravity :top_right66,    [  50,   0,  50,  66 ]
 gravity :top_right33,    [  50,   0,  50,  33 ]
+gravity :top_right_small33,    [  67,   0,  33,  33 ]
 
 # Left
 gravity :left,           [   0,   0,  50, 100 ]
@@ -257,6 +258,7 @@ gravity :center33,       [  33,  33,  33,  33 ]
 gravity :right,          [  50,   0,  50, 100 ]
 gravity :right66,        [  34,   0,  66, 100 ]
 gravity :right33,        [  67,   0,  33, 100 ]
+gravity :right_small33,        [  67,   33,  33, 34 ]
 
 # Bottom left
 gravity :bottom_left,    [   0,  50,  50,  50 ]
@@ -272,6 +274,7 @@ gravity :bottom33,       [   0,  67, 100,  33 ]
 gravity :bottom_right,   [  50,  50,  50,  50 ]
 gravity :bottom_right66, [  50,  34,  50,  66 ]
 gravity :bottom_right33, [  50,  67,  50,  33 ]
+gravity :bottom_right_small33, [  67,  67,  33,  33 ]
 
 # Gimp
 gravity :gimp_image,     [  10,   0,  80, 100 ]
@@ -432,10 +435,10 @@ grab "W-S-q", :WindowKill
 # In case no numpad is available e.g. on notebooks
 grab "W-q", [ :top_left,     :top_left66,     :top_left33     ]
 grab "W-w", [ :top,          :top66,          :top33          ]
-grab "W-e", [ :top_right,    :top_right66,    :top_right33    ]
+grab "W-e", [ :top_right,    :top_right66,    :top_right33, :top_right_small33    ]
 grab "W-a", [ :left,         :left66,         :left33         ]
 grab "W-s", [ :center,       :center66,       :center33       ]
-grab "W-d", [ :right,        :right66,        :right33        ]
+grab "W-d", [ :right,        :right66,        :right33,     :right_small33        ]
 #
 # QUERTZ
 if (host == "snotra")
@@ -447,7 +450,7 @@ end
 # QWERTY
 #
 grab "W-x", [ :bottom,       :bottom66,       :bottom33       ]
-grab "W-c", [ :bottom_right, :bottom_right66, :bottom_right33 ]
+grab "W-c", [ :bottom_right, :bottom_right66, :bottom_right33, :bottom_right_small33 ]
 
 # Exec programs
 grab "W-Return", "termite"
