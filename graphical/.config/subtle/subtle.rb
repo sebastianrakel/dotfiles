@@ -155,7 +155,6 @@ end
 # Style for the all views
 style :views do
   foreground  "#757575"
-
   # Style for the active views
   style :focus do
     foreground  "#fecf35"
@@ -201,7 +200,7 @@ end
 style :subtle do
   margin      0, 0, 0, 0
   panel       "#202020"
-  background  "#3d3d3d"
+  # background  "#3d3d3d"
   stipple     "#757575"
 end
 
