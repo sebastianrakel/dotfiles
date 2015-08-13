@@ -463,6 +463,7 @@ grab "A-Print", "teiler --quick area"
 grab "W-Print", "teiler --quick fullscreen"
 
 grab "W-F3", "~/.bin/rofi-extension/rofi-extension.sh subtle_change_view"
+grab "W-S-e", "~/.bin/rofi-extension/rofi-extension.sh powercontrol"
 
 if (host == "WSL-RakelSebast")
   grab "W-S-l", "xscreensaver-command --lock"
