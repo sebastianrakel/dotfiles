@@ -704,6 +704,13 @@ tag "stick" do
   stick true
 end
 
+tag "dialog" do
+  match "sun-awt-X11-XDialogPeer"
+  float true
+  borderless false
+  type :dialog
+end
+
 # Gimp
 tag "gimp_image" do
   match   :role => "gimp-image-window"

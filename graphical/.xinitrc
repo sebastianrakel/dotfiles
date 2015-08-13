@@ -39,6 +39,6 @@ fi
 
 feh --bg-scale ~/dotfiles/wallpaper/cute-chameleon-wallpaper.jpg
 
-export BROWSER=firefox
+export BROWSER=google-chrome-stable
 
 exec subtle
