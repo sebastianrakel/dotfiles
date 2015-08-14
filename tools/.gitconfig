@@ -12,9 +12,11 @@
     co = checkout
     ci = commit
     st = status
+    sts = status -s
     br = branch
-    hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
     type = cat-file -t
     dump = cat-file -p
-    shist = log --graph --oneline --all --date=short
-    l = log --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=iso --decorate=short
+    sl = log --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=iso --decorate=short
+    l = log --graph --pretty=format:'%C(yellow)%h %Cblue%an%Cgreen%d %Cred(%ad) %Creset%s' --date=relative --decorate=short
+    pu = push
+    pl = pull
