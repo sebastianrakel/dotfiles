@@ -1,6 +1,7 @@
-alias tmux='tmux -2'
-
 uname_string=`uname`
+
+alias tmux='tmux -2'
+alias g='git'
 
 if [[ "$uname_string" == 'OpenBSD' ]]; then
 
