@@ -20,6 +20,7 @@ def create_arguments():
 
     parser.add_argument('--check', help='check if link allready set', action='store_true')
     parser.add_argument('--test', help='only test', action='store_true')
+    parser.add_argument('--createdir', help='creates parent directories if not exists', action='store_true')
 
     args = parser.parse_args()
     return args
@@ -45,6 +46,16 @@ def get_links():
 
         links = dict(list(links.items()) + list(current_links.items()))
         skipped_links = dict(list(skipped_links.items()) + list(current_skipped_links.items()))
+
+    if args.jetbrains:
+        jetbrains_dir = os.path.join(SCRIPT_DIR, 'jetbrains')
+
+        for dir_name in os.listdir(jetbrains_dir):
+            dir_path = os.path.join(jetbrains_dir, dir_name)
+            current_links, current_skipped_links = get_links_from_dir(dir_path, destination_dir=dir_name)
+
+            links = dict(list(links.items()) + list(current_links.items()))
+            skipped_links = dict(list(skipped_links.items()) + list(current_skipped_links.items()))
 
     if args.terminal:
         terminal_dir = os.path.join(SCRIPT_DIR, 'terminal')
@@ -139,6 +150,14 @@ def link_files():
     links, skipped_links = get_links()
 
     for key, value in links.items():
+        parent_folder = os.path.abspath(os.path.join(value, os.pardir))
+
+        if args.createdir and not os.path.isdir(parent_folder):
+            if args.verbose:
+                print('Create parent dir for link ' + parent_folder)
+            if not args.test:
+                os.makedirs(parent_folder)
+
         if args.verbose:
             print('linking ' + key + ' to ' + value)
 
