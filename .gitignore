@@ -26,4 +26,8 @@ graphical/.config/openbox/autostart
 bin/local/
 
 .ropeproject/
+
+# JetBrains Stuff
 jetbrains/*/config/tasks
+jetbrains/*/config/options/statistics.application.usages.xml
+
