@@ -4,5 +4,9 @@
     <property name="DefaultHtmlDoctype.MigrateToHtml5" value="true" />
     <property name="DefaultHtmlDoctype.Refreshed" value="1" />
     <property name="installation.uid" value="57085b13-3fcb-458e-bf48-baca01789ec4" />
+    <property name="project.wizard.group" value="org.jetbrains.plugins.gradle.service.project.wizard.GradleModuleBuilder" />
+    <property name="default.storage.format" value=".idea (directory based)" />
+    <property name="project.wizard.template" value="JavaFX Application" />
+    <property name="PLUGIN_FILTER" value="docker" />
   </component>
 </application>
