@@ -9,17 +9,14 @@ call neobundle#begin(expand('~/.vim/bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 
 " Bundles
+NeoBundle 'Shougo/neocomplete'
 NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'scrooloose/nerdcommenter'
 NeoBundle 'bling/vim-airline'
-NeoBundle 'fs111/pydoc.vim'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'ajh17/Spacegray.vim'
-NeoBundle 'Townk/vim-autoclose'
 NeoBundle 'davidhalter/jedi-vim'
-NeoBundle 'klen/python-mode'
-NeoBundle 'JamshedVesuna/vim-markdown-preview'
 
 call neobundle#end()
 
@@ -83,7 +80,12 @@ colorscheme spacegray
 " NERDTree Configuration
 map <C-n> :NERDTreeToggle<CR>
 let NERDTreeIgnore=['\.pyc$', '\~$']
-let python_highlight_all = 1
+
+" NERDCommenter Stuff
+nmap <F4> :AuthorInfoDetect<cr>
+let g:vimrc_author='Sebastian Rakel'
+let g:vimrc_email='sebastian@devunit.eu'
+let g:vimrc_homepage='https://sebastianrakel.de'
 
 " Airline Stuff
 let g:airline_left_sep = ''
@@ -93,11 +95,14 @@ let g:airline#extensions#tabline#enabled = 1
 " Syntastics Stuff
 let g:syntastic_python_python_exec = '/usr/bin/python3'
 
-" NERDCommenter Stuff
-nmap <F4> :AuthorInfoDetect<cr>
-let g:vimrc_author='Sebastian Rakel'
-let g:vimrc_email='sebastian@devunit.eu'
-let g:vimrc_homepage='https://sebastianrakel.de'
+" NeoComplete Stuff
+let g:acp_enableAtStartup = 0
+let g:neocomplete#enable_at_startup = 1
+let g:neocomplete#enable_smart_case = 1
+let g:neocomplete#enable_auto_select = 1
+let g:neocomplete#sources#syntax#min_keyword_length = 3
+
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
 " autocomplete stuff
 if has("autocmd") && exists("+omnifunc")
@@ -105,4 +110,10 @@ if has("autocmd") && exists("+omnifunc")
         \   if &omnifunc == "" |
         \       setlocal omnifunc=syntaxcomplete#Complete |
         \   endif
+    autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+    autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+    autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+    " autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+    autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 endif
+
