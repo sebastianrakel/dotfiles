@@ -37,10 +37,13 @@ feh --bg-scale ~/dotfiles/wallpaper/cute-chameleon-wallpaper.jpg
 
 export BROWSER=google-chrome-stable
 
+setxkbmap de
+
 if [ -e "$localxinitrc" ] ; then
     source "$localxinitrc"
 fi
 
 cd $HOME
 
-exec subtle
+#exec subtle
+exec subtle &> $HOME/subtle-$(date +"%F-%H-%M").log
