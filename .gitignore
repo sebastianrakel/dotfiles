@@ -29,6 +29,7 @@ bin/local/
 
 # JetBrains Stuff
 jetbrains/*/config/tasks
-jetbrains/*/config/options/statistics.application.usages.xml
 jetbrains/*/config/options/dimensions.xml
+jetbrains/*/config/options/recentProjectDirectories.xml
+jetbrains/*/config/options/statistics.application.usages.xml
 
