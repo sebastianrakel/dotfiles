@@ -4,9 +4,17 @@
     <property name="DefaultHtmlDoctype.MigrateToHtml5" value="true" />
     <property name="DefaultHtmlDoctype.Refreshed" value="1" />
     <property name="installation.uid" value="57085b13-3fcb-458e-bf48-baca01789ec4" />
-    <property name="project.wizard.group" value="org.jetbrains.plugins.gradle.service.project.wizard.GradleModuleBuilder" />
+    <property name="project.wizard.group" value="JavaEE" />
     <property name="default.storage.format" value=".idea (directory based)" />
-    <property name="project.wizard.template" value="JavaFX Application" />
+    <property name="project.wizard.template" value="Empty Project" />
     <property name="PLUGIN_FILTER" value="docker" />
+    <property name="file.chooser.recent.files" value="$USER_HOME$/Projects/Docker" />
+    <property name="toolwindow.stripes.buttons.info.shown" value="true" />
+    <property name="DeploymentNotificationsComponent.WarnDisplayed.Java7&amp;Windows7FTPIssue" value="false" />
+    <property name="lastTip" value="1" />
+    <property name="file.colors.enable.non.project" value="494539" />
+    <property name="file.colors.enable.tests" value="2a3b2c" />
+    <property name="Non-Project Files" value="494539" />
+    <property name="Tests" value="2a3b2c" />
   </component>
 </application>
