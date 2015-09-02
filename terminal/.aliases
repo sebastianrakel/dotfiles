@@ -13,3 +13,6 @@ if [[ -a ~/.aliases_`hostname` ]]; then
     source ~/.aliases_`hostname`
 fi
 
+if [[ -a ~/.aliases.local ]]; then
+    source ~/.aliases.local
+fi
