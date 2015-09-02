@@ -24,3 +24,5 @@ graphical/.config/openbox/autostart
 *.orig
 
 bin/local/
+
+.ropeproject/

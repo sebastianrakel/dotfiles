@@ -12,6 +12,7 @@ def create_arguments():
     group.add_argument('--tools', help='configfiles for tools like ssh', action='store_true')
     group.add_argument('--fonts', help='fonts for user', action='store_true')
     group.add_argument('--bin', help='binaries/scripts', action='store_true')
+    group.add_argument('--jetbrains', help='jetbrains ide settings', action='store_true')
 
     group = parser.add_argument_group('output')
     group.add_argument('--print', help='only print link command', action='store_true')
@@ -44,7 +45,6 @@ def get_links():
 
         links = dict(list(links.items()) + list(current_links.items()))
         skipped_links = dict(list(skipped_links.items()) + list(current_skipped_links.items()))
-
 
     if args.terminal:
         terminal_dir = os.path.join(SCRIPT_DIR, 'terminal')
