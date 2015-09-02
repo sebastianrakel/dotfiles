@@ -12,6 +12,9 @@
     <location key="#com.intellij.execution.impl.EditConfigurationsDialog.1920.0.1920.1080" x="1920" y="19" />
     <location key="EditParametersPopupWindow.1920.0.1920.1080" x="1920" y="19" />
     <location key="Vcs.Push.Dialog.1920.0.1920.1080" x="1920" y="19" />
+    <location key="FileChooserDialogImpl.0.0.1920.1080" x="0" y="19" />
+    <location key="WELCOME_SCREEN.0.0.1920.1080" x="958" y="519" />
+    <location key="SettingsEditor.0.0.1920.1080" x="0" y="19" />
     <size key="FileChooserDialogImpl.1920.0.1920.1080" width="1916" height="1057" />
     <size key="com.intellij.ide.util.TipDialog.1920.0.1920.1080" width="1916" height="1057" />
     <size key="GridCell.Tab.0.left.1920.0.1920.1080" width="1221" height="208" />
@@ -22,7 +25,7 @@
     <size key="GridCell.Tab.1.center.1920.0.1920.1080" width="1221" height="293" />
     <size key="GridCell.Tab.1.right.1920.0.1920.1080" width="1221" height="293" />
     <size key="GridCell.Tab.1.bottom.1920.0.1920.1080" width="1221" height="293" />
-    <size key="SettingsEditor.1920.0.1920.1080" width="1916" height="1057" />
+    <size key="SettingsEditor.1920.0.1920.1080" width="1916" height="1038" />
     <size key="#xdebugger.evaluate.1920.0.1920.1080" width="1916" height="1057" />
     <size key="CommitChangelistDialog2.1920.0.1920.1080" width="1916" height="1057" />
     <size key="VCS.ChangelistChooser.1920.0.1920.1080" width="1916" height="1057" />
@@ -31,5 +34,7 @@
     <size key="#com.intellij.execution.impl.EditConfigurationsDialog.1920.0.1920.1080" width="1916" height="1057" />
     <size key="EditParametersPopupWindow.1920.0.1920.1080" width="1916" height="1057" />
     <size key="Vcs.Push.Dialog.1920.0.1920.1080" width="1916" height="1057" />
+    <size key="FileChooserDialogImpl.0.0.1920.1080" width="1916" height="1038" />
+    <size key="SettingsEditor.0.0.1920.1080" width="1916" height="1038" />
   </component>
 </application>

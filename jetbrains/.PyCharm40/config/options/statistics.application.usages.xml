@@ -4,17 +4,20 @@
       <project id="models.py" values="DEFAULT" collectionTime="1439934813130" />
       <project id="py-futev-lib" values="DEFAULT" collectionTime="1440697077314" />
       <project id="HodorMessaging" values="DEFAULT" collectionTime="1440693119706" />
+      <project id="dotfiles" values="DEFAULT" collectionTime="1441183517379" />
       <project id="hodor" values="DEFAULT" collectionTime="1441142518369" />
     </group>
     <group name="module type">
       <project id="models.py" values="PYTHON_MODULE" collectionTime="1439934813108" />
       <project id="py-futev-lib" values="PYTHON_MODULE" collectionTime="1440697077232" />
       <project id="HodorMessaging" values="PYTHON_MODULE" collectionTime="1440693119383" />
+      <project id="dotfiles" values="PYTHON_MODULE" collectionTime="1441183517278" />
       <project id="hodor" values="PYTHON_MODULE" collectionTime="1441142518297" />
     </group>
     <group name="vcs">
       <project id="py-futev-lib" values="Git" collectionTime="1440697077232" />
       <project id="HodorMessaging" values="Git" collectionTime="1440693119382" />
+      <project id="dotfiles" values="Git" collectionTime="1441183517278" />
       <project id="hodor" values="Git" collectionTime="1441142518297" />
     </group>
     <group name="run-configuration-type">
@@ -27,19 +30,21 @@
     </group>
     <group name="file-type">
       <project id="models.py" values="UNKNOWN,Python" collectionTime="1439934813127" />
-      <project id="py-futev-lib" values="Git file,XML,ARCHIVE,UNKNOWN,PLAIN_TEXT,Python" collectionTime="1440697077239" />
-      <project id="HodorMessaging" values="UNKNOWN,XML,PLAIN_TEXT,C++,JSON,Git file,Python,ReST" collectionTime="1440693119430" />
-      <project id="hodor" values="JavaScript,SourceMap,UNKNOWN,PLAIN_TEXT,XML,HTML,Images,Python,ReST,Less,C++,SCSS,JSCS,JSON,Git file,Locale,CSS,JSHint" collectionTime="1441142518304" />
+      <project id="py-futev-lib" values="UNKNOWN,PLAIN_TEXT,XML,Python,ARCHIVE,Git file" collectionTime="1440697077239" />
+      <project id="HodorMessaging" values="JSON,XML,UNKNOWN,Python,PLAIN_TEXT,Git file,ReST,C++" collectionTime="1440693119430" />
+      <project id="dotfiles" values="UNKNOWN,C++,CSS,BuildoutCfg,Ini,PLAIN_TEXT,ARCHIVE,Git file,CoffeeScript,Python,ReST,Erlang,XML,HTML,YAML,Images,JavaScript" collectionTime="1441183517287" />
+      <project id="hodor" values="ReST,SourceMap,CSS,JSON,UNKNOWN,XML,Images,JSHint,Python,JSCS,Locale,C++,Less,Git file,JavaScript,HTML,SCSS,PLAIN_TEXT" collectionTime="1441142518304" />
     </group>
     <group name="py-packages">
       <project id="py-futev-lib" values="pika" collectionTime="1440697077312" />
-      <project id="HodorMessaging" values="six,irc,more-itertools,jaraco.context,inflect,jaraco.apt,tempora,jaraco.itertools,jaraco.text,jaraco.collections,zc.lockfile,pika,yg.lockfile,wheel,jaraco.functools,jaraco.logging,jaraco.timing,jaraco.classes" collectionTime="1440693119529" />
-      <project id="hodor" values="cffi,psycopg2,pycparser,wheel,Django" collectionTime="1441142518369" />
+      <project id="HodorMessaging" values="wheel,jaraco.logging,jaraco.apt,yg.lockfile,jaraco.classes,inflect,tempora,irc,six,more-itertools,pika,jaraco.collections,jaraco.text,zc.lockfile,jaraco.context,jaraco.functools,jaraco.timing,jaraco.itertools" collectionTime="1440693119529" />
+      <project id="hodor" values="psycopg2,pycparser,Django,wheel,cffi" collectionTime="1441142518369" />
     </group>
     <group name="py-interpreter">
       <project id="models.py" values="Python 3.4.3" collectionTime="1439934813128" />
       <project id="py-futev-lib" values="Python 3.4.3" collectionTime="1440697077240" />
       <project id="HodorMessaging" values="Python 3.4.3" collectionTime="1440693119434" />
+      <project id="dotfiles" values="Python 3.4.3" collectionTime="1441183517290" />
       <project id="hodor" values="Python 3.4.3" collectionTime="1441142518304" />
     </group>
     <group name="frameworks">
@@ -49,6 +54,7 @@
       <project id="models.py" values="Project,Project" collectionTime="1439934813130" />
       <project id="py-futev-lib" values="Project,Project" collectionTime="1440697077314" />
       <project id="HodorMessaging" values="Project,Project" collectionTime="1440693119706" />
+      <project id="dotfiles" values="Project,Project" collectionTime="1441183517379" />
       <project id="hodor" values="Project,Project" collectionTime="1441142518369" />
     </group>
   </component>
@@ -60,8 +66,9 @@
       <entry feature="execute.PythonConfigurationType.Run" count="48" />
       <entry feature="ide.settings.HTML" count="1" />
       <entry feature="ide.settings.Project_Interpreter" count="1" />
-      <entry feature="ideaapp.started" count="11" />
-      <entry feature="welcome.screen.WelcomeScreen.OpenDirectoryProject" count="4" />
+      <entry feature="ideaapp.started" count="13" />
+      <entry feature="welcome.screen.WelcomeScreen.Configure" count="2" />
+      <entry feature="welcome.screen.WelcomeScreen.OpenDirectoryProject" count="5" />
     </counts>
   </component>
 </application>

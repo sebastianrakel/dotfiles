@@ -1,0 +1,8 @@
+<application>
+  <component name="PropertiesComponent">
+    <property name="log.debug.categories" value="" />
+    <property name="DefaultHtmlDoctype.MigrateToHtml5" value="true" />
+    <property name="DefaultHtmlDoctype.Refreshed" value="1" />
+    <property name="installation.uid" value="57085b13-3fcb-458e-bf48-baca01789ec4" />
+  </component>
+</application>
