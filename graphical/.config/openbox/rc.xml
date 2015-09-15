@@ -317,9 +317,9 @@
       <action name="Execute">
         <startupnotify>
           <enabled>true</enabled>
-          <name>spacefm</name>
+          <name>pcmanfm</name>
         </startupnotify>
-        <command>spacefm</command>
+        <command>pcmanfm</command>
       </action>
     </keybind>
     <keybind key="W-Return">
