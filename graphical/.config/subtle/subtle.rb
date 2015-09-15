@@ -243,8 +243,9 @@ tag "messenger" do
 end
 
 tag "remote" do
-  match "rdesktop"
+  match "rdesktop|remmina"
   gravity :center
+  float false
 end
 
 tag "editor" do
