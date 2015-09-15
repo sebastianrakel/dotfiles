@@ -1,0 +1,5 @@
+compton &
+plank &
+
+conky -c ~/.config/conky/conkyrc_workstation
+
