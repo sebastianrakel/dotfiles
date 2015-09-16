@@ -30,7 +30,7 @@ default_outline_color blue
 
 alignment top_left
 
-gap_x 1670
+gap_x 1600
 gap_y 40
 
 no_buffers yes
@@ -39,11 +39,17 @@ cpu_avg_samples 6
 net_avg_samples 6
 override_utf8_locale no
 
+# lua_load ~/.config/conky/clock_rings.lua 
+# lua_draw_hook_pre clock_rings
+
 TEXT
-${alignc -35}${font DejaVu Mono:weight=ExtraLight:size=40}${time %H:%M}${font}                 
+${alignc 20}${font DejaVu Mono:weight=ExtraLight:size=40}${time %H:%M}${font}                 
 
-${alignc}${font DejaVu Mono:weight=ExtraLight:size=14}${time %A %B %d}${font}
+${font DejaVu Mono:weight=ExtraLight:size=14}${time %A %B %d}${font}
 
+${alignc}${font DejaVu Mono:weight=ExtraLight:size=14}CPU${font}
+${alignc}$freq_g GHz
 
-
+${alignc}${font DejaVu Mono:weight=ExtraLight:size=14}RAM${font}
+${alignc}$mem/$memmax - $memperc% 
 
