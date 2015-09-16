@@ -358,6 +358,33 @@
         <command>~/.bin/rofi-extension/rofi-extension.sh powercontrol</command>
       </action>
     </keybind>
+    <keybind key="XF86AudioRaiseVolume">
+      <action name="Execute">
+        <startupnotify>
+          <enabled>true</enabled>
+          <name>Raise Volume</name>
+        </startupnotify>
+        <command>amixer -D pulse sset Master 5%+</command>
+      </action>
+    </keybind>
+    <keybind key="XF86AudioLowerVolume">
+      <action name="Execute">
+        <startupnotify>
+          <enabled>true</enabled>
+          <name>Lower Volume</name>
+        </startupnotify>
+        <command>amixer -D pulse sset Master 5%-</command>
+      </action>
+    </keybind>
+    <keybind key="XF86AudioMute">
+      <action name="Execute">
+        <startupnotify>
+          <enabled>true</enabled>
+          <name>Mute Volume</name>
+        </startupnotify>
+        <command>amixer -D pulse set Master Playback Switch toggle</command>
+      </action>
+    </keybind>
   </keyboard>
   <mouse>
     <dragThreshold>1</dragThreshold>
