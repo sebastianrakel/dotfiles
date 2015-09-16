@@ -349,6 +349,15 @@
         <command>xscreensaver-command --lock</command>
       </action>
     </keybind>
+    <keybind key="W-S-e">
+      <action name="Execute">
+        <startupnotify>
+          <enabled>true</enabled>
+          <name>rofi powercontrol</name>
+        </startupnotify>
+        <command>~/.bin/rofi-extension/rofi-extension.sh powercontrol</command>
+      </action>
+    </keybind>
   </keyboard>
   <mouse>
     <dragThreshold>1</dragThreshold>
