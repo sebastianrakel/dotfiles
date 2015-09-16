@@ -31,7 +31,7 @@
     <!-- with Smart placement on a multi-monitor system, try to place new windows
        on: 'Any' - any monitor, 'Mouse' - where the mouse is, 'Active' - where
        the active window is, 'Primary' - only on the primary monitor -->
-    <primaryMonitor>1</primaryMonitor>
+    <primaryMonitor>Mouse</primaryMonitor>
     <!-- The monitor where Openbox should place popup dialogs such as the
        focus cycling popup, or the desktop switch popup.  It can be an index
        from 1, specifying a particular monitor.  Or it can be one of the
@@ -156,12 +156,12 @@
     <right>0</right>
   </margins>
   <dock>
-    <position>TopLeft</position>
+    <position>BottomLeft</position>
     <!-- (Top|Bottom)(Left|Right|)|Top|Bottom|Left|Right|Floating -->
     <floatingX>0</floatingX>
     <floatingY>0</floatingY>
-    <noStrut>no</noStrut>
-    <stacking>Above</stacking>
+    <noStrut>yes</noStrut>
+    <stacking>Normal</stacking>
     <!-- 'Above', 'Normal', or 'Below' -->
     <direction>Vertical</direction>
     <!-- 'Vertical' or 'Horizontal' -->

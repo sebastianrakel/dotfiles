@@ -1,5 +1,6 @@
 compton &
 plank &
 
-conky -c ~/.config/conky/conkyrc_workstation
+conky -dc ~/.config/conky/conkyrc_workstation
 
+trayer --SetDockType true --transparent true --widthtype request --heighttype pixel --height 32 --edge bottom --align left --alpha 255 --expand true --SetDockType true &
