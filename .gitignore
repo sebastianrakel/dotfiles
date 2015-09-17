@@ -32,4 +32,11 @@ jetbrains/*/config/tasks
 jetbrains/*/config/options/dimensions.xml
 jetbrains/*/config/options/recentProjectDirectories.xml
 jetbrains/*/config/options/statistics.application.usages.xml
+jetbrains/*/config/options/feature.usage.statistics.xml
+jetbrains/*/config/options/jdk.table.xml
+jetbrains/*/config/options/runner.layout.xml
+jetbrains/*/config/options/packages.xml
+jetbrains/*/config/options/runner.layout.xml
+jetbrains/*/config/options/window.manager.xml
+
 
