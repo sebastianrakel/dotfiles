@@ -5,4 +5,5 @@
 
 #exec subtle
 # exec subtle &> $HOME/subtle-$(date +"%F-%H-%M").log
-exec startxfce4
+# exec startxfce4
+exec openbox-session
