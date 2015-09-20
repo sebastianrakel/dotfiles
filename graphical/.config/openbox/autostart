@@ -3,4 +3,5 @@ plank &
 
 conky -dc ~/.config/conky/conkyrc_workstation
 
-trayer --SetDockType true --transparent true --widthtype request --heighttype pixel --height 32 --edge bottom --align left --alpha 255 --expand true --SetDockType true &
+# trayer --SetDockType --transparent true --widthtype request --heighttype pixel --height 16 --edge bottom --align left --alpha 255 --expand true --SetDockType true &
+stalonetray -t --dockapp-mode simple -d none 
