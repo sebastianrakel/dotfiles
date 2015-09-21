@@ -1,5 +1,6 @@
 #!/bin/bash
 
+profile=$HOME/.profile
 localxprofile=$HOME/.xprofile.local
 userresources=$HOME/.Xresources
 usermodmap=$HOME/.Xmodmap
@@ -41,6 +42,10 @@ setxkbmap de
 
 if [ -e "$localxprofile" ] ; then
     source "$localxprofile"
+fi
+
+if [ -e "$profile" ] ; then
+    source "$profile"
 fi
 
 cd $HOME
