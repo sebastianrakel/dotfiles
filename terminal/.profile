@@ -6,8 +6,15 @@ if hash ruby 2>/dev/null; then
     PATH="`ruby -e 'print Gem.user_dir'`/bin:$PATH"
 fi
 
-export GOPATH=~/go
+PATH="$HOME/.node_modules/bin:$PATH"
+export npm_config_prefix=~/.node_modules
 
-PATH=$PATH:~/go/bin
-PATH=$PATH:~/.bin
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+
+export GOPATH="$HOME/go"
+
+PATH="$HOME/go/bin:$PATH"
+PATH="$HOME/.bin:$PATH"
+PATH="$HOME/.bin/local:$PATH"
 

@@ -18,3 +18,4 @@ if [ -z "$TMUX" ]; then
 fi
 
 source ~/.profile
+
