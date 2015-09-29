@@ -9,10 +9,6 @@ compinit -i
 
 # check dotfiles version
 # dotfiles/checkStatus.sh ~/dotfiles/
-if hash ruby 2>/dev/null; then
-    PATH="`ruby -e 'print Gem.user_dir'`/bin:$PATH"
-fi
-
 if [ -z "$TMUX" ]; then
     export TERM=xterm-256color
 fi

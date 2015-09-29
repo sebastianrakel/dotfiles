@@ -77,9 +77,10 @@ bindsym XF86AudioPlay exec mpc toggle
 bindsym XF86AudioNext exec mpc next
 bindsym XF86AudioPrev exec mpc prev
 
-bindsym XF86AudioRaiseVolume exec ~/dotfiles/pulse_volume_control.sh raise
-bindsym XF86AudioLowerVolume exec ~/dotfiles/pulse_volume_control.sh lower
-bindsym XF86AudioMute exec ~/dotfiles/pulse_volume_control.sh mute
+
+bindsym XF86AudioRaiseVolume exec amixer -D pulse sset Master 5%+
+bindsym XF86AudioLowerVolume exec amixer -D pulse sset Master 5%-
+bindsym XF86AudioMute exec amixer -D pulse set Master Playback Switch toggle
 
 #########
 # MODES #
@@ -134,6 +135,8 @@ assign [class="Termite"] 1:main
 assign [class="Aurora|Firefox|Navigator|Opera|Chromium|dwb|Thunderbird|Google-chrome"] 2:www
 assign [class="Spotify"] 3:media
 assign [class="jetbrains-*"] 4:dev
+assign [class="Virt-manager"] 5:virt
+assign [class="Remmina"] 6:remote
 assign [class="Steam"] 8:games
 
 for_window [instance="Google-chrome \(~\/.config\/google-chrome-media\)"] move container to workspace 3:media
