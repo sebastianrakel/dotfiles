@@ -12,7 +12,7 @@
     <property name="installation.uid" value="729f2174-dae1-4592-be7f-2b1f8b2ffbd7" />
     <property name="fileTypeChangedCounter" value="1" />
     <property name="PyCharm.initialConfigurationShown" value="true" />
-    <property name="file.chooser.recent.files" value="$USER_HOME$/dotfiles&#10;/home/sebastian/Projects/py-futev-lib&#10;/home/sebastian/Projects/HodorMessaging/IRC/BotBot.py&#10;/home/sebastian/Projects/HodorMessaging&#10;/home/sebastian/Projects/rackmonkey/models.py&#10;/home/sebastian/Projects/hodor" />
+    <property name="file.chooser.recent.files" value="$USER_HOME$/Projects/docker-registry-frontend&#10;/home/sebastian/dotfiles&#10;/home/sebastian/Projects/py-futev-lib&#10;/home/sebastian/Projects/HodorMessaging/IRC/BotBot.py&#10;/home/sebastian/Projects/HodorMessaging&#10;/home/sebastian/Projects/rackmonkey/models.py&#10;/home/sebastian/Projects/hodor" />
     <property name="toolwindow.stripes.buttons.info.shown" value="true" />
     <property name="DeploymentNotificationsComponent.WarnDisplayed.Java7&amp;Windows7FTPIssue" value="false" />
     <property name="lastTip" value="1" />
@@ -27,6 +27,7 @@
     <property name="ExpandEnvironmentPanel" value="true" />
     <property name="ExpandBeforeRunStepsPanel" value="true" />
     <property name="RunConfigurable.dividerProportion" value="0.3" />
-    <property name="OpenOrAttachDialog.OpenMode" value="replace" />
+    <property name="OpenOrAttachDialog.OpenMode" value="new" />
+    <property name="TEMPLATES_FILTER_HISTORY" value="pyth&#10;virt" />
   </component>
 </application>

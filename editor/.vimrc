@@ -16,6 +16,7 @@ NeoBundle 'scrooloose/nerdcommenter'
 NeoBundle 'bling/vim-airline'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'ajh17/Spacegray.vim'
+NeoBundle 'lsdr/monokai'
 NeoBundle 'davidhalter/jedi-vim'
 
 call neobundle#end()
@@ -53,7 +54,6 @@ set guifont=yancfont\ 12px
 filetype on
 filetype plugin indent on
 
-syntax enable " enable syntax highlighting (previously syntax on).
 
 map ,f :set foldmethod=indent<cr>zM<cr>
 map ,F :set foldmethod=manual<cr>zR<cr>
@@ -76,6 +76,8 @@ cmap w!! w !sudo tee > /dev/null %
 
 " COLORSCHEMES
 colorscheme spacegray
+" colorscheme monokai
+syntax enable " enable syntax highlighting (previously syntax on).
 
 " NERDTree Configuration
 map <C-n> :NERDTreeToggle<CR>
@@ -104,6 +106,9 @@ let g:neocomplete#sources#syntax#min_keyword_length = 3
 
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
+" Set FileType
+au BufRead,BufNewFile *.pp   setfiletype puppet
+
 " autocomplete stuff
 if has("autocmd") && exists("+omnifunc")
     autocmd Filetype *
@@ -117,3 +122,6 @@ if has("autocmd") && exists("+omnifunc")
     autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 endif
 
+" Puppetfiles
+autocmd FileType puppet
+    \   setlocal tabstop=2 softtabstop=2 shiftwidth=2
