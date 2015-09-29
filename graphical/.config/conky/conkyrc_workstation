@@ -53,7 +53,7 @@ ${execpi 100 ~/.config/conky/conky_cpu.sh}
 ${alignc}${font DejaVu Mono:weight=ExtraLight:size=14}RAM - $memperc% ${font}
 ${alignc}$mem/$memmax
 
-# ${if_smapi_bat_installed 0}
+${if_smapi_bat_installed 0}
 ${alignc}${font DejaVu Mono:weight=ExtraLight:size=14}BAT - $battery_percent% ${font}
 ${alignc}${battery_time}
-# ${endif}
+${endif}
