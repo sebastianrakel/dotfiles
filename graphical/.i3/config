@@ -136,7 +136,7 @@ assign [class="Termite"] 1:main
 assign [class="Aurora|Firefox|Navigator|Opera|Chromium|dwb|Thunderbird|Google-chrome"] 2:www
 assign [class="Spotify"] 3:media
 assign [class="jetbrains-*|subl3"] 4:dev
-assign [class="Virt-manager"] 5:virt
+assign [class="Virt-manager|VirtualBox"] 5:virt
 assign [class="Remmina"] 6:remote
 assign [class="Steam"] 8:games
 
