@@ -1,5 +1,7 @@
 #!/bin/bash
 
+localprofile=$HOME/.profile.local
+
 export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=setting'
 
 if hash ruby 2>/dev/null; then
@@ -17,4 +19,10 @@ export GOPATH="$HOME/go"
 PATH="$HOME/go/bin:$PATH"
 PATH="$HOME/.bin:$PATH"
 PATH="$HOME/.bin/local:$PATH"
+
+export VAGRANT_DEFAULT_PROVIDER=libvirt
+
+if [ -e "$localprofile" ] ; then
+    source "$localprofile"
+fi
 
