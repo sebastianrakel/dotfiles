@@ -75,7 +75,7 @@ nnoremap <C-H> <C-W><C-H>
 cmap w!! w !sudo tee > /dev/null %
 
 " COLORSCHEMES
-colorscheme spacegray
+" colorscheme spacegray
 " colorscheme monokai
 syntax enable " enable syntax highlighting (previously syntax on).
 
