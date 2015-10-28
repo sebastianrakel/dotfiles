@@ -18,6 +18,7 @@ NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'ajh17/Spacegray.vim'
 NeoBundle 'lsdr/monokai'
 NeoBundle 'davidhalter/jedi-vim'
+NeoBundle 'chriskempson/base16-vim'
 
 call neobundle#end()
 
@@ -50,6 +51,8 @@ set guioptions-=T "remove toolbar
 set guioptions-=r "remove right-hand scroll bar
 set guioptions-=L "remove left-hand scroll bar
 set guifont=yancfont\ 12px
+
+let base16colorspace=256
 
 filetype on
 filetype plugin indent on
