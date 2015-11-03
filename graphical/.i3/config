@@ -133,7 +133,7 @@ bindsym $mod+r mode "resize"
 ###########
 
 assign [class="Termite"] 1:main
-assign [class="Aurora|Firefox|Navigator|Opera|Chromium|dwb|Thunderbird|Google-chrome"] 2:www
+assign [class="Aurora|Firefox|Navigator|Opera|Chromium|dwb|Thunderbird|google-chrome"] 2:www
 assign [class="Spotify"] 3:media
 assign [class="jetbrains-*|subl3"] 4:dev
 assign [class="Virt-manager|VirtualBox"] 5:virt
