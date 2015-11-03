@@ -140,7 +140,7 @@ assign [class="Virt-manager|VirtualBox"] 5:virt
 assign [class="Remmina"] 6:remote
 assign [class="Steam"] 8:games
 
-for_window [instance="Google-chrome \(~\/.config\/google-chrome-media\)"] move container to workspace 3:media
+for_window [instance="google-chrome \(~\/.config\/google-chrome-media\)"] move container to workspace 3:media
 for_window [instance="spotify"] move container to workspace 3:media
 
 #######
