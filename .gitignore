@@ -39,4 +39,5 @@ jetbrains/*/config/options/packages.xml
 jetbrains/*/config/options/runner.layout.xml
 jetbrains/*/config/options/window.manager.xml
 
-
+graphical/.config/i3/config
+graphical/.config/i3blocks/config
