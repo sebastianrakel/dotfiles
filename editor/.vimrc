@@ -118,8 +118,16 @@ if has("autocmd") && exists("+omnifunc")
         \   if &omnifunc == "" |
         \       setlocal omnifunc=syntaxcomplete#Complete |
         \   endif
-    autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-    autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+    autocmd FileType css,scss
+        \   setlocal omnifunc=csscomplete#CompleteCSS
+            \        tabstop=2    
+            \        softtabstop=2 
+            \        shiftwidth=2
+    autocmd FileType html,markdown 
+        \   setlocal omnifunc=htmlcomplete#CompleteTag 
+            \        tabstop=2 
+            \        softtabstop=2 
+            \        shiftwidth=2
     autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
     " autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
     autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
