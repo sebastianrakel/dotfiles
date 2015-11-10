@@ -1,0 +1,1 @@
+/home/sebastian/dotfiles/bin/config-merger/config-merger.sh
