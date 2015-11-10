@@ -1,0 +1,4 @@
+[wifi]
+instance=wlp2s0
+interval=10
+
