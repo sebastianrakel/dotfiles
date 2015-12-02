@@ -1,0 +1,88 @@
+.
+├── fb
+├── Inconsolata Bold for Powerline.ttf
+├── Inconsolata-Bold.ttf
+├── Inconsolata for Powerline.ttf
+├── Inconsolata-Regular.ttf
+├── Input
+│   ├── Input-Bold_(InputMonoCondensed-Bold).ttf
+│   ├── Input-BoldItalic_(InputMonoCondensed-BoldItalic).ttf
+│   ├── Input-Italic_(InputMonoCondensed-Italic).ttf
+│   └── Input-Regular_(InputMonoCondensed-Regular).ttf
+├── misc
+│   ├── drift.pcf
+│   ├── fonts.dir
+│   ├── noxis.pcf
+│   ├── terminalpants.bdf
+│   ├── terminalpants.pcf
+│   ├── terminusicons2mono.bdf
+│   ├── terminusicons2.pcf
+│   └── terminusicons.pcf
+├── ohsnap
+│   ├── fonts.dir
+│   ├── fonts.scale
+│   ├── ohsnap6x11b.icons.pcf
+│   ├── ohsnap6x11b.pcf
+│   ├── ohsnap6x11b.psfu
+│   ├── ohsnap6x11r.icons.pcf
+│   ├── ohsnap6x11r.pcf
+│   ├── ohsnap6x11r.psfu
+│   ├── ohsnap6x13b.icons.pcf
+│   ├── ohsnap6x13b.pcf
+│   ├── ohsnap6x13b.psfu
+│   ├── ohsnap6x13r.icons.pcf
+│   ├── ohsnap6x13r.pcf
+│   ├── ohsnap6x13r.psfu
+│   ├── ohsnap7x12b.icons.pcf
+│   ├── ohsnap7x12b.pcf
+│   ├── ohsnap7x12b.psfu
+│   ├── ohsnap7x12r.icons.pcf
+│   ├── ohsnap7x12r.pcf
+│   ├── ohsnap7x12r.psfu
+│   ├── ohsnap7x14b.icons.pcf
+│   ├── ohsnap7x14b.pcf
+│   ├── ohsnap7x14b.psfu
+│   ├── ohsnap7x14r.icons.pcf
+│   ├── ohsnap7x14r.pcf
+│   ├── ohsnap7x14r.psfu
+│   ├── ohsnapu6x11b.pcf
+│   ├── ohsnapu6x11r.pcf
+│   ├── ohsnapu6x13b.pcf
+│   ├── ohsnapu6x13r.pcf
+│   ├── ohsnapu7x12b.pcf
+│   ├── ohsnapu7x12r.pcf
+│   ├── ohsnapu7x14b.pcf
+│   ├── ohsnapu7x14r.pcf
+│   └── README.ohsnap
+├── ProFontWindows.ttf
+├── terminesspowerline
+│   ├── fonts.dir
+│   ├── ter-powerline-x12b.pcf
+│   ├── ter-powerline-x12n.pcf
+│   ├── ter-powerline-x14b.pcf
+│   ├── ter-powerline-x14n.pcf
+│   ├── ter-powerline-x16b.pcf
+│   ├── ter-powerline-x16n.pcf
+│   ├── ter-powerline-x18b.pcf
+│   ├── ter-powerline-x18n.pcf
+│   ├── ter-powerline-x20b.pcf
+│   ├── ter-powerline-x20n.pcf
+│   ├── ter-powerline-x22b.pcf
+│   ├── ter-powerline-x22n.pcf
+│   ├── ter-powerline-x24b.pcf
+│   ├── ter-powerline-x24n.pcf
+│   ├── ter-powerline-x28b.pcf
+│   ├── ter-powerline-x28n.pcf
+│   ├── ter-powerline-x32b.pcf
+│   └── ter-powerline-x32n.pcf
+└── tewi
+    ├── fonts.dir
+    ├── fonts.scale
+    ├── tewi2a-bold-11.bdf
+    ├── tewi2a-normal-11.bdf
+    ├── tewi-bold-11.bdf
+    ├── tewifw-bold-11.bdf
+    ├── tewifw-normal-11.bdf
+    └── tewi-normal-11.bdf
+
+5 directories, 80 files
