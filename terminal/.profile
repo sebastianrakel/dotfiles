@@ -50,7 +50,7 @@ PATH="$HOME/.bin/local:$PATH"
 # Base 16 - Color Switching
 #
 
-BASE16_SHELL="$HOME/.bin/base16-shell/base16-solarized.light.sh"
+BASE16_SHELL="$HOME/.bin/base16-shell/base16-solarized.dark.sh"
 [[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
 
 b16() {
