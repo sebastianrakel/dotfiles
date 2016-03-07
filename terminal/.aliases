@@ -2,6 +2,7 @@ uname_string=`uname`
 
 alias tmux='tmux -2'
 alias g='git'
+alias dd='dd status=progress'
 
 if [[ "$uname_string" == 'OpenBSD' ]]; then
 
