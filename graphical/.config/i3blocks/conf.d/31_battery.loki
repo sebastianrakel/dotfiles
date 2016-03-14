@@ -1,6 +1,11 @@
 [battery]
-label=BAT
+label=BAT-0
 #label=⚡
-#instance=1
+instance=0
 interval=30
 
+[battery]
+label=BAT-1
+#label=⚡
+instance=1
+interval=30
