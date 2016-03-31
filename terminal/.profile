@@ -78,7 +78,7 @@ vim() {
 # Environment
 #
 
-export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=setting'
+export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=lcd'
 export VAGRANT_DEFAULT_PROVIDER=libvirt
 
 #
