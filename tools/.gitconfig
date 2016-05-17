@@ -1,6 +1,7 @@
 [user]
 	email = sebastian@devunit.eu
 	name = Sebastian Rakel
+	signingkey = B9D631B8
 [push]
 	default = simple
 [merge]
@@ -20,3 +21,5 @@
     l = log --graph --pretty=format:'%C(yellow)%h %Cblue%an%Cgreen%d %Cred(%ad) %Creset%s' --date=relative --decorate=short
     pu = push
     pl = pull
+[commit]
+	gpgsign = true
