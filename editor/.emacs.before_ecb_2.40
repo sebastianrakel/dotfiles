@@ -1,0 +1,40 @@
+(require 'package)
+(package-initialize)
+(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+
+(require 'evil)
+(evil-mode 0)
+
+(require 'auto-complete)
+(require 'auto-complete-config)
+(ac-config-default)
+
+(require 'color-theme)
+(require 'color-theme-solarized)
+(color-theme-solarized-dark)
+
+;don't show the startup screen
+(setq inhibit-startup-screen t)
+
+; don't show the menu bar
+(menu-bar-mode -1)
+
+; don't show the tool bar
+(tool-bar-mode -1)
+
+; don't show the scroll bar
+(scroll-bar-mode -1)
+
+(require 'ecb)
+(setq ecb-layout-name "leftright3")
+(setq ecb-show-sources-in-directories-buffer 'always)
+(setq ecb-compile-window-height 6)
+(setq ecb-tip-of-the-day nil)
+(setq ecb-source-path '("~/"))
+
+(ecb-activate)
+
+(global-set-key [f10] 'gud-next)
+(global-set-key [f11] 'gud-step)
+(global-set-key [f5] 'gud-cont)
+(global-set-key [f12] 'gud-break)
