@@ -35,9 +35,9 @@ export NVM_DIR="$HOME/.nvm"
 #
 # Go Lang Settings
 #
-
-export GOPATH="$HOME/go"
-PATH="$HOME/go/bin:$PATH"
+export GOPATH="$HOME/.go"
+PATH="$PATH:$GOPATH/bin"
+export GOBIN=$GOPATH/bin
 
 #
 # Extend Path Variable
