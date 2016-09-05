@@ -39,7 +39,6 @@ feh --bg-center ~/dotfiles/wallpaper/chameleon.jpg
 export BROWSER=google-chrome-stable
 export TERMINAL=termite
 
-setxkbmap de
 
 if [ -e "$localxprofile" ] ; then
     source "$localxprofile"
