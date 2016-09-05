@@ -1,2 +1,2 @@
 #!/bin/bash
-exec google-chrome-stable --user-data-dir=~/.config/google-chrome-media
+exec google-chrome-stable --user-data-dir=/home/sebastian/.config/google-chrome-media
