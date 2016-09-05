@@ -17,5 +17,10 @@
 
 (setq-default indent-tabs-mode nil)
 
-(setq c-default-style "linux"
-      c-basic-offset 4)
+(set-default 'truncate-lines t)
+
+(global-set-key (kbd "<f1>") 'describe-mode)
+
+(fset 'yes-or-no-p 'y-or-n-p)
+
+(set-default-font "foxxx0font")

@@ -3,9 +3,14 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        indent-for-tab-command
+        kill-region
         sh-assignment
         ))
 
 (setq mc/cmds-to-run-once
       '(
+        keyboard-escape-quit
+        upcase-region
+        yaml-electric-backspace
         ))

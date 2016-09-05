@@ -1,8 +1,8 @@
 ; ruby stuff
-(require 'ruby-mode)
 (defun my-ruby-hook()
-  (message "Ruby Mode")
+  (message "Enhanced Ruby Mode")
   (linum-mode 1)
+  (robe-mode)
 )
 
 (add-to-list 'auto-mode-alist

@@ -1,4 +1,5 @@
 (defun my-go-mode-hook ()
+  (linum-mode 1)
   ; Call Gofmt before saving
   (add-hook 'before-save-hook 'gofmt-before-save)
   ; Customize compile command to run go build

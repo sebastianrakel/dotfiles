@@ -9,6 +9,15 @@
 (load "~/.emacs.d/google-go")
 (load "~/.emacs.d/haml")
 (load "~/.emacs.d/multi-cursor")
+(load "~/.emacs.d/c")
+(load "~/.emacs.d/lua")
+(load "~/.emacs.d/helm-settings")
+(load "~/.emacs.d/projectile")
+(load "~/.emacs.d/markdown")
+(load "~/.emacs.d/jenkins")
+(load "~/.emacs.d/groovy")
+; (load "~/.emacs.d/flycheck")
+
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -22,3 +31,4 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+(put 'upcase-region 'disabled nil)

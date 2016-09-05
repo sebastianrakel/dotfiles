@@ -1,0 +1,41 @@
+which pip
+ls
+cd Projects/
+ls
+cd vhost-api/
+ls
+git checkout develop
+git branch
+git checkout devel
+git pull
+ls
+bundle update
+bundle install
+bundle install
+ls
+docker build -t dockerhub.lcs-landwehr.de/etcd .
+docker build -t dockerhub.lcs-landwehr.de/etcd .
+docker build -t dockerhub.lcs-landwehr.de/etcd .
+docker build -t dockerhub.lcs-landwehr.de/etcd .
+docker build -t dockerhub.lcs-landwehr.de/etcd .
+docker run -ti --rm dockerhub.lcs-landwehr.de/etcd
+docker build -t dockerhub.lcs-landwehr.de/etcd .
+docker run -ti --rm dockerhub.lcs-landwehr.de/etcd
+docker run -ti --rm -p 2379:2379 dockerhub.lcs-landwehr.de/etcd
+cd ~/Projects/workspace-switcher/
+ls
+python workspace-switcher.py 
+python workspace-switcher.py 
+python workspace-switcher.py 
+python workspace-switcher.py 
+python workspace-switcher.py 
+python workspace-switcher.py 
+python workspace-switcher.py 
+python workspace-switcher.py 
+python workspace-switcher.py 
+python workspace-switcher.py 
+python workspace-switcher.py 
+python workspace-switcher.py 
+python workspace-switcher.py 
+python workspace-switcher.py 
+python workspace-switcher.py 
