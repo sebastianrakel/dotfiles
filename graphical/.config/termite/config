@@ -2,13 +2,11 @@
 resize_grip = false
 scroll_on_output = false
 scroll_on_keystroke = true
-audible_bell = false
-visible_bell = false
 mouse_autohide = false
 allow_bold = true
-# font = yancfont 12px 
+font = foxxx0font
 # font = Input 11 
-font = Terminus 8
+# font = Terminus 8
 dynamic_title = true
 urgent_on_bell = true
 clickable_url = true

@@ -50,7 +50,7 @@ PATH="$HOME/.bin/local:$PATH"
 # Base 16 - Color Switching
 #
 
-BASE16_SHELL="$HOME/.bin/base16-shell/base16-solarized.dark.sh"
+BASE16_SHELL="$HOME/.bin/base16-shell/base16-colors.dark.sh"
 [[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
 
 b16() {
@@ -80,6 +80,13 @@ vim() {
 
 export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=lcd'
 export VAGRANT_DEFAULT_PROVIDER=libvirt
+
+
+ANDROID_SDK_HOME="$HOME/Android/Sdk"
+if [ -d "$ANDROID_SDK_HOME/platform-tools" ]; then
+    PATH="$ANDROID_SDK_HOME/platform-tools:$PATH"
+fi
+
 
 #
 # Load local settings

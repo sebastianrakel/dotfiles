@@ -1,3 +1,3 @@
 #!/bin/bash
 
-env WORKSPACE=testi
+python ${HOME}/Projects/workspace-switcher/workspace-switcher.py

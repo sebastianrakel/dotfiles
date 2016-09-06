@@ -1,1 +1,1 @@
-/home/sebastian/dotfiles/bin/config-merger/config-merger.py
+config-merger/config-merger.py
