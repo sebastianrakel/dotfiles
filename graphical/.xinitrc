@@ -5,7 +5,6 @@
 
 #exec subtle
 # exec subtle &> $HOME/subtle-$(date +"%F-%H-%M").log
-# exec startxfce4
 # exec openbox-session
 # exec herbstluftwm --locked
 exec i3
