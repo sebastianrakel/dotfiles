@@ -24,3 +24,19 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 
 (set-default-font "foxxx0font")
+
+(global-set-key (kbd "M-x") 'helm-M-x)
+
+(defun my-set-title()
+  (let ((open-file-buffer nil) (file-buffer-count 0))
+      (dolist (value (buffer-list))
+        (if (not (equal (buffer-file-name value) nil))
+            (progn
+              (setq open-file-buffer value)
+              (setq file-buffer-count (+ file-buffer-count 1))))
+        (if (equal file-buffer-count 1)
+            (progn
+              (let ((current-directory-name (file-name-nondirectory (directory-file-name (file-name-directory (buffer-file-name open-file-buffer))))))
+                (set-frame-name current-directory-name)))))))
+
+(add-hook 'find-file-hook 'my-set-title)
