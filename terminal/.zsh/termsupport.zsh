@@ -17,11 +17,11 @@ function title {
 ZSH_THEME_TERM_TAB_TITLE_IDLE="%15<..<%~%<<" #15 char left truncated PWD
 ZSH_THEME_TERM_TITLE_IDLE="%n@%m: %~"
 
-function precmd {
+function title_precmd {
     title $ZSH_THEME_TERM_TAB_TITLE_IDLE $ZSH_THEME_TERM_TITLE_IDLE
 }
 
-function preexec {
+function title_preexec {
     emulate -L zsh
     setopt extended_glob
     
@@ -30,3 +30,6 @@ function preexec {
 
     title '$CMD' '%100>...>$LINE%<<'
 }
+
+add-zsh-hook preexec title_preexec
+add-zsh-hook precmd title_precmd
