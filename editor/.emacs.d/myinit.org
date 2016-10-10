@@ -1,0 +1,145 @@
+* Common Stuff
+  * Interface
+    Hide Startup Message, Toolbar, Scrollbar and Menubar
+    #+BEGIN_SRC emacs-lisp
+      (setq inhibit-startup-message t)
+      (tool-bar-mode -1)
+      (menu-bar-mode -1)
+      (scroll-bar-mode -1)
+    #+END_SRC
+  * Font Settings
+    #+BEGIN_SRC emacs-lisp
+      (set-default-font "foxxx0font")
+    #+END_SRC
+  * Theme
+    #+BEGIN_SRC emacs-lisp
+      (use-package base16-theme
+        :ensure t)
+      (load-theme 'base16-default-dark t)
+    #+END_SRC
+    
+  * Basic Settings
+    #+BEGIN_SRC emacs-lisp
+      (fset 'yes-or-no-p 'y-or-n-p)
+      (setq-default indent-tabs-mode nil)
+      (set-default 'truncate-lines t)
+
+      (setq backup-directory-alist
+            `((".*" . ,temporary-file-directory)))
+      (setq auto-save-file-name-transforms
+            `((".*" ,temporary-file-directory t)))
+
+    #+END_SRC
+  * Global Keybindings  
+    #+BEGIN_SRC emacs-lisp
+      (global-set-key (kbd "<f1>") 'describe-mode) 
+      (global-set-key (kbd "<f5>") 'revert-buffer)
+      (global-set-key (kbd "M-x") 'helm-M-x)
+      (global-set-key (kbd "C-x g") 'magit-status)
+      (global-set-key (kbd "<f4>") 'helm-buffers-list)
+      (global-set-key (kbd "<M-f1>") 'helm-dash)
+      (global-set-key (kbd "C-<f6>") 'compile)
+      (global-set-key (kbd "<f6>") 'recompile)
+    #+END_SRC
+
+* Autocomplete
+  #+BEGIN_SRC emacs-lisp
+    (use-package auto-complete
+      :ensure t
+      :init 'my-ac-init)
+
+    (defun my-ac-init()
+      (ac-config-default)
+      (global-auto-complete-mode t))
+
+  #+END_SRC
+
+* Org Mode
+#+BEGIN_SRC emacs-lisp
+  (use-package org-bullets
+    :ensure t
+    :config
+    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+#+END_SRC
+  
+* Helm
+#+BEGIN_SRC emacs-lisp
+  (use-package helm
+    :ensure t)
+#+END_SRC
+
+* Powerline
+#+BEGIN_SRC emacs-lisp
+  (use-package powerline
+    :ensure t)
+  (powerline-default-theme)
+#+END_SRC
+
+* Magit
+#+BEGIN_SRC emacs-lisp
+  (use-package magit
+    :ensure t)
+#+END_SRC
+  
+* Markdown
+#+BEGIN_SRC emacs-lisp
+  (defun my-gfm-hook()
+    (message "Github Markdown Mode")
+    (local-set-key (kbd "<f5>") 'markdown-live-preview-mode))
+
+  (add-to-list 'auto-mode-alist '("\\.md\\'" . gfm-mode))
+
+  (add-hook 'gfm-mode-hook 'my-gfm-hook)
+#+END_SRC
+* Programming
+  * Common
+    #+BEGIN_SRC emacs-lisp
+      (defun my-prog-hook()
+        (linum-mode 1)
+        (rainbow-delimiters-mode)
+        (smartparens-mode))
+
+      (add-hook 'prog-mode-hook 'my-prog-hook)
+    #+END_SRC
+  * Flycheck
+    #+BEGIN_SRC emacs-lisp
+      (use-package flycheck
+        :ensure t
+        :init
+        (global-flycheck-mode t))
+    #+END_SRC
+  * Google Golang
+    #+BEGIN_SRC emacs-lisp
+      (defun my-go-mode-hook ()
+        ; Call Gofmt before saving
+        (add-hook 'before-save-hook 'gofmt-before-save)
+
+        ; Customize compile command to run go build
+        (if (not (string-match "go" compile-command))
+            (set (make-local-variable 'compile-command)
+                 "go build -v -gcflags '-N -l' && go test -v && go vet"))
+        
+        ; Godef jump key binding
+        (local-set-key (kbd "M-.") 'godef-jump))
+       
+      (add-hook 'go-mode-hook 'my-go-mode-hook)
+
+      (with-eval-after-load 'go-mode
+      (require 'go-autocomplete))
+    #+END_SRC
+  * Python
+    #+BEGIN_SRC emacs-lisp
+      (use-package jedi
+        :ensure t
+        :init
+        (add-hook 'python-mode-hook 'jedi:setup)
+        (add-hook 'python-mode-hook 'jedi:ac-setup))
+
+    #+END_SRC
+* Miscellaneous
+#+BEGIN_SRC emacs-lisp
+  (use-package rainbow-delimiters
+    :ensure t)
+  (use-package smartparens
+    :ensure t)
+#+END_SRC

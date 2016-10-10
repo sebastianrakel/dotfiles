@@ -1,9 +1,11 @@
 ;;; epl-autoloads.el --- automatically extracted autoloads
 ;;
 ;;; Code:
-(add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
+(add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
-;;;### (autoloads nil nil ("epl.el") (22413 6812 859211 283000))
+;;;### (autoloads nil nil ("../../../../../.emacs.d/elpa/epl-20150517.433/epl-autoloads.el"
+;;;;;;  "../../../../../.emacs.d/elpa/epl-20150517.433/epl.el") (22523
+;;;;;;  40639 172782 541000))
 
 ;;;***
 

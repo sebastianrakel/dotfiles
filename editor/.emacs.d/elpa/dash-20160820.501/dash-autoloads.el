@@ -1,9 +1,11 @@
 ;;; dash-autoloads.el --- automatically extracted autoloads
 ;;
 ;;; Code:
-(add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
+(add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
-;;;### (autoloads nil nil ("dash.el") (22497 10581 390532 705000))
+;;;### (autoloads nil nil ("../../../../../.emacs.d/elpa/dash-20160820.501/dash-autoloads.el"
+;;;;;;  "../../../../../.emacs.d/elpa/dash-20160820.501/dash.el")
+;;;;;;  (22523 38932 916150 720000))
 
 ;;;***
 
