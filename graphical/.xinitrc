@@ -1,7 +1,7 @@
 #!/bin/sh
 
-[ -f /etc/xprofile ] && source /etc/xprofile
-[ -f ~/.xprofile ] && source ~/.xprofile
+[ -f /etc/xprofile ] && . /etc/xprofile
+[ -f ~/.xprofile ] && . ~/.xprofile
 
 #exec subtle
 # exec subtle &> $HOME/subtle-$(date +"%F-%H-%M").log

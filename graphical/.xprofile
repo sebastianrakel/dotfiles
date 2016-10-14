@@ -41,11 +41,11 @@ export TERMINAL=termite
 
 
 if [ -f $localxprofile ] ; then
-    source $localxprofile
+    . $localxprofile
 fi
 
 if [ -f $profile ] ; then
-    source $profile
+    . $profile
 fi
 
 cd $HOME
