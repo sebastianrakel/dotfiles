@@ -188,4 +188,6 @@
 #+BEGIN_SRC emacs-lisp
   (use-package nyan-mode
     :ensure t)
+
+  (nyan-mode)
 #+END_SRC
