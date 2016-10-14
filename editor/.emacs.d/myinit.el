@@ -27,29 +27,53 @@
 (global-set-key (kbd "<M-f1>") 'helm-dash)
 (global-set-key (kbd "C-<f6>") 'compile)
 (global-set-key (kbd "<f6>") 'recompile)
+(global-set-key (kbd "<f2>") 'helm-projectile)
 
 (use-package auto-complete
-  :ensure t
-  :init 'my-ac-init)
+  :ensure t)
 
-(defun my-ac-init()
-  (ac-config-default)
-  (global-auto-complete-mode t))
+(require 'auto-complete)
+(require 'auto-complete-config)
+(ac-config-default)
+(global-auto-complete-mode t)
 
 (use-package org-bullets
   :ensure t
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
+(defun my-gfm-hook()
+  (setq markdown-command "multimarkdown")
+  (local-set-key (kbd "<f5>") 'markdown-live-preview-mode))
+
+(use-package markdown-mode
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (my-gfm-hook))
+
 (use-package helm
   :ensure t)
 
 (use-package powerline
   :ensure t)
-(powerline-default-theme)
+;;(powerline-default-theme)
+
+(use-package projectile
+  :ensure t)
+
+(use-package helm-projectile
+  :ensure t)
 
 (use-package magit
   :ensure t)
+
+(use-package which-key
+  :ensure t
+  :init
+  (which-key-mode))
 
 (defun my-prog-hook()
   (linum-mode 1)
@@ -63,6 +87,15 @@
   :init
   (global-flycheck-mode t))
 
+(use-package go-mode
+  :ensure t)
+
+(use-package go-autocomplete
+  :ensure t)
+
+(use-package go-playground
+  :ensure t)
+
 (defun my-go-mode-hook ()
   ; Call Gofmt before saving
   (add-hook 'before-save-hook 'gofmt-before-save)
@@ -73,12 +106,11 @@
            "go build -v -gcflags '-N -l' && go test -v && go vet"))
   
   ; Godef jump key binding
-  (local-set-key (kbd "M-.") 'godef-jump))
+  (local-set-key (kbd "M-.") 'godef-jump)
+  (require 'go-autocomplete)
+  (message "Go Hook loaded"))
  
 (add-hook 'go-mode-hook 'my-go-mode-hook)
-
-(with-eval-after-load 'go-mode
-(require 'go-autocomplete))
 
 (use-package jedi
   :ensure t
@@ -86,7 +118,15 @@
   (add-hook 'python-mode-hook 'jedi:setup)
   (add-hook 'python-mode-hook 'jedi:ac-setup))
 
+(add-to-list 'auto-mode-alist
+             '("\\.\\(?:gemspec\\|irbrc\\|gemrc\\|rake\\|rb\\|ru\\|thor\\)\\'" . ruby-mode))
+(add-to-list 'auto-mode-alist
+             '("\\(Capfile\\|Gemfile\\(?:\\.[a-zA-Z0-9._-]+\\)?\\|[rR]akefile\\)\\'" . ruby-mode))
+
 (use-package rainbow-delimiters
   :ensure t)
 (use-package smartparens
+  :ensure t)
+
+(use-package nyan-mode
   :ensure t)
