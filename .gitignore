@@ -43,3 +43,4 @@ graphical/.config/i3/config
 graphical/.config/i3blocks/config
 
 editor/.emacs.d/local/
+editor/.emacs.d/url/
