@@ -41,3 +41,5 @@ jetbrains/*/config/options/window.manager.xml
 
 graphical/.config/i3/config
 graphical/.config/i3blocks/config
+
+editor/.emacs.d/local/
