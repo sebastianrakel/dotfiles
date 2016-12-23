@@ -1,47 +1,60 @@
 * Common Stuff
-  * Interface
-    Hide Startup Message, Toolbar, Scrollbar and Menubar
+** Include own files
+     #+BEGIN_SRC emacs-lisp
+       (add-to-list 'load-path "~/.emacs.d/include")
+     #+END_SRC
+** Interface
+*** Hide Startup Message, Toolbar, Scrollbar and Menubar
     #+BEGIN_SRC emacs-lisp
-      (setq inhibit-startup-message t)
+      (setq inhibit-startup-message nil)
       (tool-bar-mode -1)
       (menu-bar-mode -1)
       (scroll-bar-mode -1)
-    #+END_SRC
-  * Font Settings
-    #+BEGIN_SRC emacs-lisp
-      (set-default-font "foxxx0font")
-    #+END_SRC
-  * Theme
-    #+BEGIN_SRC emacs-lisp
-      (use-package base16-theme
-        :ensure t)
-      (load-theme 'base16-default-dark t)
-    #+END_SRC
-    
-  * Basic Settings
-    #+BEGIN_SRC emacs-lisp
-      (fset 'yes-or-no-p 'y-or-n-p)
-      (setq-default indent-tabs-mode nil)
-      (set-default 'truncate-lines t)
 
-      (setq backup-directory-alist
-            `((".*" . ,temporary-file-directory)))
-      (setq auto-save-file-name-transforms
-            `((".*" ,temporary-file-directory t)))
+      (require 'mybuffer)
+      (setup-mybuffer-environment)
+      (setup-startup-hook)
+    #+END_SRC  
+** Recent Files
+   #+BEGIN_SRC emacs-lisp
+     (require 'recentf)
+     (recentf-mode 1)
+     (setq recentf-max-menu-items 25)
+   #+END_SRC
+** Font Settings
+   #+BEGIN_SRC emacs-lisp
+     (set-default-font "foxxx0font")
+   #+END_SRC
+** Theme
+   #+BEGIN_SRC emacs-lisp
+     (use-package base16-theme
+       :ensure t)
+     (load-theme 'base16-default-dark t)
+   #+END_SRC
+** Basic Settings
+   #+BEGIN_SRC emacs-lisp
+     (fset 'yes-or-no-p 'y-or-n-p)
+     (setq-default indent-tabs-mode nil)
+     (set-default 'truncate-lines t)
 
-    #+END_SRC
-  * Global Keybindings  
-    #+BEGIN_SRC emacs-lisp
-      (global-set-key (kbd "<f1>") 'describe-mode) 
-      (global-set-key (kbd "<f5>") 'revert-buffer)
-      (global-set-key (kbd "M-x") 'helm-M-x)
-      (global-set-key (kbd "C-x g") 'magit-status)
-      (global-set-key (kbd "<f4>") 'helm-buffers-list)
-      (global-set-key (kbd "<M-f1>") 'helm-dash)
-      (global-set-key (kbd "C-<f6>") 'compile)
-      (global-set-key (kbd "<f6>") 'recompile)
-      (global-set-key (kbd "<f2>") 'helm-projectile)
-    #+END_SRC
+     (setq backup-directory-alist
+           `((".*" . ,temporary-file-directory)))
+     (setq auto-save-file-name-transforms
+           `((".*" ,temporary-file-directory t)))
+
+   #+END_SRC
+** Global Keybindings
+   #+BEGIN_SRC emacs-lisp
+     (global-set-key (kbd "<f1>") 'describe-mode) 
+     (global-set-key (kbd "<f5>") 'revert-buffer)
+     (global-set-key (kbd "M-x") 'helm-M-x)
+     (global-set-key (kbd "C-x g") 'magit-status)
+     (global-set-key (kbd "<f4>") 'helm-buffers-list)
+     (global-set-key (kbd "<M-f1>") 'helm-dash)
+     (global-set-key (kbd "C-<f6>") 'compile)
+     (global-set-key (kbd "<f6>") 'recompile)
+     (global-set-key (kbd "<f2>") 'helm-projectile)
+   #+END_SRC
 
 * Autocomplete
   #+BEGIN_SRC emacs-lisp
@@ -104,7 +117,9 @@
     :ensure t)
 
 #+END_SRC
-* Magit
+
+* git
+** Magit
 #+BEGIN_SRC emacs-lisp
   (use-package magit
     :ensure t)
@@ -126,6 +141,14 @@
 
       (add-hook 'prog-mode-hook 'my-prog-hook)
     #+END_SRC
+** Dataformats
+   #+BEGIN_SRC emacs-lisp
+     (use-package json-mode
+       :ensure t)
+
+     (use-package yaml-mode
+       :ensure t)
+   #+END_SRC
 ** Flycheck
     #+BEGIN_SRC emacs-lisp
       (use-package flycheck
@@ -142,6 +165,9 @@
         :ensure t)
 
       (use-package go-playground
+        :ensure t)
+
+      (use-package go-dlv
         :ensure t)
 
       (defun my-go-mode-hook ()
@@ -192,6 +218,16 @@
      (add-to-list 'auto-mode-alist
                   '("Jenkinsfile" . groovy-mode))
    #+END_SRC
+** LUA
+   #+BEGIN_SRC emacs-lisp
+     (use-package lua-mode
+       :ensure t)
+   #+END_SRC
+** Haskell
+#+BEGIN_SRC emacs-lisp
+  (use-package haskell-mode
+    :ensure t)
+#+END_SRC
 * Miscellaneous
 #+BEGIN_SRC emacs-lisp
   (use-package rainbow-delimiters
@@ -210,12 +246,5 @@
 
   (nyan-mode)
 #+END_SRC
-** RSS 
-   #+BEGIN_SRC emacs-lisp
-     (defun load-feed-settings()
-         (load-file "~/.emacs.d/local/feed.el"))
+* Testing
 
-     (use-package elfeed
-       :ensure t
-       :init (load-feed-settings))
-   #+END_SRC
