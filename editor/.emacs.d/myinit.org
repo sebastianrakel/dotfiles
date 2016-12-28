@@ -45,8 +45,12 @@
    #+END_SRC
 ** Global Keybindings
    #+BEGIN_SRC emacs-lisp
-     (global-set-key (kbd "<f1>") 'describe-mode) 
+     (defun reload-init()
+       )
+
+     (global-set-key (kbd "<f1>") 'describe-mode)
      (global-set-key (kbd "<f5>") 'revert-buffer)
+     (global-set-key (kbd "C-<f5>") 'reload-init)
      (global-set-key (kbd "M-x") 'helm-M-x)
      (global-set-key (kbd "C-x g") 'magit-status)
      (global-set-key (kbd "<f4>") 'helm-buffers-list)
@@ -55,7 +59,7 @@
      (global-set-key (kbd "<f6>") 'recompile)
      (global-set-key (kbd "<f2>") 'helm-projectile)
    #+END_SRC
-
+   
 * Autocomplete
   #+BEGIN_SRC emacs-lisp
     (use-package auto-complete
@@ -89,10 +93,6 @@
            ("\\.md\\'" . markdown-mode)
            ("\\.markdown\\'" . markdown-mode))
     :init (my-gfm-hook))
-
-
-
-
 #+END_SRC
    
 * Helm
@@ -141,6 +141,17 @@
 
       (add-hook 'prog-mode-hook 'my-prog-hook)
     #+END_SRC
+** GDB
+   #+BEGIN_SRC emacs-lisp
+     (defun my-gdb-hook()
+       (local-set-key (kbd "<f10>") 'gud-next)
+       (local-set-key (kbd "<f11>") 'gud-step)
+       (local-set-key (kbd "<f5>") 'gud-go)
+       (local-set-key (kbd "<f12>") 'gud-print)
+       (local-set-key (kbd "<f9>") 'gud-break))
+
+     (add-hook 'prog-mode-hook 'my-gdb-hook)
+   #+END_SRC
 ** Dataformats
    #+BEGIN_SRC emacs-lisp
      (use-package json-mode
