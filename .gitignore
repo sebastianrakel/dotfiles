@@ -18,6 +18,11 @@ editor/.emacs.d/auto-save-list
 editor/.emacs.d/ac-comphist.dat
 editor/.emacs.d/.python-environments
 editor/.emacs.d/*elc
+editor/.emacs.d/local/
+editor/.emacs.d/url/
+editor/.emacs.d/eshell/
+editor/.emacs.d/recentf
+editor/.emacs.d/tramp
 
 #  graphical/.config/openbox/autostart
 
@@ -41,6 +46,4 @@ jetbrains/*/config/options/window.manager.xml
 
 graphical/.config/i3/config
 graphical/.config/i3blocks/config
-
-editor/.emacs.d/local/
-editor/.emacs.d/url/
+graphical/.config/gtk-3.0/bookmarks
