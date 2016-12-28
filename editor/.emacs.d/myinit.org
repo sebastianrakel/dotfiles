@@ -200,11 +200,15 @@
     #+END_SRC
 ** Python
     #+BEGIN_SRC emacs-lisp
+      (defun my-python-hook()
+        (local-set-key (kbd "M-.") 'jedi:goto-definition))
+
       (use-package jedi
         :ensure t
         :init
         (add-hook 'python-mode-hook 'jedi:setup)
-        (add-hook 'python-mode-hook 'jedi:ac-setup))
+        (add-hook 'python-mode-hook 'jedi:ac-setup)
+        (add-hook 'python-mode-hook 'my-python-hook))
 
     #+END_SRC
 ** Ruby
