@@ -46,7 +46,7 @@
 ** Global Keybindings
    #+BEGIN_SRC emacs-lisp
      (defun reload-init()
-       )
+       (load-file "~/.emacs.d/init.el"))
 
      (global-set-key (kbd "<f1>") 'describe-mode)
      (global-set-key (kbd "<f5>") 'revert-buffer)
