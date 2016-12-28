@@ -249,7 +249,6 @@
 * Fun/Social/Internet
 ** Filebin Client
 #+BEGIN_SRC emacs-lisp
-  (load-file "~/.emacs.d/local/filebin.el")
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
   (use-package nyan-mode
