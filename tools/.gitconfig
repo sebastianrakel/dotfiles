@@ -23,3 +23,9 @@
     pl = pull
 [commit]
 	gpgsign = true
+[sendemail]
+    from = Sebastian Rakel <sebastian@devunit.eu>
+    smtpuser =
+    smtpserver = "/usr/bin/msmtp"
+    chainreplyto = false
+
