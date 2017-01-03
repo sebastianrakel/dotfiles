@@ -43,37 +43,44 @@
            `((".*" ,temporary-file-directory t)))
 
    #+END_SRC
-** Dedicated Windows
-   #+BEGIN_SRC emacs-lisp
-     (defadvice pop-to-buffer (before cancel-other-window first)
-       (ad-set-arg 1 nil))
+** Custom Functions
+*** Reload Init File
+    #+BEGIN_SRC emacs-lisp
+      (defun reload-init()
+        (load-file "~/.emacs.d/init.el"))
+    #+END_SRC
+*** Dedicated Windows
+    #+BEGIN_SRC emacs-lisp
+      (defadvice pop-to-buffer (before cancel-other-window first)
+        (ad-set-arg 1 nil))
 
-     (ad-activate 'pop-to-buffer)
+      (ad-activate 'pop-to-buffer)
 
-     ;; Toggle window dedication
-     (defun toggle-window-dedicated ()
-       "Toggle whether the current active window is dedicated or not."
-       (interactive)
-       (message
-        (if (let (window (get-buffer-window (current-buffer)))
-              (set-window-dedicated-p window 
-                                      (not (window-dedicated-p window))))
-            "Window '%s' is dedicated"
-          "Window '%s' is normal")
-        (current-buffer)))
-   #+END_SRC
+      ;; Toggle window dedication
+      (defun toggle-window-dedicated ()
+        "Toggle whether the current active window is dedicated or not."
+        (interactive)
+        (message
+         (if (let (window (get-buffer-window (current-buffer)))
+               (set-window-dedicated-p window 
+                                       (not (window-dedicated-p window))))
+             "Window '%s' is dedicated"
+           "Window '%s' is normal")
+         (current-buffer)))
+    #+END_SRC
 ** Global Keybindings
    #+BEGIN_SRC emacs-lisp
-     (defun reload-init()
-       (load-file "~/.emacs.d/init.el"))
-
      (global-set-key (kbd "<f1>") 'describe-mode)
+     (global-set-key (kbd "<M-f1>") 'helm-dash)
+     (global-set-key (kbd "<C-f1>") 'show-mybuffer)
+
      (global-set-key (kbd "<f5>") 'revert-buffer)
      (global-set-key (kbd "C-<f5>") '(lambda () (interactive) (reload-init)))
+
      (global-set-key (kbd "M-x") 'helm-M-x)
      (global-set-key (kbd "C-x g") 'magit-status)
      (global-set-key (kbd "<f4>") 'helm-buffers-list)
-     (global-set-key (kbd "<M-f1>") 'helm-dash)
+       
      (global-set-key (kbd "C-<f6>") 'compile)
      (global-set-key (kbd "<f6>") 'recompile)
      (global-set-key (kbd "<f2>") 'helm-projectile)
