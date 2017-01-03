@@ -108,5 +108,8 @@
   (setq initial-buffer-choice nil)
   (setq inhibit-startup-screen t))
 
+(defun show-mybuffer()
+  (switch-to-buffer my-startup-buffer-name))
+
 (provide 'mybuffer)
 ;;; mybuffer.el ends here
