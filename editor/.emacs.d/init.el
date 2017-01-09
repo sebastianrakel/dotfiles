@@ -20,7 +20,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (helm-dash arduino-mode sublimity helm-gitlab chess confluence go-playground go-mode org-bullets auto-complete use-package base16-theme))))
+    (omnisharp helm-dash arduino-mode sublimity helm-gitlab chess confluence go-playground go-mode org-bullets auto-complete use-package base16-theme))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

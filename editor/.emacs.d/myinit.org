@@ -80,9 +80,7 @@
      (global-set-key (kbd "M-x") 'helm-M-x)
      (global-set-key (kbd "C-x g") 'magit-status)
      (global-set-key (kbd "<f4>") 'helm-buffers-list)
-       
-     (global-set-key (kbd "C-<f6>") 'compile)
-     (global-set-key (kbd "<f6>") 'recompile)
+
      (global-set-key (kbd "<f2>") 'helm-projectile)
      (global-set-key (kbd "<pause>") 'toggle-window-dedicated)
    #+END_SRC
@@ -163,11 +161,16 @@
 #+END_SRC
 * Programming
 ** Common
-    #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
+      (defun my-prog-bindings()
+        (global-set-key (kbd "C-<f6>") 'compile)
+        (global-set-key (kbd "<f6>") 'recompile))
+
       (defun my-prog-hook()
         (linum-mode 1)
         (rainbow-delimiters-mode)
-        (smartparens-mode))
+        (smartparens-mode)
+        (my-prog-bindings))
 
       (add-hook 'prog-mode-hook 'my-prog-hook)
     #+END_SRC
@@ -277,6 +280,18 @@
    #+BEGIN_SRC emacs-lisp
      (use-package arduino-mode
        :ensure t)
+   #+END_SRC
+** CSharp
+   #+BEGIN_SRC emacs-lisp
+     (defun setup-omnisharp()
+       (setq omnisharp-server-executable-path "/home/sebastian/Projects/omnisharp-server/OmniSharp/bin/Debug/OmniSharp.exe"))
+
+     (use-package omnisharp
+       :ensure t
+       :init
+       (add-hook 'csharp-mode-hook 'omnisharp-mode)
+       (setup-omnisharp))
+
    #+END_SRC
 * Miscellaneous
 #+BEGIN_SRC emacs-lisp
