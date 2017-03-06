@@ -7,8 +7,13 @@ for config_file ($ZSH/*.zsh) source $config_file
 autoload -U compinit
 compinit -i
 
+
 # check dotfiles version
 # dotfiles/checkStatus.sh ~/dotfiles/
 
 source ~/.profile
 
+if hash fzf 2>/dev/null; then    
+    source /usr/share/fzf/completion.zsh
+    source /usr/share/fzf/key-bindings.zsh
+fi
