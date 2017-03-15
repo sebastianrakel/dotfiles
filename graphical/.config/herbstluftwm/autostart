@@ -168,12 +168,12 @@ hc detect_monitors
 
 if [ -e "${HOME}/.config/systemd/user/bar.service" ]; then
     herbstclient pad 16
-    systemctl --user restart bar    
+    systemctl --user restart bar
 else
   panel=~/.config/herbstluftwm/panel.sh
   [ -x "$panel" ] || panel=/etc/xdg/herbstluftwm/panel.sh
-  for monitor in $(herbstclient list_monitors | cut -d: -f1) ; do
-    # start it on each monitor
+  
+  for monitor in $(herbstclient list_monitors | cut -d: -f1) ; do  
     "${panel}" "${monitor}" &
   done  
 fi
