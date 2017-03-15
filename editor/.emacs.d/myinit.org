@@ -23,7 +23,7 @@
    #+END_SRC
 ** Font Settings
    #+BEGIN_SRC emacs-lisp
-     (set-default-font "foxxx0 foxxx0font")
+     (set-default-font "foxxx0font")
    #+END_SRC
 ** Theme
    #+BEGIN_SRC emacs-lisp
