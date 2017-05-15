@@ -23,7 +23,8 @@
    #+END_SRC
 ** Font Settings
    #+BEGIN_SRC emacs-lisp
-     (set-default-font "foxxx0font")
+     (add-to-list 'default-frame-alist '(font . "foxxx0font"))
+     (set-face-attribute 'default t :font "foxxx0font")
    #+END_SRC
 ** Theme
    #+BEGIN_SRC emacs-lisp
