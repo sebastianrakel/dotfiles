@@ -30,7 +30,7 @@
    #+BEGIN_SRC emacs-lisp
      (use-package base16-theme
        :ensure t)
-     (load-theme 'base16-default-dark t)
+     (load-theme 'base16-monokai t)
    #+END_SRC
 ** Basic Settings
    #+BEGIN_SRC emacs-lisp
@@ -259,6 +259,10 @@
     #+END_SRC
 ** Ruby
     #+BEGIN_SRC emacs-lisp
+      (use-package haml-mode
+        :ensure t)
+
+
       (add-to-list 'auto-mode-alist
                    '("\\.\\(?:gemspec\\|irbrc\\|gemrc\\|rake\\|rb\\|ru\\|thor\\)\\'" . ruby-mode))
       (add-to-list 'auto-mode-alist
