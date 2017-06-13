@@ -4,7 +4,7 @@ scroll_on_output = false
 scroll_on_keystroke = true
 mouse_autohide = false
 allow_bold = true
-font = foxxx0font
+font = Envy Code R 11
 # font = DejaVu Sans Mono 14
 # font = Input 11 
 # font = Terminus 8
@@ -46,7 +46,7 @@ color15 = #d7d7d7
 
 
 [hints]
-font = envypn 8
+font = Envy Code R 11
 foreground = #000000
 background = #FD971F
 border = #000000
