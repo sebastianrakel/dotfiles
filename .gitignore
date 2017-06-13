@@ -23,6 +23,8 @@ editor/.emacs.d/url/
 editor/.emacs.d/eshell/
 editor/.emacs.d/recentf
 editor/.emacs.d/tramp
+editor/.emacs.d/network-security.data
+editor/.emacs.d/session.*
 
 #  graphical/.config/openbox/autostart
 
@@ -47,4 +49,7 @@ jetbrains/*/config/options/window.manager.xml
 graphical/.config/i3/config
 graphical/.config/i3blocks/config
 graphical/.config/gtk-3.0/bookmarks
-/editor/.emacs.d/network-security.data
+
+
+
+
