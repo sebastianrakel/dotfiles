@@ -23,8 +23,8 @@
    #+END_SRC
 ** Font Settings
    #+BEGIN_SRC emacs-lisp
-     (add-to-list 'default-frame-alist '(font . "foxxx0font"))
-     (set-face-attribute 'default t :font "foxxx0font")
+     (add-to-list 'default-frame-alist '(font . "Envy Code R"))
+     (set-face-attribute 'default t :font "Envy Code R")
    #+END_SRC
 ** Theme
    #+BEGIN_SRC emacs-lisp
