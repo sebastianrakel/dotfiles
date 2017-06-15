@@ -62,8 +62,12 @@ hc keybind $Mod-Control-Down    resize down +$resizestep
 hc keybind $Mod-Control-Up      resize up +$resizestep
 hc keybind $Mod-Control-Right   resize right +$resizestep
 
-hc keybind XF86MonBrightnessUp spawn xbacklight + 10%
-hc keybind XF86MonBrightnessDown spawn xbacklight - 10%
+hc keybind XF86MonBrightnessUp spawn ${HOME}/.bin/backlight.rb increase
+hc keybind XF86MonBrightnessDown spawn ${HOME}/.bin/backlight.rb decrease
+
+hc keybind XF86AudioRaiseVolume spawn sh -c "pactl set-sink-mute 0 false ; pactl set-sink-volume 0 +5%"
+hc keybind XF86AudioLowerVolume spawn sh -c "pactl set-sink-mute 0 false ; pactl set-sink-volume 0 -5%"
+hc keybind XF86AudioMute spawn pactl set-sink-mute 0 toggle
 
 # tags
 tag_names=( {main,www,media,dev,virt,remote,stuff,games} )
@@ -150,6 +154,12 @@ hc rule focus=on # normally focus new clients
 #hc rule class~'(.*[Rr]xvt.*|.*[Tt]erm|Konsole)' focus=on
 
 hc rule instance=chromium tag=www
+hc rule instance=qutebrowser tag=www
+
+hc rule class~'jetbrains-.*' tag=dev
+hc rule instance='jetbrains-toolbox' tag=dev
+
+hc rule instance=VirtualBox tag=virt
 
 hc rule windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH)' pseudotile=on
 hc rule windowtype='_NET_WM_WINDOW_TYPE_DIALOG' focus=on
