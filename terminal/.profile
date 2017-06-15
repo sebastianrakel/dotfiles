@@ -89,6 +89,12 @@ if [ -d "$ANDROID_SDK_HOME/platform-tools" ]; then
     PATH="$ANDROID_SDK_HOME/platform-tools:$PATH"
 fi
 
+# Editor
+
+export ALTERNATE_EDITOR=emacs
+export EDITOR=emacsclient
+export VISUAL=emacsclient
+
 
 #
 # Load local settings
