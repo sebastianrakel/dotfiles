@@ -13,5 +13,5 @@ fi
 alias ls='ls --color=auto'
 PS1='[\u@\h \W]\$ '
 
-source ~/.profile
+source ${HOME}/.profile
 
