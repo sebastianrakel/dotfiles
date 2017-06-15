@@ -79,9 +79,9 @@ vim() {
 #
 
 # export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=lcd'
-export _JAVA_AWT_WM_NONREPARENTING=1
+# export _JAVA_AWT_WM_NONREPARENTING=1
 
-export VAGRANT_DEFAULT_PROVIDER=libvirt
+#export VAGRANT_DEFAULT_PROVIDER=libvirt
 
 
 ANDROID_SDK_HOME="$HOME/Android/Sdk"
