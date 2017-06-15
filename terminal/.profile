@@ -95,6 +95,9 @@ export ALTERNATE_EDITOR=emacs
 export EDITOR=emacsclient
 export VISUAL=emacsclient
 
+# GPG
+
+source "${HOME}/.bin/gpg-agent.sh"
 
 #
 # Load local settings
