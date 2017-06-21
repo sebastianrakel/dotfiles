@@ -316,6 +316,13 @@
       (use-package ng2-mode
         :ensure t)
     #+END_SRC
+** F#
+   #+BEGIN_SRC emacs-lisp
+     (use-package fsharp-mode
+       :ensure t)
+
+     (setq-default fsharp-indent-offset 2)
+   #+END_SRC
 * Miscellaneous
 #+BEGIN_SRC emacs-lisp
   (use-package rainbow-delimiters
