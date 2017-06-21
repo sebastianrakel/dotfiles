@@ -86,6 +86,20 @@
 
      (global-set-key (kbd "<f2>") 'helm-projectile)
      (global-set-key (kbd "<pause>") 'toggle-window-dedicated)
+
+
+     ;; easy spell check
+     (global-set-key (kbd "<f8>") 'ispell-word)
+     (global-set-key (kbd "C-S-<f8>") 'flyspell-mode)
+     (global-set-key (kbd "C-M-<f8>") 'flyspell-buffer)
+     (global-set-key (kbd "C-<f8>") 'flyspell-check-previous-highlighted-word)
+     (defun flyspell-check-next-highlighted-word ()
+       "Custom function to spell check next highlighted word"
+       (interactive)
+       (flyspell-goto-next-error)
+       (ispell-word)
+       )
+     (global-set-key (kbd "M-<f8>") 'flyspell-check-next-highlighted-word)
    #+END_SRC
    
 * Autocomplete
@@ -153,10 +167,14 @@
 
 * git
 ** Magit
-#+BEGIN_SRC emacs-lisp
-  (use-package magit
-    :ensure t)
-#+END_SRC
+  #+BEGIN_SRC emacs-lisp
+    (use-package magit
+      :ensure t)
+
+    (add-hook 'git-commit-setup-hook
+              (lambda()
+                (flyspell-mode 1)))
+  #+END_SRC
 * Which-Key
 #+BEGIN_SRC emacs-lisp
   (use-package which-key
@@ -179,7 +197,8 @@
        (linum-mode 1)
        (rainbow-delimiters-mode)
        (smartparens-mode)
-       (my-prog-bindings))
+       (my-prog-bindings)
+       (flyspell-prog-mode))
 
      (add-hook 'prog-mode-hook 'my-prog-hook)
      (add-hook 'prog-mode-hook 'hs-minor-mode)
