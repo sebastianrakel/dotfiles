@@ -353,6 +353,7 @@
 ** Filebin Client
 #+BEGIN_SRC emacs-lisp
 #+END_SRC
+** nyan Mode
 #+BEGIN_SRC emacs-lisp
   (use-package nyan-mode
     :ensure t)
