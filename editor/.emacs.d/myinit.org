@@ -23,8 +23,8 @@
    #+END_SRC
 ** Font Settings
    #+BEGIN_SRC emacs-lisp
-     (add-to-list 'default-frame-alist '(font . "Fira Mono 11"))
-     (set-face-attribute 'default t :font "Fira Mono 11")
+     (add-to-list 'default-frame-alist '(font . "Iosevka 11"))
+     (set-face-attribute 'default t :font "Iosevka 11")
    #+END_SRC
 ** Theme
    #+BEGIN_SRC emacs-lisp
@@ -50,6 +50,7 @@
 *** Reload Init File
     #+BEGIN_SRC emacs-lisp
       (defun reload-init()
+        (interactive)
         (load-file "~/.emacs.d/init.el"))
     #+END_SRC
 *** Dedicated Windows
@@ -352,8 +353,32 @@
 * Fun/Social/Internet
 ** Filebin Client
 #+BEGIN_SRC emacs-lisp
+  (defun filebin-upload-string(message)
+    (let ((command (concat
+                    "fb << EOF\n"
+                    message
+                    "\nEOF")))
+      (message (shell-command-to-string command))))
+
+  (defun filebin-buffer-content()
+    (interactive)
+    (let ((content (buffer-string)))
+      (filebin-upload-string content)))
+
+  (defun filebin-buffer-file()
+    (interactive)
+    (let ((command (concat
+                    "fb "
+                    (buffer-file-name)
+                    )))
+      (message (shell-command-to-string command))))
+
+  (defun filebin-buffer-selection()
+    (interactive)
+    (let ((content (buffer-substring (region-beginning) (region-end))))
+      (filebin-upload-string content)))
 #+END_SRC
-** nyan Mode
+*** nyan Mode
 #+BEGIN_SRC emacs-lisp
   (use-package nyan-mode
     :ensure t)
