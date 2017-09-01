@@ -3,11 +3,15 @@ uname_string=`uname`
 alias tmux='tmux -2'
 alias g='git'
 alias dd='dd status=progress'
+alias nossh='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+alias grep='grep --color'
 
 if [[ "$uname_string" == 'OpenBSD' ]]; then
 
 else
     alias ls='ls --color=auto'
+    alias ip='ip -c'
+    alias dmesg='dmesg -T --color'
 fi
 
 if [[ -a ~/.aliases_`hostname` ]]; then
