@@ -25,7 +25,7 @@
     ("c968804189e0fc963c641f5c9ad64bca431d41af2fb7e1d01a2a6666376f819c" default)))
  '(package-selected-packages
    (quote
-    (fsharp-mode yaml-mode which-key use-package smartparens restclient rainbow-delimiters powerline org-bullets omnisharp nyan-mode ng2-mode markdown-mode magit lua-mode json-mode jedi helm-projectile helm-dash haskell-mode haml-mode groovy-mode go-playground go-dlv go-autocomplete dockerfile-mode base16-theme arduino-mode))))
+    (puppet-mode flymake-puppet fsharp-mode yaml-mode which-key use-package smartparens restclient rainbow-delimiters powerline org-bullets omnisharp nyan-mode ng2-mode markdown-mode magit lua-mode json-mode jedi helm-projectile helm-dash haskell-mode haml-mode groovy-mode go-playground go-dlv go-autocomplete dockerfile-mode base16-theme arduino-mode))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
