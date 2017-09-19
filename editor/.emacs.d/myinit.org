@@ -198,8 +198,7 @@
        (linum-mode 1)
        (rainbow-delimiters-mode)
        (smartparens-mode)
-       (my-prog-bindings)
-       (flyspell-prog-mode))
+       (my-prog-bindings))
 
      (add-hook 'prog-mode-hook 'my-prog-hook)
      (add-hook 'prog-mode-hook 'hs-minor-mode)
