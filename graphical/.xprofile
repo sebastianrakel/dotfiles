@@ -34,7 +34,7 @@ if [ -d /etc/X11/xinit/xinitrc.d ] ; then
  unset f
 fi
 
-feh --bg-center "${HOME}/.dotfiles/wallpaper/thinktwice_codeonce.png"
+feh --bg-center "${HOME}/.dotfiles/wallpaper/ThimbleweedParkPoster.png"
 
 export BROWSER=chromium
 export TERMINAL=termite
