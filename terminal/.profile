@@ -97,8 +97,9 @@ export VISUAL=emacsclient
 
 # GPG
 
-source "${HOME}/.bin/gpg-agent.sh"
-
+if [ -e "${HOME}/.bin/gpg-agent.sh" ] ; then
+    . "${HOME}/.bin/gpg-agent.sh"
+fi
 #
 # Load local settings
 #
