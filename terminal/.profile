@@ -105,6 +105,6 @@ fi
 #
 
 if [ -e "$localprofile" ] ; then
-    source "$localprofile"
+    . "$localprofile"
 fi
 

@@ -3,9 +3,5 @@
 [ -f /etc/xprofile ] && . /etc/xprofile
 [ -f ~/.xprofile ] && . ~/.xprofile
 
-#exec subtle
-# exec subtle &> $HOME/subtle-$(date +"%F-%H-%M").log
-# exec openbox-session
-# exec i3
-exec herbstluftwm --locked
-# exec i3
+real_wm_start_command=${wm_start_command:-"herbstluftwm --locked"}
+exec "${real_wm_start_command}"
