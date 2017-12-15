@@ -95,6 +95,8 @@ export ALTERNATE_EDITOR=emacs
 export EDITOR=emacsclient
 export VISUAL=emacsclient
 
+PRINT="0" archlinux_check_kernel.sh
+
 # GPG
 
 if [ -e "${HOME}/.bin/gpg-agent.sh" ] ; then
