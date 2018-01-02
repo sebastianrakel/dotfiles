@@ -97,6 +97,10 @@ export VISUAL=emacsclient
 
 PRINT="0" archlinux_check_kernel.sh
 
+# Music
+
+export MPD_HOST="$HOME/.mpd/socket"
+
 # GPG
 
 if [ -e "${HOME}/.bin/gpg-agent.sh" ] ; then
