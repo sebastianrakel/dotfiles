@@ -2,8 +2,8 @@
 # Any customization should be done in ~/.gtkrc-2.0.mine instead.
 
 include "/home/sebastian/.gtkrc-2.0.mine"
-gtk-theme-name="Numix"
-gtk-icon-theme-name="Numix-Light"
+gtk-theme-name="Adwaita"
+gtk-icon-theme-name="Arc"
 gtk-font-name="foxxx0font 10"
 gtk-cursor-theme-name="Adwaita"
 gtk-cursor-theme-size=0
