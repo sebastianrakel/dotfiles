@@ -12,7 +12,7 @@ editor/.vim/bundle/*
 !editor/.vim/bundle/neobundle.vim
 
 tools/.ssh/*
-tools/.ssh/config
+!tools/.ssh/config
 
 editor/.emacs.d/auto-save-list
 editor/.emacs.d/ac-comphist.dat
