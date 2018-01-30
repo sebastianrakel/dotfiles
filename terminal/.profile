@@ -106,6 +106,14 @@ export MPD_HOST="$HOME/.mpd/socket"
 if [ -e "${HOME}/.bin/gpg-agent.sh" ] ; then
     . "${HOME}/.bin/gpg-agent.sh"
 fi
+
+# Little Helpers
+goto_golang_project() {
+    golang_chosen_dir=$(tree -L 3 -d -f -i "${GOPATH}/src/" | fzf)
+    cd "${golang_chosen_dir}" || return
+}
+
+
 #
 # Load local settings
 #
