@@ -25,6 +25,7 @@ editor/.emacs.d/recentf
 editor/.emacs.d/tramp
 editor/.emacs.d/network-security.data
 editor/.emacs.d/session.*
+editor/.emacs.d/request
 
 #  graphical/.config/openbox/autostart
 
