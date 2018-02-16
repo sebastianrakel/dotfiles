@@ -21,7 +21,8 @@ hc keybind $Mod-Shift-r reload
 hc keybind $Mod-Return spawn ${TERMINAL:-xterm} # use your $TERMINAL with xterm as fallback
 hc keybind $Mod-d spawn rofi -show run
 hc keybind $Mod-Shift-e spawn ruby ~/.bin/scripts/locker/locker.rb
-hc keybind $Mod+p spawn python3 ~/.bin/scripts/workspace-switcher/workspace-switcher.py
+hc keybind $Mod+p spawn ruby ~/Projects/Linux/workspace-switcher/workspace-switcher.rb
+hc keybind $Mod-Shift+p spawn rofi-pass
 
 # basic movement
 # focusing clients
@@ -65,9 +66,9 @@ hc keybind $Mod-Control-Right   resize right +$resizestep
 hc keybind XF86MonBrightnessUp spawn ${HOME}/.bin/backlight.rb increase
 hc keybind XF86MonBrightnessDown spawn ${HOME}/.bin/backlight.rb decrease
 
-hc keybind XF86AudioRaiseVolume spawn sh -c "pactl set-sink-mute 0 false ; pactl set-sink-volume 0 +5%"
-hc keybind XF86AudioLowerVolume spawn sh -c "pactl set-sink-mute 0 false ; pactl set-sink-volume 0 -5%"
-hc keybind XF86AudioMute spawn pactl set-sink-mute 0 toggle
+hc keybind XF86AudioRaiseVolume spawn ${HOME}/.bin/volume_control.sh increase
+hc keybind XF86AudioLowerVolume spawn ${HOME}/.bin/volume_control.sh decrease
+hc keybind XF86AudioMute spawn ${HOME}/.bin/volume_control.sh mute
 
 # tags
 tag_names=( {main,www,media,dev,virt,remote,stuff,games} )
@@ -169,7 +170,6 @@ hc rule windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK|DESKTOP)' manage=off
 hc unlock
 
 herbstclient set tree_style '╾│ ├└╼─┐'
-hc set wmname LG3D
 # hc set wmname LG3D
 
 # do multi monitor setup here, e.g.:
@@ -178,8 +178,7 @@ hc set wmname LG3D
 hc detect_monitors
 
 if [ -e "${HOME}/.config/systemd/user/bar.service" ]; then
-    herbstclient pad 16
-    systemctl --user restart bar
+    systemctl --user restart bar    
 else
   panel=~/.config/herbstluftwm/panel.sh
   [ -x "$panel" ] || panel=/etc/xdg/herbstluftwm/panel.sh
