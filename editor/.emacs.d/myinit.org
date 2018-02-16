@@ -2,6 +2,7 @@
 ** Include own files
      #+BEGIN_SRC emacs-lisp
        (add-to-list 'load-path "~/.emacs.d/include")
+
      #+END_SRC
 ** Interface
 *** Hide Startup Message, Toolbar, Scrollbar and Menubar
@@ -78,6 +79,8 @@
      (global-set-key (kbd "M-<f1>") 'helm-dash)
      (global-set-key (kbd "C-<f1>") '(lambda () (interactive) (show-mybuffer)))
 
+     (global-set-key (kbd "C-<f3>") 'treemacs-toggle)
+
      (global-set-key (kbd "M-<f5>") 'revert-buffer)
      (global-set-key (kbd "C-<f5>") '(lambda () (interactive) (reload-init)))
 
@@ -88,6 +91,8 @@
      (global-set-key (kbd "<f2>") 'helm-projectile)
      (global-set-key (kbd "<pause>") 'toggle-window-dedicated)
 
+     ;; avoid freezing
+     (global-unset-key (kbd "C-z"))
 
      ;; easy spell check
      (global-set-key (kbd "<f8>") 'ispell-word)
@@ -102,7 +107,6 @@
        )
      (global-set-key (kbd "M-<f8>") 'flyspell-check-next-highlighted-word)
    #+END_SRC
-   
 * Autocomplete
   #+BEGIN_SRC emacs-lisp
     (use-package auto-complete
@@ -192,13 +196,16 @@
      (defun my-prog-bindings()
        (global-set-key (kbd "C-<f6>") 'compile)
        (global-set-key (kbd "<f6>") 'recompile)
-       (global-set-key (kbd "C-+") 'hs-toggle-hiding))
+       (global-set-key (kbd "C-+") 'hs-toggle-hiding)
+       (global-set-key (kbd "C-.") 'find-tag-other-window)
+       (global-set-key (kbd "C-<tab>") 'helm-imenu))
 
      (defun my-prog-hook()
        (linum-mode 1)
        (rainbow-delimiters-mode)
        (smartparens-mode)
-       (my-prog-bindings))
+       (my-prog-bindings)
+       (setq compilation-scroll-output t))
 
      (add-hook 'prog-mode-hook 'my-prog-hook)
      (add-hook 'prog-mode-hook 'hs-minor-mode)
@@ -312,30 +319,25 @@
   (use-package haskell-mode
     :ensure t)
 #+END_SRC
-** CSharp
+** Jira
    #+BEGIN_SRC emacs-lisp
-     (defun setup-omnisharp()
-       (setq omnisharp-server-executable-path "/home/sebastian/Projects/omnisharp-server/OmniSharp/bin/Debug/OmniSharp.exe"))
-
-     (use-package omnisharp
-       :ensure t
-       :init
-       (add-hook 'csharp-mode-hook 'omnisharp-mode)
-       (setup-omnisharp))
-
+     (setq jiralib-url "https://jira.lcs-landwehr.de")
+     (setq jiralib-use-restapi t)
    #+END_SRC
-** F#
+** Rust
    #+BEGIN_SRC emacs-lisp
-     (use-package fsharp-mode
+     (use-package rust-mode
        :ensure t)
-
-     (setq-default fsharp-indent-offset 2)
    #+END_SRC
 * Miscellaneous
 #+BEGIN_SRC emacs-lisp
   (use-package rainbow-delimiters
     :ensure t)
+
   (use-package smartparens
+    :ensure t)
+
+  (use-package treemacs
     :ensure t)
 #+END_SRC
 * Fun/Social/Internet
@@ -343,7 +345,7 @@
 #+BEGIN_SRC emacs-lisp
   (defun filebin-upload-string(message)
     (let ((command (concat
-                    "fb << EOF\n"
+                    "fb << 'EOF'\n"
                     message
                     "\nEOF")))
       (message (shell-command-to-string command))))
@@ -377,6 +379,10 @@
    #+BEGIN_SRC emacs-lisp
      (use-package restclient
        :ensure t)
+   #+END_SRC
+** E-Mail
+   #+BEGIN_SRC emacs-lisp
+     (load "~/.emacs.d/local/mail-settings")
    #+END_SRC
 * Testing
 
