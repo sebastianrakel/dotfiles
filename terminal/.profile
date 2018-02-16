@@ -113,6 +113,23 @@ goto_golang_project() {
     cd "${golang_chosen_dir}" || return
 }
 
+take_this_project() {
+    current_project_dir=$(pwd)
+    if [ ! -d "${current_project_dir}/.git" ]; then
+        echo "This is not a git project"
+        return
+    fi
+
+    if [ -e "${current_project_dir}/.git/hooks/post-commit" ]; then
+        ln -s "${HOME}/.git-templates/hooks/post-commit" "${current_project_dir}/.git/hooks/post-commit"
+        echo "Installed Post Commit Hook"
+    fi
+
+    if [ -e "${current_project_dir}/.giterize.sh" ]; then
+        echo "Run giterize"
+        sh "${current_project_dir}/.giterize.sh"
+    fi
+}
 
 #
 # Load local settings
