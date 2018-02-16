@@ -64,15 +64,15 @@ if [ -n "$ZSH_VERSION" ]; then
 	# todo: auto complete for bash
 fi
 
-vim() {
-	if [[ "${BASE16_SHELL}" == *".light.sh" ]]; then
-		scheme=$(basename "$(echo "${BASE16_SHELL}")" | sed 's/.light.sh*//g')
-		/usr/bin/vim "+set background=light" "+colorscheme ${scheme}" "$@"
-	elif [[ "${BASE16_SHELL}" == *".dark.sh" ]]; then
-		scheme=$(basename "$(echo "${BASE16_SHELL}")" | sed 's/.dark.sh*//g')
-		/usr/bin/vim "+colorscheme ${scheme}" "$@"
-	fi
-}
+#vim() {
+#	if [[ "${BASE16_SHELL}" == *".light.sh" ]]; then
+#		scheme=$(basename "$(echo "${BASE16_SHELL}")" | sed 's/.light.sh*//g')
+#		/usr/bin/vim "+set background=light" "+colorscheme ${scheme}" "$@"
+#	elif [[ "${BASE16_SHELL}" == *".dark.sh" ]]; then
+#		scheme=$(basename "$(echo "${BASE16_SHELL}")" | sed 's/.dark.sh*//g')
+#		/usr/bin/vim "+colorscheme ${scheme}" "$@"
+#	fi
+#}
 
 #
 # Environment
