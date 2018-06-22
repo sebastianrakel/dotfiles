@@ -16,3 +16,4 @@ bindkey "^[OF" end-of-line
 bindkey "^[[1;5C" forward-word
 bindkey "^[[1;5D" backward-word
 
+bindkey "^X^E" edit-command-line

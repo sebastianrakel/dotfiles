@@ -23,6 +23,7 @@ hc keybind $Mod-d spawn rofi -show run
 hc keybind $Mod-Shift-e spawn ruby ~/.bin/scripts/locker/locker.rb
 hc keybind $Mod+p spawn ruby ~/Projects/Linux/workspace-switcher/workspace-switcher.rb
 hc keybind $Mod-Shift+p spawn rofi-pass
+hc keybind $Mod-Shift+o spawn ~/Projects/Fun/splatmoji/splatmoji type
 
 # basic movement
 # focusing clients
@@ -165,6 +166,7 @@ hc rule instance=VirtualBox tag=virt
 hc rule windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH)' pseudotile=on
 hc rule windowtype='_NET_WM_WINDOW_TYPE_DIALOG' focus=on
 hc rule windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK|DESKTOP)' manage=off
+hc rule instance=sun-awt-X11-XWindowPeer title~'win.*' manage=off
 
 # unlock, just to be sure
 hc unlock

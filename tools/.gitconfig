@@ -29,3 +29,5 @@
     smtpserver = "/usr/bin/msmtp"
     chainreplyto = false
 
+[http]
+	emptyAuth = true

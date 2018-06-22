@@ -2,7 +2,7 @@ uname_string=`uname`
 
 alias tmux='tmux -2'
 alias g='git'
-alias dd='dd status=progress'
+alias dd='/usr/bin/dd status=progress'
 alias nossh='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 alias grep='grep --color'
 
@@ -11,6 +11,7 @@ if [[ "$uname_string" == 'OpenBSD' ]]; then
 else
     alias ls='ls --color=auto'
     alias ip='ip -c'
+    alias ips='ip -br a'
     alias dmesg='dmesg -T --color'
 fi
 

@@ -120,7 +120,7 @@ take_this_project() {
         return
     fi
 
-    if [ -e "${current_project_dir}/.git/hooks/post-commit" ]; then
+    if [ ! -e "${current_project_dir}/.git/hooks/post-commit" ]; then
         ln -s "${HOME}/.git-templates/hooks/post-commit" "${current_project_dir}/.git/hooks/post-commit"
         echo "Installed Post Commit Hook"
     fi
