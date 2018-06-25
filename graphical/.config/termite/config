@@ -4,8 +4,8 @@ scroll_on_output = false
 scroll_on_keystroke = true
 mouse_autohide = false
 allow_bold = true
+font = FiraMono Regular 12
 font = Pragmata Pro 12
-font = DejaVu Sans Mono 14
 dynamic_title = true
 urgent_on_bell = true
 clickable_url = true
@@ -40,8 +40,8 @@ color15 = #d7d7d7
 
 
 [hints]
+font = FiraMono Regular 12
 font = Pragmata Pro 12
-font = DejaVu Sans Mono 14
 foreground = #000000
 background = #FD971F
 border = #000000
