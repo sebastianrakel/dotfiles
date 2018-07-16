@@ -133,13 +133,10 @@ take_this_project() {
 }
 
 if type startx &>/dev/null && ! pgrep X >/dev/null; then
-    [][ -z $TTY ]] && TTY=$(tty)
-	TTY=${TTY#/dev/}
-
-	if [[ $TTY = tty1 ]]; then
-		startx | systemd-cat -t Xorg-session
-		exit
-	fi
+    if [[ ! $DISPLAY && $XDG_VTNR -eq 1 ]]; then
+        startx | systemd-cat -t Xorg-session
+	exit
+    fi
 fi
 
 #
