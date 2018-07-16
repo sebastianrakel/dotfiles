@@ -45,6 +45,7 @@ export GOBIN=$GOPATH/bin
 
 PATH="$HOME/.bin:$PATH"
 PATH="$HOME/.bin/local:$PATH"
+PATH="$HOME/.local/bin:$PATH"
 
 #
 # Base 16 - Color Switching
@@ -130,6 +131,16 @@ take_this_project() {
         sh "${current_project_dir}/.giterize.sh"
     fi
 }
+
+if type startx &>/dev/null && ! pgrep X >/dev/null; then
+    [][ -z $TTY ]] && TTY=$(tty)
+	TTY=${TTY#/dev/}
+
+	if [[ $TTY = tty1 ]]; then
+		startx | systemd-cat -t Xorg-session
+		exit
+	fi
+fi
 
 #
 # Load local settings
