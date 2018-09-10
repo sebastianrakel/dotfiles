@@ -5,7 +5,7 @@
 #
 
 localprofile=$HOME/.profile.local
-
+uname_string=`uname`
 #
 # Terminal Settings
 #
@@ -96,17 +96,21 @@ export ALTERNATE_EDITOR=emacs
 export EDITOR=emacsclient
 export VISUAL=emacsclient
 
-PRINT="0" archlinux_check_kernel.sh
+if [ "${uname_string}" != "FreeBSD" ]; then
+    # Archlinux Kernel check
+    PRINT="0" archlinux_check_kernel.sh
+
+    # GPG
+    if [ -e "${HOME}/.bin/gpg-agent.sh" ] ; then
+        . "${HOME}/.bin/gpg-agent.sh"
+    fi
+fi
 
 # Music
 
 export MPD_HOST="$HOME/.mpd/socket"
 
-# GPG
 
-if [ -e "${HOME}/.bin/gpg-agent.sh" ] ; then
-    . "${HOME}/.bin/gpg-agent.sh"
-fi
 
 # Little Helpers
 goto_golang_project() {
@@ -131,6 +135,15 @@ take_this_project() {
         sh "${current_project_dir}/.giterize.sh"
     fi
 }
+
+#if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
+#    cd ${HOME}/Projects/Linux/tablecloth/
+#  XKB_DEFAULT_LAYOUT=us exec build/tablecloth/tablecloth
+#fi
+
+#if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]] && [[ -z $XDG_SESSION_TYPE ]]; then
+#  XDG_SESSION_TYPE=wayland exec dbus-run-session gnome-session
+#fi
 
 if type startx &>/dev/null && ! pgrep X >/dev/null; then
     if [[ ! $DISPLAY && $XDG_VTNR -eq 1 ]]; then

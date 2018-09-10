@@ -6,8 +6,8 @@ alias dd='/usr/bin/dd status=progress'
 alias nossh='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 alias grep='grep --color'
 
-if [[ "$uname_string" == 'OpenBSD' ]]; then
-
+if [[ "$uname_string" == 'OpenBSD' || "$uname_string" == 'FreeBSD' ]]; then
+    alias ls='ls -G'
 else
     alias ls='ls --color=auto'
     alias ip='ip -c'
