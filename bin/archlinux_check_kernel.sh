@@ -1,8 +1,14 @@
-#!/bin/bash
-OUTPUT=${PRINT:-"1"} perl -E '$output = $ENV{"OUTPUT"} == "1"; ($run, $run_patch, $inst) = (`uname -r` =~ /([\w\d-.]+)-arch([\d]+)/g, `pacman -Q linux` =~ /linux\s+(.*)/g); say "Running Kernel: $run-$run_patch" if $output ; say "Installed Kernel: $inst" if $output ; exit 1 if "#{run}-#{run_patch}" != "#{inst}"'
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use List::Util qw/any/;
+use feature qw/say/;
 
-rc=$?
- 
-if [[ $rc != 0 ]]; then
-    echo "YOUR FUCKING KERNEL IS FUCKING OLD!"
-fi
+my @old = `uname -r` =~ /(\d+)/g;
+my @new = `pacman -Q linux` =~ /(\d+)/g;
+
+my $reboot = @old != @new || any {$old[$_] != $new[$_]} (0..(@new-1));
+
+if ($reboot) {
+       print "YOUR FUCKING KERNEL IS FUCKING OLD!\n";
+}
