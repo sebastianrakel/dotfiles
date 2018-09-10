@@ -24,6 +24,7 @@ hc keybind $Mod-Shift-e spawn ruby ~/.bin/scripts/locker/locker.rb
 hc keybind $Mod+p spawn ruby ~/Projects/Linux/workspace-switcher/workspace-switcher.rb
 hc keybind $Mod-Shift+p spawn rofi-pass
 hc keybind $Mod-Shift+o spawn ~/Projects/Fun/splatmoji/splatmoji type
+hc keybind $Mod-Print spawn flameshot gui
 
 # basic movement
 # focusing clients
@@ -66,6 +67,9 @@ hc keybind $Mod-Control-Right   resize right +$resizestep
 
 hc keybind XF86MonBrightnessUp spawn ${HOME}/.bin/backlight.rb increase
 hc keybind XF86MonBrightnessDown spawn ${HOME}/.bin/backlight.rb decrease
+
+hc keybind $Mod-Prior spawn ${HOME}/.bin/volume_control.sh increase
+hc keybind $Mod-Next spawn ${HOME}/.bin/volume_control.sh decrease
 
 hc keybind XF86AudioRaiseVolume spawn ${HOME}/.bin/volume_control.sh increase
 hc keybind XF86AudioLowerVolume spawn ${HOME}/.bin/volume_control.sh decrease
