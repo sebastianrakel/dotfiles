@@ -1,34 +1,11 @@
-# git submodules
-at first usage, you have to load the submodules
+# My dotfiles
 
-```
-git submodule init && git submodule update
-```
+This are my dotfiles, my daily driver
 
-# Usage
-```
-usage: init.py [-h] [--graphical] [--terminal] [--editor] [--tools] [--fonts]
-               [--bin] [--jetbrains] [--print] [--verbose] [--check] [--test]
-               [--createdir]
+You are free to copy anything of this repo, maybe it's helpful.
 
-init script for dotfiles
+I'm always open for tips or anything like this
 
-optional arguments:
-  -h, --help   show this help message and exit
-  --check      check if link allready set
-  --test       only test
-  --createdir  creates parent directories if not exists
+# Igor
 
-category:
-  --graphical  graphical dotfiles like i3 config
-  --terminal   terminal dotfiles like zsh
-  --editor     editor dotfiles like vim
-  --tools      configfiles for tools like ssh
-  --fonts      fonts for user
-  --bin        binaries/scripts
-  --jetbrains  jetbrains ide settings
-
-output:
-  --print      only print link command
-  --verbose    show output
-```
+This repo will be deployed with [https://github.com/noctux/igor](igor)... the awesome project of noctux

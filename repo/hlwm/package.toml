@@ -1,0 +1,7 @@
+[[files]]
+source = "./autostart"
+dest   = "~/.config/herbstluftwm/autostart"
+
+[[files]]
+source = "./panel.sh"
+dest   = "~/.config/herbstluftwm/panel.sh"

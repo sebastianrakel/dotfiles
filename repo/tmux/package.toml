@@ -1,0 +1,3 @@
+[[files]]
+source = "./tmux.conf"
+dest   = "~/.tmux.conf"

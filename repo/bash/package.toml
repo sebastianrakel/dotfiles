@@ -1,0 +1,3 @@
+[[files]]
+source = "./bashrc"
+dest   = "~/.bashrc"

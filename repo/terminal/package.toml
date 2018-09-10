@@ -1,0 +1,7 @@
+[[files]]
+source = "./profile"
+dest   = "~/.profile"
+
+[[files]]
+source = "./aliases"
+dest   = "~/.aliases"

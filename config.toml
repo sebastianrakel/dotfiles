@@ -1,0 +1,32 @@
+[defaults]
+        repositories = {
+                     main = { path = './repo' }
+        }
+
+        facts = {
+              git = {
+                  email      = "sebastian@devunit.eu",
+                  signingkey = "B9D631B8"
+              }
+        }
+
+[configurations.base]
+        packages = ['git', 'zsh', 'tmux', 'terminal']
+
+[configurations.computer]
+        dependencies = ['base']
+        packages = ['emacs', 'gpg', 'x11', 'hlwm', 'termite', 'qutebrowser']
+
+[configurations.loki]
+        dependencies = ['computer']
+        packages = ['mpd']
+
+[configurations.ws-rakel-seb]
+        dependencies = ['computer']
+
+        facts = {
+              git = {
+                  email      = "sebastian.rakel@landwehr.it",
+                  signingkey = "B9D631B8"
+              }
+        }

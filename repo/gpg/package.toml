@@ -1,0 +1,3 @@
+[[files]]
+source = "./gpg-agent.conf"
+dest   = "~/.gnupg/gpg-agent.conf"

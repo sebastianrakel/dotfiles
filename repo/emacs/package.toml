@@ -1,0 +1,11 @@
+[[files]]
+source = "./myinit.org"
+dest   = "~/.emacs.d/myinit.org"
+
+[[files]]
+source = "./init.el"
+dest   = "~/.emacs.d/init.el"
+
+[[files]]
+source = "./include"
+dest   = "~/.emacs.d/include"

@@ -1,0 +1,7 @@
+[[templates]]
+source  = "./templates/config.tmpl"
+dest    = "~/.config/git/config"
+
+[[files]]
+source  = "./gitignore"
+dest    = "~/.gitignore"

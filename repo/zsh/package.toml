@@ -1,0 +1,7 @@
+[[files]]
+source = "./zshrc"
+dest   = "~/.zshrc"
+
+[[files]]
+source = "./zsh"
+dest   = "~/.zsh"

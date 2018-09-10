@@ -1,0 +1,39 @@
+[user]
+    name = Sebastian Rakel    
+    email = { $facts{git}->{email} }
+    signingkey = { $facts{git}->{signingkey} }
+    
+[push]
+    default = simple
+    
+[merge]
+    tool = gvimdiff
+    
+[core]
+    editor = vim
+    excludesfile = /home/sebastian/.gitignore
+        
+[alias]
+    co = checkout
+    ci = commit
+    st = status
+    sts = status -s
+    br = branch
+    type = cat-file -t
+    dump = cat-file -p
+    sl = log --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=iso --decorate=short
+    l = log --graph --pretty=format:'%C(yellow)%h %Cblue%an%Cgreen%d %Cred(%ad) %Creset%s' --date=relative --decorate=short
+    pu = push
+    pl = pull
+    
+[commit]
+    gpgsign = true
+    
+[sendemail]
+    from = Sebastian Rakel <sebastian@devunit.eu>
+    smtpuser =
+    smtpserver = "/usr/bin/msmtp"
+    chainreplyto = false
+
+[http]
+    emptyAuth = true

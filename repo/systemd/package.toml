@@ -1,0 +1,11 @@
+[[files]]
+source = "./bar.service"
+dest   = "~/.config/systemd/user/bar.service"
+
+[[files]]
+source = "./mail-sync.service"
+dest   = "~/.config/systemd/user/mail-sync.service"
+
+[[files]]
+source = "./mail-sync.timer"
+dest   = "~/.config/systemd/user/mail-sync.timer"

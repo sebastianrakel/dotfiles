@@ -1,0 +1,3 @@
+[[files]]
+source = "./mpd.conf"
+dest   = "~/.config/mpd/mpd.conf"
