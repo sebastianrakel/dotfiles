@@ -22,13 +22,18 @@
      (recentf-mode 1)
      (setq recentf-max-menu-items 25)
    #+END_SRC
-** COMMENT Font Settings
+** Font Settings
    #+BEGIN_SRC emacs-lisp
      (cond 
       ((find-font (font-spec :name "PragmataPro 12"))
-       (set-frame-font "PragmataPro 12"))
+       (add-to-list 'default-frame-alist '(font . "PragmataPro 12"))
+       (set-face-attribute 'default t :font "PragmataPro 12")
+       (message "Set Pragmata"))
       ((find-font (font-spec :name "Fira Mono 11"))
-       (set-frame-font "Fira Mono 11")))
+       (add-to-list 'default-frame-alist '(font . "Fira Mono 11"))
+       (set-face-attribute 'default t :font "Fira Mono 11")
+       (message "Set Fira")))
+
 
    #+END_SRC
 ** Theme

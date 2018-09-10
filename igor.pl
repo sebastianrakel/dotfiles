@@ -15277,7 +15277,7 @@ $fatpacked{"Igor/CLI.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'IGOR_C
   	} sort keys %$cfgs;
   
   	die "Automatic task selection using identifier '$identifier' not unique: " . @tasks if @tasks > 1;
-  	die "Task selection using identifier '$identifier' machted no configurations" unless @tasks;
+  	die "Task selection using identifier '$identifier' matched no configurations" unless @tasks;
   
   	return $tasks[0];
   }
@@ -16424,8 +16424,16 @@ $fatpacked{"Igor/Operation.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'
   	# If we execute a proper command (vs relying on sh),
   	# we can actually check whether the binary exists...
   	if (ref($self->command) eq 'ARRAY') {
-  		my $binary = File::Which::which($self->command->[0]);
-  		log_debug "Resolved @{[$self->command->[0]]} to @{[$binary // 'undef']}";
+  		my $cmd = $self->command->[0];
+  		my $binary;
+  		if (-x $cmd) {
+  			$binary = $cmd;
+  		} elsif (-x "@{[$self->basedir]}/$cmd") {
+  			$binary = "@{[$self->basedir]}/$cmd";
+  		}else {
+  			$binary = File::Which::which($cmd);
+  		}
+  		log_debug "Resolved $cmd to @{[$binary // 'undef']}";
   		return defined($binary);
   	}
   
@@ -16572,6 +16580,7 @@ $fatpacked{"Igor/Package.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'IG
   };
   
   use Data::Dumper;
+  use File::pushd;
   use Path::Tiny;
   use Try::Tiny;
   use Type::Tiny;
@@ -16642,9 +16651,13 @@ $fatpacked{"Igor/Package.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'IG
   sub from_perl_file {
   	my ($filepath, $repository, $config) = @_;
   
-  	my $packagesub = Igor::Util::file_to_coderef($filepath);
-  	my $conf = $packagesub->($config);
   	my $packagedir = path($filepath)->parent;
+  	my $packagesub = Igor::Util::file_to_coderef($filepath);
+  	my $conf;
+  	{ # execute this from the packageidr
+  		my $dir = pushd($packagedir);
+  		$conf = $packagesub->($config);
+  	}
   
   	return from_hash($conf, $packagedir, $repository);
   }
@@ -16937,12 +16950,15 @@ $fatpacked{"Igor/Sink.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'IGOR_
   			$changeneeded = $self->path->slurp_utf8() ne $data;
   		} catch {
   			$changeneeded = 1;
-  		}
+  		};
   	} elsif ($type == Igor::Pipeline::Type::FILE) {
   		try {
   			$changeneeded = not (S_ISLNK($self->path->lstat->mode) && ($self->path->realpath eq $data->realpath));
   		} catch {
   			$changeneeded = 1;
+  		};
+  		if (-e $self->path && not S_ISLNK($self->path->lstat->mode)) {
+  			die ("File @{[$self->path]} already exists and is not a symlink");
   		}
   	} else {
   		die "Unsupported type \"$type\" at \"@{[ __PACKAGE__ ]}\" when checking file @{[$self->path]}";

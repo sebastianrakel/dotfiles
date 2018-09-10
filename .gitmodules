@@ -4,9 +4,6 @@
 [submodule "bin/rofi-extension"]
 	path = bin/rofi-extension
 	url = https://github.com/sebastianrakel/rofi-extensions.git
-[submodule "bin/base16-shell"]
-	path = bin/base16-shell
+[submodule "repo/scripts/files/base16-shell"]
+	path = repo/scripts/files/base16-shell
 	url = https://github.com/chriskempson/base16-shell.git
-[submodule "bin/config-merger"]
-	path = bin/config-merger
-	url = https://github.com/sebastianrakel/config-merger.git
