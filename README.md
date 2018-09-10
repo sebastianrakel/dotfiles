@@ -8,4 +8,4 @@ I'm always open for tips or anything like this
 
 # Igor
 
-This repo will be deployed with [https://github.com/noctux/igor](igor)... the awesome project of noctux
+This repo will be deployed with [igor](https://github.com/noctux/igor)... the awesome project from noctux
