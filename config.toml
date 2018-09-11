@@ -27,6 +27,6 @@
         facts = {
               git = {
                   email      = "sebastian.rakel@landwehr.it",
-                  signingkey = "B9D631B8"
+                  signingkey = "7ED04C7F09524295F10DA30515725C19DFA82902"
               }
         }
