@@ -1,3 +1,7 @@
 [[files]]
 source = "./gpg-agent.conf"
 dest   = "~/.gnupg/gpg-agent.conf"
+
+[[files]]
+source = "./gpg-agent.sh"
+dest   = "~/.bin/gpg-agent.sh"
