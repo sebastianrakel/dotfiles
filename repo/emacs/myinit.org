@@ -406,7 +406,8 @@
    #+END_SRC
 ** E-Mail
    #+BEGIN_SRC emacs-lisp
-     (load "~/.emacs.d/local/mail-settings")
+     (cond (file-exists-p "~/.emacs.d/local/mail-settings")
+           (load "~/.emacs.d/local/mail-settings"))
    #+END_SRC
 * Testing
 
