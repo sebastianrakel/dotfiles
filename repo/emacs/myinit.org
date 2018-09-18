@@ -407,6 +407,9 @@
      (cond
       ((file-exists-p "~/.emacs.d/local/mail-settings.el")
        (load "~/.emacs.d/local/mail-settings")))
+
+     (add-to-list 'auto-mode-alist
+                  '("loki.none" . notmuch-message-mode))
    #+END_SRC
 * Testing
 
