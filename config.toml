@@ -21,6 +21,10 @@
         dependencies = ['computer']
         packages = ['mpd']
 
+[configurations.odin]
+        dependencies = ['computer']
+        packages = ['mpd']
+
 [configurations.ws-rakel-seb]
         dependencies = ['computer']
 
