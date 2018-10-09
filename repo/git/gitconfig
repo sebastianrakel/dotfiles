@@ -1,8 +1,3 @@
-[user]
-    name = Sebastian Rakel    
-    email = { $facts{git}->{email} }
-    signingkey = { $facts{git}->{signingkey} }
-    
 [push]
     default = simple
     
@@ -27,13 +22,10 @@
     pl = pull
     
 [commit]
-    gpgsign = true
-    
-[sendemail]
-    from = Sebastian Rakel <sebastian@devunit.eu>
-    smtpuser =
-    smtpserver = "/usr/bin/msmtp"
-    chainreplyto = false
+    gpgsign = true    
 
 [http]
     emptyAuth = true
+
+[include]
+    path = /home/sebastian/.config/git/conf.d/user
