@@ -1,5 +1,9 @@
 [[templates]]
-source  = "./templates/config.tmpl"
+source  = "./templates/user.tmpl"
+dest    = "~/.config/git/conf.d/user"
+
+[[files]]
+source  = "./gitconfig"
 dest    = "~/.config/git/config"
 
 [[files]]
