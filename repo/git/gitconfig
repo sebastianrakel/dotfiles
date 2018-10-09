@@ -28,4 +28,4 @@
     emptyAuth = true
 
 [include]
-    path = /home/sebastian/.config/git/conf.d
+    path = /home/sebastian/.config/git/conf.d/user
