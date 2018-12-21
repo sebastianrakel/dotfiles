@@ -6,7 +6,7 @@
         facts = {
               git = {
                   email      = "sebastian@devunit.eu",
-                  signingkey = "B9D631B8"
+                  signingkey = "779EBA5EB9D631B8!"
               }
         }
 
