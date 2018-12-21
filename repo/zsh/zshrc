@@ -7,6 +7,8 @@ for config_file ($ZSH/*.zsh) source $config_file
 autoload -U compinit
 compinit -i
 
+autoload edit-command-line
+zle -N edit-command-line
 
 # check dotfiles version
 # dotfiles/checkStatus.sh ~/dotfiles/

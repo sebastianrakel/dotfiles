@@ -40,6 +40,11 @@ PATH="$PATH:$GOPATH/bin"
 export GOBIN=$GOPATH/bin
 
 #
+# Rust Lang Settings
+#
+PATH="$PATH:$HOME/.cargo/bin"
+
+#
 # Extend Path Variable
 #
 
@@ -143,6 +148,10 @@ take_this_project() {
 
 #if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]] && [[ -z $XDG_SESSION_TYPE ]]; then
 #  XDG_SESSION_TYPE=wayland exec dbus-run-session gnome-session
+#fi
+
+#if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then 
+#  XKB_DEFAULT_LAYOUT=us exec sway -d 2 > /home/sebastian/sway.log
 #fi
 
 if type startx &>/dev/null && ! pgrep X >/dev/null; then

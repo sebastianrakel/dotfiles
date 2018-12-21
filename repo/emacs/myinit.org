@@ -52,7 +52,6 @@
            `((".*" ,temporary-file-directory t)))
 
      (windmove-default-keybindings 'meta)
-
    #+END_SRC
 ** Custom Functions
 *** Reload Init File

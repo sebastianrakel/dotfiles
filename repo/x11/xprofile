@@ -39,6 +39,7 @@ feh --bg-center "${HOME}/Pictures/Wallpaper/zombie.jpg"
 export BROWSER=chromium
 export TERMINAL=termite
 
+export QT_AUTO_SCREEN_SCALE_FACTOR=0
 
 if [ -f $localxprofile ] ; then
     . $localxprofile
