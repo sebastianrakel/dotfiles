@@ -1,7 +1,7 @@
 [options]
 font = Monospace 9
 font = Fira Mono 12
-font = PragmataPro 12
+#font = PragmataPro 12
 scrollback_lines = 10000
 
 [colors]
