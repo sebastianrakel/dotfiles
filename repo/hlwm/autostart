@@ -22,7 +22,7 @@ hc keybind $Mod-Return spawn ${TERMINAL:-xterm} # use your $TERMINAL with xterm 
 hc keybind $Mod-d spawn rofi -show run
 hc keybind $Mod-Shift-e spawn ruby ~/.bin/scripts/locker/locker.rb
 hc keybind $Mod+p spawn ruby ~/Projects/Linux/workspace-switcher/workspace-switcher.rb
-hc keybind $Mod-Shift+p spawn rofi-pass
+hc keybind $Mod-Shift+p spawn rofi-pass --root .password-store:.password-store-futev
 hc keybind $Mod-Shift+o spawn ~/Projects/Fun/splatmoji/splatmoji type
 hc keybind $Mod-Print spawn flameshot gui
 
@@ -97,7 +97,7 @@ hc keybind $Mod-comma  use_index -1 --skip-visible
 hc keybind $Mod-r remove
 hc keybind $Mod-s floating toggle
 hc keybind $Mod-f fullscreen toggle
-# hc keybind $Mod-p pseudotile toggle
+hc keybind $Mod-Control-p pseudotile toggle
 # The following cycles through the available layouts within a frame, but skips
 # layouts, if the layout change wouldn't affect the actual window positions.
 # I.e. if there are two windows within a frame, the grid layout is skipped.
@@ -117,6 +117,7 @@ hc keybind $Mod-BackSpace   cycle_monitor
 hc keybind $Mod-Tab         cycle_all +1
 hc keybind $Mod-Shift-Tab   cycle_all -1
 hc keybind $Mod-c cycle
+hc keybind $Mod-Shift-c spawn python ~/.bin/local/windowswitcher.py
 hc keybind $Mod-i jumpto urgent
 
 # theme
@@ -182,6 +183,8 @@ herbstclient set tree_style '╾│ ├└╼─┐'
 # hc set_monitors 1280x1024+0+0 1280x1024+1280+0
 # or simply:
 hc detect_monitors
+
+feh --bg-fill "${HOME}/Pictures/Wallpaper/archlinux.jpg"
 
 if [ -e "${HOME}/.config/systemd/user/bar.service" ]; then
     systemctl --user restart bar    
