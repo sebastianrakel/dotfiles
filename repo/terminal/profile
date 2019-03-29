@@ -116,11 +116,25 @@ fi
 export MPD_HOST="$HOME/.mpd/socket"
 
 
+pass() {
+  gopass $@
+}
+
 
 # Little Helpers
 goto_golang_project() {
     golang_chosen_dir=$(tree -L 3 -d -f -i "${GOPATH}/src/" | fzf)
     cd "${golang_chosen_dir}" || return
+}
+
+load_venv() {
+    current_dir=$(pwd)
+    if [ -d "${current_dir}/venv" ]; then
+        source "${current_dir}/venv/bin/activate"
+    else
+        venv=$(find "${HOME}/.venvs" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | fzf)
+        source "${HOME}/.venvs/${venv}/bin/activate"
+    fi
 }
 
 take_this_project() {
@@ -156,7 +170,7 @@ take_this_project() {
 
 if type startx &>/dev/null && ! pgrep X >/dev/null; then
     if [[ ! $DISPLAY && $XDG_VTNR -eq 1 ]]; then
-        startx | systemd-cat -t Xorg-session
+        startx
 	exit
     fi
 fi
