@@ -2,7 +2,7 @@
 ** Include own files
      #+BEGIN_SRC emacs-lisp
        (add-to-list 'load-path "~/.emacs.d/include")
-       (load "~/.emacs.d/local/projectfinder.el")       
+       (load "~/.emacs.d/local/projectfinder.el")
      #+END_SRC
 ** Interface
 *** Hide Startup Message, Toolbar, Scrollbar and Menubar
@@ -15,7 +15,7 @@
       (require 'mybuffer)
       (setup-mybuffer-environment)
       (setup-startup-hook)
-    #+END_SRC  
+    #+END_SRC
 ** Recent Files
    #+BEGIN_SRC emacs-lisp
      (require 'recentf)
@@ -24,15 +24,10 @@
    #+END_SRC
 ** Font Settings
    #+BEGIN_SRC emacs-lisp
-     (if (string-equal system-name "loki")
-         (progn
-           (message "Setting pragmata")
-           (add-to-list 'default-frame-alist '(font . "PragmataPro-12"))
-           (set-frame-font "PragmataPro-12"))
-       (progn
-         (message "Setting Fira Mono")
-         (add-to-list 'default-frame-alist '(font . "fira mono-10"))
-         (set-frame-font "fira mono-10")))
+     (progn
+       (message "Setting Fira Mono")
+       (add-to-list 'default-frame-alist '(font . "fira mono-12"))
+       (set-frame-font "fira mono-12"))
    #+END_SRC
 ** Theme
    #+BEGIN_SRC emacs-lisp
@@ -73,7 +68,7 @@
         (interactive)
         (message
          (if (let (window (get-buffer-window (current-buffer)))
-               (set-window-dedicated-p window 
+               (set-window-dedicated-p window
                                        (not (window-dedicated-p window))))
              "Window '%s' is dedicated"
            "Window '%s' is normal")
@@ -85,7 +80,7 @@
      (global-set-key (kbd "M-<f1>") 'helm-dash)
      (global-set-key (kbd "C-<f1>") '(lambda () (interactive) (show-mybuffer)))
 
-     (global-set-key (kbd "C-<f3>") 'treemacs-toggle)
+     (global-set-key (kbd "C-<f3>") 'treemacs-add-project-to-workspace)
 
      (global-set-key (kbd "M-<f5>") 'revert-buffer)
      (global-set-key (kbd "C-<f5>") '(lambda () (interactive) (reload-init)))
@@ -142,7 +137,7 @@
     :ensure t
     :config
     (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
-#+END_SRC 
+#+END_SRC
 ** Markdown
 #+BEGIN_SRC emacs-lisp
   (defun my-gfm-hook()
@@ -157,7 +152,7 @@
            ("\\.markdown\\'" . markdown-mode))
     :init (my-gfm-hook))
 #+END_SRC
-   
+
 * Helm
 #+BEGIN_SRC emacs-lisp
   (use-package helm
@@ -166,7 +161,8 @@
   (use-package helm-dash
     :ensure t
     :init
-    (setq helm-dash-browser-func 'eww))
+    (setq helm-dash-browser-func 'eww)
+    (setq helm-dash-docsets-path "~/.local/share/Zeal/Zeal/docsets"))
 #+END_SRC
 
 * Powerline
@@ -301,7 +297,8 @@
         :init
         (add-hook 'python-mode-hook 'jedi:setup)
         (add-hook 'python-mode-hook 'jedi:ac-setup)
-        (add-hook 'python-mode-hook 'my-python-hook))
+        (add-hook 'python-mode-hook 'my-python-hook)
+        (add-hook 'python-mode-hook (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace))))
 
     #+END_SRC
 ** Ruby
@@ -349,6 +346,24 @@
    #+BEGIN_SRC emacs-lisp
      (use-package rust-mode
        :ensure t)
+   #+END_SRC
+** Haxe
+   #+BEGIN_SRC emacs-lisp
+     (use-package haxe-mode
+       :ensure t)
+   #+END_SRC
+** HTML
+   #+BEGIN_SRC emacs-lisp
+     (use-package web-mode
+       :ensure t)
+
+     (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+     (add-to-list 'auto-mode-alist '("\\.jinja2?\\'" . web-mode))
+     (add-to-list 'auto-mode-alist '("\\.djhtml?\\'" . web-mode))
+
+     (setq web-mode-engines-alist
+           '(("django"    . "\\.jinja2\\'")
+             ("django"    . "\\.djhtml\\'")))
    #+END_SRC
 * Miscellaneous
 #+BEGIN_SRC emacs-lisp
@@ -411,4 +426,3 @@
                   '("loki.none" . notmuch-message-mode))
    #+END_SRC
 * Testing
-
