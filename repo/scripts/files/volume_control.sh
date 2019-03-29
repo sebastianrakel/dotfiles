@@ -1,26 +1,22 @@
 #!/bin/bash
 
 notify_group="volume-control"
+active_sink=$(pacmd list-sinks |awk '/* index:/{print $3}')
 
-function get_volume {
-    current_volume=`pactl list sinks | grep '^[[:space:]]Volume:' | head -n 1 | tail -n 1 | sed -e 's,.* \([0-9][0-9]*\)%.*,\1,'`
+function get_volume() {
+    current_volume=$(pactl list sinks | grep '^[[:space:]]Volume:' | head -n $(( $1 + 1 )) | tail -n 1 | sed -e 's,.* \([0-9][0-9]*\)%.*,\1,')
 }
 
 function set_volume {
-    amixer -D pulse -M set Master $1
-    #pactl set-sink-mute 0 false; pactl set-sink-volume 0 $1
-    #get_volume
-    #notify-send -c "${notify_group}" "Set Volume to ${current_volume}"
+    pactl set-sink-mute ${active_sink} false; pactl set-sink-volume ${active_sink} ${1}
+    get_volume ${active_sink}
+    notify-send -c "${notify_group}" "Set Volume to ${current_volume}"
 }
 
-function get_mute_state {
-    mute_output=`pactl list sinks | grep '^[[:space:]]Mute:' | head -n 1 | tail -n 1 | sed -e 's,.* \([A-Za-z]*\).*,\1,'`
-
-    if [ "${mute_output}" == "yes"]; then
-        mute_state="muted"
-    else
-        mute_state="unmuted"
-    fi
+function toggle_mute() {
+    pactl set-sink-mute ${active_sink} toggle
+    muted=$(pactl list sinks | grep '^[[:space:]]Mute:' | head -n $(( $1 + 1 )) | tail -n 1 | sed -e 's,.* \([A-Za-z]*\).*,\1,')
+    notify-send -c "${notify_group}" "Muted ${muted}"
 }
 
 case "${1}"
@@ -32,10 +28,7 @@ in
         set_volume "-5%"
     ;;
     "mute")
-        #pactl set-sink-mute 0 toggle
-        amixer -D pulse set Master toggle 
-        get_mute_state
-        notify-send -c "${notify_group}" "Volume is ${mute_state}"
+        toggle_mute ${active_sink}
     ;;
 esac
 
