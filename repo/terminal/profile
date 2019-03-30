@@ -175,7 +175,7 @@ if type startx &>/dev/null && ! pgrep X >/dev/null; then
     fi
 fi
 
-if [ "$TERM" == "dump" ]; then
+if [ "$TERM" = "dump" ]; then
     PS1="> "
 fi
 
