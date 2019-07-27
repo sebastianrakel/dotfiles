@@ -160,9 +160,6 @@ hc rule focus=on # normally focus new clients
 # give focus to most common terminals
 #hc rule class~'(.*[Rr]xvt.*|.*[Tt]erm|Konsole)' focus=on
 
-hc rule instance=chromium tag=www
-hc rule instance=qutebrowser tag=www
-
 hc rule class~'jetbrains-.*' tag=dev
 hc rule instance='jetbrains-toolbox' tag=dev
 
