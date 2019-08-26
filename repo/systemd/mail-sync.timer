@@ -2,7 +2,7 @@
 Description=Run mail-sync every 2 Minutes
 
 [Timer]
-OnCalendar=*:00/2:00
+OnCalendar=*:00/30:00
 AccuracySec=1s
 
 [Install]
