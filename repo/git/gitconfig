@@ -16,11 +16,18 @@
     br = branch
     type = cat-file -t
     dump = cat-file -p
-    sl = log --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=iso --decorate=short
-    l = log --graph --pretty=format:'%C(yellow)%h %Cblue%an%Cgreen%d %Cred(%ad) %Creset%s' --date=relative --decorate=short
+    sl = log --pretty=log --date=iso --decorate=short
+    l = log --graph --pretty=log --date=relative --decorate=short
     pu = push
     pl = pull
-    
+    fl = log --color --all --date-order --decorate --stat
+    lg = log --graph --abbrev-commit --color --pretty=log
+    lf = lg --name-status
+
+[pretty]
+    log = %C(yellow)%h%C(reset) %C(normal)%s%C(reset) %C(dim white)%an%C(reset) %C(dim blue)(%ar)%C(reset) %C(auto)%d%C(reset)
+    old = %C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s
+
 [commit]
     gpgsign = true    
 
