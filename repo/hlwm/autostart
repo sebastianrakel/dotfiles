@@ -19,7 +19,7 @@ hc keybind $Mod-Shift-q close
 hc keybind $Mod-Shift-r reload
 # hc keybind $Mod-Shift-c close
 hc keybind $Mod-Return spawn ${TERMINAL:-xterm} # use your $TERMINAL with xterm as fallback
-hc keybind $Mod-d spawn rofi -show run
+hc keybind $Mod-d spawn rofi -show combi -combi-modi run,drun -show-icons
 hc keybind $Mod-Shift-e spawn ruby ~/.bin/scripts/locker/locker.rb
 hc keybind $Mod+p spawn ruby ~/Projects/Linux/workspace-switcher/workspace-switcher.rb
 hc keybind $Mod-Shift+p spawn rofi-pass --root .password-store:.password-store-futev
