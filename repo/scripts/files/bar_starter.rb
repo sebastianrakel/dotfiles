@@ -24,6 +24,12 @@ def start_trayer()
   return trayer_pid
 end
 
+def start_plank()
+  plank_command = "plank"
+  plank_pid = Process.spawn(plank_command)
+  return plank_pid
+end
+
 monitor_count = `herbstclient list_monitors`.lines.size
 poly_displays = `polybar -m`.lines
 
@@ -43,13 +49,14 @@ bar_pids = monitor_count.times.map do |index|
 
   monitor = poly_displays[index].split(":")[0]
   
-  command = start_polybar(index)
-  pad_command = "herbstclient pad #{index} 16"
+  command = start_polybar(index)  
+  pad_command = "herbstclient pad #{index} 30"
   Process.spawn(pad_command)
   Process.spawn({"MONITOR" => monitor}, command)
 end
 
 trayer_pid = 0
+plank_pid = start_plank()
 
 IO.popen(%w(herbstclient --idle)) do |io|
   io.each do |line|
@@ -60,5 +67,6 @@ IO.popen(%w(herbstclient --idle)) do |io|
     }
 
     Process.kill('TERM', trayer_pid) unless trayer_pid == 0
+    Process.kill('TERM', plank_pid) unless plank_pid == 0
   end
 end
