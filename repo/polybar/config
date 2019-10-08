@@ -1,0 +1,334 @@
+;=====================================================
+;
+;   To learn more about how to configure Polybar
+;   go to https://github.com/jaagr/polybar
+;
+;   The README contains alot of information
+;
+;=====================================================
+
+[settings]
+screenchange-reload = true
+;compositing-background = xor
+;compositing-background = screen
+;compositing-foreground = source
+;compositing-border = over
+
+[global/wm]
+margin-top = 5
+margin-bottom = 5
+
+[colors]
+transparent = #00000000
+background = ${xrdb:color0:#222}
+background-alt = ${xrdb:color0:#444}
+foreground = ${xrdb:color7:#FFF}
+foreground-alt = ${xrdb:color8:#222}
+primary = ${xrdb:color1:#222}
+secondary = ${xrdb:color2:#222}
+alert = ${xrdb:color3:#222}
+
+[bar/2]
+inherit = bar/0
+monitor = ${env:MONITOR:HDMI-1}
+
+[bar/1]
+inherit = bar/0
+monitor = ${env:MONITOR:HDMI-1}
+
+[bar/0]
+monitor = ${env:MONITOR:HDMI-1}
+width = 100%
+height = 30
+radius = 0
+fixed-center = false
+
+background = ${colors.transparent}
+foreground = ${colors.foreground}
+
+line-size = 2
+line-color = ${colors.foreground}
+
+border-size = 0
+border-color = ${colors.foreground}
+
+padding-left = 0
+padding-right = 0
+
+module-margin-left = 0
+module-margin-right = 0
+
+;font-0 = Fira Mono:pixelsize=10;1
+;font-1 = Siji:pixelsize=8;1
+;font-3 = "Font Awesome 5 Free:style=Solid:pixelsize=8;1"
+
+font-0 = FuraCode Nerd Font:style=Regular:size=12;1
+font-1 = FuraCode Nerd Font:style=Regular:size=10;1
+font-2 = FuraCode Nerd Font:style=Regular:size=18;4
+font-3 = mplus Nerd Font Mono;1
+font-4 = "PowerlineSymbols:pixelsize=15;1"
+font-5 = "Font Awesome 5 Free:style=Regular:pixelsize=8;1"
+
+modules-left = space herbstluftwm space arrow->
+;modules-center = xwindow
+modules-right = arrow<- space octo space date space
+;modules-right = unread-mail battery0 battery1 date
+
+tray-position = right
+tray-padding = 2
+tray-maxsize = 20
+;tray-transparent = true
+tray-background = ${colors.background}
+
+;wm-restack = bspwm
+;wm-restack = i3
+;override-redirect = true
+
+;scroll-up = bspwm-desknext
+;scroll-down = bspwm-deskprev
+
+;scroll-up = i3wm-wsnext
+;scroll-down = i3wm-wsprev
+
+[module/arrow->]
+type = custom/text
+content = 
+content-foreground = ${colors.background}
+content-background = ${colors.transparent}
+content-font = 3
+ 
+[module/arrow<-]
+type = custom/text
+content = 
+content-foreground = ${colors.background}
+content-background = ${colors.transparent}
+content-font = 3
+
+[module/space]
+type = custom/text
+content = █
+content-foreground = ${colors.background}
+content-background = ${colors.transparent}
+content-font = 3
+
+[module/tmux-sessions]
+type = custom/script
+
+exec = tmux ls | wc -l
+interval = 10
+
+format-prefix = " "
+
+[module/unread-mail]
+type = custom/script
+
+exec = notmuch search tag:unread and tag:inbox | wc -l
+interval = 10
+
+
+format-prefix = " "
+label = %output:0:15%
+
+
+[module/ewmh]
+type = internal/xworkspaces
+
+pin-workspaces = false
+enable-click = false
+enable-scroll = false
+
+format = <label-state>
+
+label-monitor = %name%
+
+label-active = %name%
+label-active-foreground = #ffffff
+label-active-background = #3f3f3f
+label-active-underline = #fba922
+
+label-occupied = %name%
+label-occupied-underline = #555555
+
+label-urgent = %name%
+label-urgent-foreground = #000000
+label-urgent-background = #bd2c40
+label-urgent-underline = #9b0a20
+
+label-empty = %name%
+label-empty-foreground = #55
+
+[module/xwindow]
+type = internal/xwindow
+label = %title:0:30:...%
+
+
+[module/date]
+type = internal/date
+interval = 5
+
+date = %Y-%m-%d
+date-alt = " %Y-%m-%d"
+
+time = %H:%M
+time-alt = %H:%M:%S
+
+format-prefix = " "
+format-prefix-foreground = ${colors.foreground}
+;format-underline = #0a6cf5
+format-background = ${colors.background}
+
+label = %date% %time%
+
+[module/battery0]
+type = internal/battery
+
+; This is useful in case the battery never reports 100% charge
+full-at = 95
+
+; Use the following command to list batteries and adapters:
+; $ ls -1 /sys/class/power_supply/
+battery = BAT0
+adapter = AC
+
+poll-interval = 5
+format-charging = <animation-charging> <label-charging>
+format-discharging = <ramp-capacity> <label-discharging>
+label-charging = %percentage%%
+label-discharging = %percentage%%
+label-full = %percentage%%
+
+ramp-capacity-0 = 
+ramp-capacity-1 = 
+ramp-capacity-2 = 
+ramp-capacity-3 = 
+ramp-capacity-4 = 
+
+bar-capacity-width = 10
+
+animation-charging-0 = 
+animation-charging-1 = 
+animation-charging-2 = 
+animation-charging-3 = 
+animation-charging-4 = 
+
+animation-charging-framerate = 750
+
+[module/battery1]
+type = internal/battery
+
+; This is useful in case the battery never reports 100% charge
+full-at = 95
+
+; Use the following command to list batteries and adapters:
+; $ ls -1 /sys/class/power_supply/
+battery = BAT1
+adapter = AC
+
+poll-interval = 5
+
+format-charging = <animation-charging> <label-charging>
+format-discharging = <ramp-capacity> <label-discharging>
+label-charging = %percentage%%
+label-discharging = %percentage%%
+label-full = %percentage%%
+
+ramp-capacity-0 = 
+ramp-capacity-1 = 
+ramp-capacity-2 = 
+ramp-capacity-3 = 
+ramp-capacity-4 = 
+
+bar-capacity-width = 10
+
+animation-charging-0 = 
+animation-charging-1 = 
+animation-charging-2 = 
+animation-charging-3 = 
+animation-charging-4 = 
+
+animation-charging-framerate = 750
+
+[module/herbstluftwm]
+type = custom/script
+
+exec-if = ps -C herbstluftwm >/dev/null 2>&1
+exec = ~/.config/polybar/herbstluftwm.sh
+tail = true
+format-background = ${colors.background}
+
+[module/octo]
+type = custom/script
+
+exec-if = ~/.bin/local/octo_status.py
+exec = ~/.bin/local/octo_status.py
+tail = true
+format-prefix = " "
+format-background = ${colors.background}
+click-left = xdg-open "http://192.168.20.29"
+
+[module/mpd]
+type = internal/mpd
+
+host = /home/sebastian/.mpd/socket
+
+; Seconds to sleep between progressbar/song timer sync
+; Default: 1
+interval = 2
+
+;format-online-font = 3
+format-online = <icon-prev> <icon-stop> <toggle> <icon-next> 
+;format-playing = ${self.format-online}
+;format-paused = ${self.format-online}
+;format-stopped = ${self.format-online}
+
+; Available tags:
+;   <label-offline>
+;format-offline = <label-offline>
+
+; Available tokens:
+;   %artist%
+;   %album%
+;   %date%
+;   %title%
+; Default: %artist% - %title%
+label-song = %artist% - %title%
+
+; Available tokens:
+;   %elapsed%
+;   %total%
+; Default: %elapsed% / %total%
+label-time = %elapsed%/%total%
+
+; Available tokens:
+;   None
+label-offline = mpd is offline
+
+; Only applies if <icon-X> is used
+icon-play = 
+icon-pause = 
+icon-stop = 
+icon-prev = 
+icon-next = 
+
+; Used to display the state of random/repeat/repeatone
+; Only applies if <icon-[random|repeat|repeatone]> is used
+toggle-on-foreground = #ff
+toggle-off-foreground = #55
+
+; Only applies if <bar-progress> is used
+bar-progress-width = 45
+bar-progress-indicator = |
+bar-progress-fill = ─
+bar-progress-empty = ─
+
+
+
+
+[module/mail-sync]
+type = custom/script
+
+exec = cat ${HOME}/.cache/mail-sync
+interval = 1
+click-left = systemctl --user start mail-sync.service
+; vim:ft=dosini
+
