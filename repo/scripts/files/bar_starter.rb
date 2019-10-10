@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+require 'socket'
+
 def start_conquer(index)
   socket = "/run/user/1000/conquer.#{index}.socket"
   log = "conquer.#{index}.log"
@@ -11,7 +13,8 @@ def start_conquer(index)
 end
 
 def start_polybar(index)
-  command = "polybar -r -c ~/.config/polybar/config #{index}"
+  hostname = Socket.gethostname
+  command = "polybar -r -c ~/.config/polybar/config #{hostname}"
   return command
 end
 

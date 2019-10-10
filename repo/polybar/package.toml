@@ -1,0 +1,20 @@
+[[files]]
+source = "./colors"
+dest   = "~/.config/polybar/colors"
+
+[[files]]
+source = "./custom-modules"
+dest   = "~/.config/polybar/custom-modules"
+
+[[files]]
+source = "./modules"
+dest   = "~/.config/polybar/modules"
+
+[[files]]
+source = "./herbstluftwm.sh"
+dest   = "~/.config/polybar/herbstluftwm.sh"
+
+[[files]]
+source = "./config"
+dest   = "~/.config/polybar/config"
+
