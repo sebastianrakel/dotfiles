@@ -71,7 +71,7 @@ inherit = bar/0
 monitor = ${env:MONITOR:HDMI-1}
 modules-right = arrow<- space octo space date space
 
-[bar/ws-rakel-seb]
+[bar/ws-rakel-seb.landwehr.it]
 inherit = bar/0
 monitor = ${env:MONITOR:HDMI-1}
 modules-right = arrow<- space date space
