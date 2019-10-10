@@ -1,0 +1,63 @@
+[module/arrow->]
+type = custom/text
+content = 
+content-foreground = ${colors.background}
+content-background = ${colors.transparent}
+content-font = 3
+ 
+[module/arrow<-]
+type = custom/text
+content = 
+content-foreground = ${colors.background}
+content-background = ${colors.transparent}
+content-font = 3
+
+[module/space]
+type = custom/text
+content = █
+content-foreground = ${colors.background}
+content-background = ${colors.transparent}
+content-font = 3
+
+[module/tmux-sessions]
+type = custom/script
+
+exec = tmux ls | wc -l
+interval = 10
+
+format-prefix = " "
+
+[module/unread-mail]
+type = custom/script
+
+exec = notmuch search tag:unread and tag:inbox | wc -l
+interval = 10
+
+
+format-prefix = " "
+label = %output:0:15%
+
+[module/herbstluftwm]
+type = custom/script
+
+exec-if = ps -C herbstluftwm >/dev/null 2>&1
+exec = ~/.config/polybar/herbstluftwm.sh
+tail = true
+format-background = ${colors.background}
+
+[module/octo]
+type = custom/script
+
+exec-if = ~/.bin/local/octo_status.py
+exec = ~/.bin/local/octo_status.py
+tail = true
+format-prefix = " "
+format-background = ${colors.background}
+click-left = xdg-open "http://192.168.20.29"
+
+[module/mail-sync]
+type = custom/script
+
+exec = cat ${HOME}/.cache/mail-sync
+interval = 1
+click-left = systemctl --user start mail-sync.service

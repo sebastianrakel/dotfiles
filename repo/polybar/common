@@ -1,0 +1,48 @@
+[settings]
+screenchange-reload = true
+
+[global/wm]
+margin-top = 5
+margin-bottom = 5
+
+[bar/2]
+inherit = bar/0
+monitor = ${env:MONITOR:HDMI-1}
+
+[bar/1]
+inherit = bar/0
+monitor = ${env:MONITOR:HDMI-1}
+
+[bar/0]
+monitor = ${env:MONITOR:HDMI-1}
+width = 100%
+height = 30
+radius = 0
+fixed-center = false
+
+background = ${colors.transparent}
+foreground = ${colors.foreground}
+
+line-size = 2
+line-color = ${colors.foreground}
+
+border-size = 0
+border-color = ${colors.foreground}
+
+padding-left = 0
+padding-right = 0
+
+module-margin-left = 0
+module-margin-right = 0
+
+font-0 = FuraCode Nerd Font:style=Regular:size=12;1
+font-1 = FuraCode Nerd Font:style=Regular:size=10;1
+font-2 = FuraCode Nerd Font:style=Regular:size=18;4
+font-3 = mplus Nerd Font Mono;1
+font-4 = "PowerlineSymbols:pixelsize=15;1"
+font-5 = "Font Awesome 5 Free:style=Regular:pixelsize=8;1"
+
+tray-position = right
+tray-padding = 2
+tray-maxsize = 20
+tray-background = ${colors.background}

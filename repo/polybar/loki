@@ -1,0 +1,4 @@
+modules-left = space herbstluftwm space arrow->
+modules-right = arrow<- space unread-mail space battery0 space battery1 space date space
+
+; vim:ft=dosini
