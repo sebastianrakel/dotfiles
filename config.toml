@@ -15,7 +15,7 @@
 
 [configurations.computer]
         dependencies = ['base']
-        packages = ['emacs', 'gpg', 'x11', 'hlwm', 'termite', 'qutebrowser', 'systemd', 'scripts', 'wallpaper', 'polybar']
+        packages = ['emacs', 'gpg', 'x11', 'hlwm', 'termite', 'qutebrowser', 'systemd', 'scripts', 'wallpaper', 'polybar', 'compton']
 
 [configurations.loki]
         dependencies = ['computer']
