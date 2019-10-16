@@ -22,13 +22,13 @@
      (recentf-mode 1)
      (setq recentf-max-menu-items 25)
    #+END_SRC
-** Font Settings
-   #+BEGIN_SRC emacs-lisp
-     (progn
-       (message "Setting Fira Mono")
-       (add-to-list 'default-frame-alist '(font . "fira mono-12"))
-       (set-frame-font "fira mono-12"))
-   #+END_SRC
+*** Font Settings
+    #+BEGIN_SRC emacs-lisp
+      (progn
+        (message "Setting Fira Mono")
+        (add-to-list 'default-frame-alist '(font . "fira mono-12"))
+        (set-frame-font "fira mono-12"))
+    #+END_SRC
 ** Theme
    #+BEGIN_SRC emacs-lisp
      (use-package base16-theme
@@ -202,6 +202,9 @@
 * Programming
 ** Common
    #+BEGIN_SRC emacs-lisp
+     (use-package multiple-cursors
+       :ensure t)
+
      (use-package editorconfig
        :ensure t
        :config
@@ -223,6 +226,14 @@
        (smartparens-mode)
        (my-prog-bindings)
        (setq compilation-scroll-output t))
+
+     (defun indent-buffer ()
+       (interactive)
+       (save-excursion
+         (indent-region (point-min) (point-max) nil)))
+
+     (global-set-key (kbd "C-M-l") 'indent-buffer)
+     (global-set-key (kbd "C-M-o") 'mc/edit-lines)
 
      (add-hook 'prog-mode-hook 'my-prog-hook)
      (add-hook 'prog-mode-hook 'hs-minor-mode)
