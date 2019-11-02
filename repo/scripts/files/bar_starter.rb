@@ -58,6 +58,7 @@ bar_pids = monitor_count.times.map do |index|
   Process.spawn({"MONITOR" => monitor}, command)
 end
 
+sleep 1
 trayer_pid = 0
 plank_pid = start_plank()
 
@@ -70,6 +71,7 @@ IO.popen(%w(herbstclient --idle)) do |io|
     }
 
     Process.kill('TERM', trayer_pid) unless trayer_pid == 0
+    puts "kill plank with pid: #{plank_pid}"
     Process.kill('TERM', plank_pid) unless plank_pid == 0
   end
 end
