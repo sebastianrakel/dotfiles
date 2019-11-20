@@ -59,7 +59,6 @@ bar_pids = monitor_count.times.map do |index|
 end
 
 trayer_pid = 0
-plank_pid = start_plank()
 
 IO.popen(%w(herbstclient --idle)) do |io|
   io.each do |line|
@@ -70,6 +69,5 @@ IO.popen(%w(herbstclient --idle)) do |io|
     }
 
     Process.kill('TERM', trayer_pid) unless trayer_pid == 0
-    Process.kill('TERM', plank_pid) unless plank_pid == 0
   end
 end
