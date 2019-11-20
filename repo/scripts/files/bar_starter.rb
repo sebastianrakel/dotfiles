@@ -58,6 +58,7 @@ bar_pids = monitor_count.times.map do |index|
   Process.spawn({"MONITOR" => monitor}, command)
 end
 
+sleep 1
 trayer_pid = 0
 
 IO.popen(%w(herbstclient --idle)) do |io|
