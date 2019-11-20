@@ -32,7 +32,7 @@ height = 30
 radius = 0
 fixed-center = false
 
-background = ${colors.transparent}
+background = ${colors.background}
 foreground = ${colors.foreground}
 
 line-size = 2
@@ -54,7 +54,7 @@ font-3 = mplus Nerd Font Mono;1
 font-4 = "PowerlineSymbols:pixelsize=15;1"
 font-5 = "Font Awesome 5 Free:style=Regular:pixelsize=8;1"
 
-modules-left = space herbstluftwm space arrow->
+modules-left = herbstluftwm
 
 tray-position = right
 tray-padding = 2
@@ -64,37 +64,23 @@ tray-background = ${colors.background}
 [bar/loki]
 inherit = bar/0
 monitor = ${env:MONITOR:HDMI-1}
-modules-right = arrow<- space battery0 space battery1 space date space
+modules-right = battery0 space battery1 space date
 
 [bar/odin]
 inherit = bar/0
 monitor = ${env:MONITOR:HDMI-1}
-modules-right = arrow<- space octo space date space
+modules-right = octo space date space
 
 [bar/ws-rakel-seb.landwehr.it]
 inherit = bar/0
 monitor = ${env:MONITOR:HDMI-1}
-modules-right = arrow<- space date space
-
-[module/arrow->]
-type = custom/text
-content = 
-content-foreground = ${colors.background}
-content-background = ${colors.transparent}
-content-font = 3
- 
-[module/arrow<-]
-type = custom/text
-content = 
-content-foreground = ${colors.background}
-content-background = ${colors.transparent}
-content-font = 3
+modules-right = date space
 
 [module/space]
 type = custom/text
-content = █
+content = " "
 content-foreground = ${colors.background}
-content-background = ${colors.transparent}
+content-background = ${colors.background}
 content-font = 3
 
 [module/tmux-sessions]
@@ -175,6 +161,7 @@ adapter = AC
 poll-interval = 5
 format-charging = <animation-charging> <label-charging>
 format-discharging = <ramp-capacity> <label-discharging>
+format-full = <ramp-capacity> <label-full>
 label-charging = %percentage%%
 label-discharging = %percentage%%
 label-full = %percentage%%
