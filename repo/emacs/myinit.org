@@ -119,15 +119,12 @@
 * Autocomplete
   #+BEGIN_SRC emacs-lisp
     (use-package auto-complete
+      :ensure nil)
+
+    (use-package company
       :ensure t)
 
-    (require 'auto-complete)
-    (require 'auto-complete-config)
-    (ac-config-default)
-
-    (global-auto-complete-mode t)
-    (define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
-
+    (add-hook 'after-init-hook 'global-company-mode)
   #+END_SRC
 
 * Documentation
@@ -379,6 +376,30 @@
 
      (setq web-mode-enable-auto-closing t)
    #+END_SRC
+** C/C++
+   #+BEGIN_SRC emacs-lisp
+     (use-package lsp-mode
+       :ensure t
+       :commands lsp)
+
+     (use-package lsp-ui
+       :ensure t
+       :commands lsp-ui-mode)
+
+     (use-package company-lsp
+       :ensure t
+       :commands company-lsp)
+
+     (use-package ccls
+       :ensure t
+       :hook ((c-mode c++-mode objc-mode cuda-mode) .
+              (lambda () (require 'ccls) (lsp))))
+   #+END_SRC
+** Puppet
+   #+BEGIN_SRC emacs-lisp
+     (use-package puppet-mode
+       :ensure t)
+   #+END_SRC
 * Miscellaneous
 #+BEGIN_SRC emacs-lisp
   (use-package rainbow-delimiters
@@ -429,14 +450,5 @@
    #+BEGIN_SRC emacs-lisp
      (use-package restclient
        :ensure t)
-   #+END_SRC
-** E-Mail
-   #+BEGIN_SRC emacs-lisp
-     (cond
-      ((file-exists-p "~/.emacs.d/local/mail-settings.el")
-       (load "~/.emacs.d/local/mail-settings")))
-
-     (add-to-list 'auto-mode-alist
-                  '("loki.none" . notmuch-message-mode))
    #+END_SRC
 * Testing
