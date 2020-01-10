@@ -25,9 +25,9 @@
 *** Font Settings
     #+BEGIN_SRC emacs-lisp
       (progn
-        (message "Setting Fira Mono")
-        (add-to-list 'default-frame-alist '(font . "fira mono-12"))
-        (set-frame-font "fira mono-12"))
+        (message "Setting Monospace")
+        (add-to-list 'default-frame-alist '(font . "monospace-12"))
+        (set-frame-font "monospace-12"))
     #+END_SRC
 ** Theme
    #+BEGIN_SRC emacs-lisp
@@ -398,6 +398,11 @@
 ** Puppet
    #+BEGIN_SRC emacs-lisp
      (use-package puppet-mode
+       :ensure t)
+   #+END_SRC
+** Embedded
+   #+BEGIN_SRC emacs-lisp
+     (use-package platformio-mode
        :ensure t)
    #+END_SRC
 * Miscellaneous
