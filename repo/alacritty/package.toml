@@ -1,0 +1,3 @@
+[[files]]
+source = "./alacritty.yml"
+dest   = "~/.config/alacritty/alacritty.yml"
