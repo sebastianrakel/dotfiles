@@ -37,7 +37,7 @@ fi
 feh --bg-fill "${HOME}/Pictures/Wallpaper/archlinux.jpg"
 
 export BROWSER=chromium
-export TERMINAL=termite
+export TERMINAL=alacritty
 
 export QT_AUTO_SCREEN_SCALE_FACTOR=0
 
