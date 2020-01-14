@@ -28,7 +28,7 @@ alert = ${xrdb:color3:#222}
 [bar/0]
 monitor = ${env:MONITOR:HDMI-1}
 width = 100%
-height = 30
+height = 22
 radius = 0
 fixed-center = false
 
@@ -47,13 +47,10 @@ padding-right = 0
 module-margin-left = 0
 module-margin-right = 0
 
-font-0 = FuraCode Nerd Font:style=Regular:size=12;1
-font-1 = FuraCode Nerd Font:style=Regular:size=10;1
-font-2 = FuraCode Nerd Font:style=Regular:size=18;4
-font-3 = mplus Nerd Font Mono;1
-font-4 = "PowerlineSymbols:pixelsize=15;1"
-font-5 = "Font Awesome 5 Free:style=Regular:pixelsize=8;1"
-
+font-0 = Monospace:style=Regular:size=10;1
+font-1 = Font Awesome 5 Free:pixelsize=10;1
+font-2 = Font Awesome 5 Free Solid:pixelsize=10;1
+font-3 = Font Awesome 5 Brands:pixelsize=10;1
 modules-left = herbstluftwm
 
 tray-position = right
@@ -64,12 +61,12 @@ tray-background = ${colors.background}
 [bar/loki]
 inherit = bar/0
 monitor = ${env:MONITOR:HDMI-1}
-modules-right = battery0 space battery1 space date
+modules-right = mail-sync space battery0 space battery1 space date
 
 [bar/odin]
 inherit = bar/0
 monitor = ${env:MONITOR:HDMI-1}
-modules-right = octo space date space
+modules-right = mail-sync space octo space date space
 
 [bar/ws-rakel-seb.landwehr.it]
 inherit = bar/0
@@ -144,7 +141,7 @@ date-alt = " %Y-%m-%d"
 time = %H:%M
 time-alt = %H:%M:%S
 
-format-prefix = " "
+format-prefix = " "
 format-prefix-foreground = ${colors.foreground}
 ;format-underline = #0a6cf5
 format-background = ${colors.background}
@@ -166,11 +163,11 @@ label-charging = %percentage%%
 label-discharging = %percentage%%
 label-full = %percentage%%
 
-ramp-capacity-0 = 
-ramp-capacity-1 = 
-ramp-capacity-2 = 
-ramp-capacity-3 = 
-ramp-capacity-4 = 
+ramp-capacity-0 = 
+ramp-capacity-1 = 
+ramp-capacity-2 = 
+ramp-capacity-3 = 
+ramp-capacity-4 = 
 
 bar-capacity-width = 10
 
@@ -234,7 +231,9 @@ bar-progress-empty = ─
 type = custom/script
 
 exec = cat ${HOME}/.cache/mail-sync
+format-prefix = " "
 interval = 1
 click-left = systemctl --user start mail-sync.service
+
 ; vim:ft=dosini
 

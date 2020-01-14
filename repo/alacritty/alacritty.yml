@@ -2,3 +2,8 @@ font:
         normal:
                 family: Monospace
         size: 14.0
+mouse:
+  url:
+    launcher:
+      program: chromium
+      args: []
