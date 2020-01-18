@@ -1,459 +1,224 @@
-* Common Stuff
-** Include own files
-     #+BEGIN_SRC emacs-lisp
-       (add-to-list 'load-path "~/.emacs.d/include")
-       (load "~/.emacs.d/local/projectfinder.el")
-     #+END_SRC
-** Interface
-*** Hide Startup Message, Toolbar, Scrollbar and Menubar
-    #+BEGIN_SRC emacs-lisp
-      (setq inhibit-startup-message nil)
-      (tool-bar-mode -1)
-      (menu-bar-mode -1)
-      (scroll-bar-mode -1)
+* Style
+** Hide Startup Message, Toolbar, Scrollbar, Menubar
+   #+BEGIN_SRC emacs-lisp
+       (setq inhibit-startup-message nil)
+       (tool-bar-mode -1)
+       (menu-bar-mode -1)
+       (scroll-bar-mode -1)
+   #+END_SRC
+** Theme
+   #+BEGIN_SRC emacs-lisp
+      (use-package base16-theme
+	:ensure t
+	:config (load-theme 'base16-monokai t))
+   #+END_SRC
+** Font
+   #+BEGIN_SRC emacs-lisp
+     (progn
+       (message "Setting Monospace")
+       (add-to-list 'default-frame-alist '(font . "monospace-12"))
+       (set-frame-font "monospace-12"))
+   #+END_SRC
+** Powerline
+   #+BEGIN_SRC emacs-lisp
+     (use-package powerline
+       :ensure t
+       :config (powerline-default-theme))
+   #+END_SRC
+* GUI
+** Helper
+   #+BEGIN_SRC emacs-lisp
+     (use-package ivy
+       :ensure t)
 
-      (require 'mybuffer)
-      (setup-mybuffer-environment)
-      (setup-startup-hook)
-    #+END_SRC
+     (use-package counsel
+       :ensure t)
+
+     (use-package swiper
+       :ensure t)
+   #+END_SRC
+** Which-Keybindings
+   #+BEGIN_SRC emacs-lisp
+     (use-package which-key
+       :ensure t
+       :init
+       (which-key-mode))
+   #+END_SRC
+* Behavior
+** Yes/No-Questions
+   #+BEGIN_SRC emacs-lisp
+   (fset 'yes-or-no-p 'y-or-n-p)
+   #+END_SRC
+** Backup/Autosave
+   #+BEGIN_SRC emacs-lisp
+     (setq backup-directory-alist
+	   `((".*" . ,temporary-file-directory)))
+     (setq auto-save-file-name-transforms
+	   `((".*" ,temporary-file-directory t)))
+   #+END_SRC
+** Truncate Lines
+   #+BEGIN_SRC emacs-lisp
+   (set-default 'truncate-lines t)
+   #+END_SRC
+** Tab Mode
+   #+BEGIN_SRC emacs-lisp
+   (setq-default indent-tabs-mode nil)   
+   #+END_SRC
 ** Recent Files
    #+BEGIN_SRC emacs-lisp
      (require 'recentf)
      (recentf-mode 1)
      (setq recentf-max-menu-items 25)
    #+END_SRC
-*** Font Settings
-    #+BEGIN_SRC emacs-lisp
-      (progn
-        (message "Setting Monospace")
-        (add-to-list 'default-frame-alist '(font . "monospace-12"))
-        (set-frame-font "monospace-12"))
-    #+END_SRC
-** Theme
-   #+BEGIN_SRC emacs-lisp
-     (use-package base16-theme
-       :ensure t)
-     (load-theme 'base16-monokai t)
-   #+END_SRC
-** Basic Settings
-   #+BEGIN_SRC emacs-lisp
-     (fset 'yes-or-no-p 'y-or-n-p)
-     (setq-default indent-tabs-mode nil)
-     (set-default 'truncate-lines t)
-
-     (setq backup-directory-alist
-           `((".*" . ,temporary-file-directory)))
-     (setq auto-save-file-name-transforms
-           `((".*" ,temporary-file-directory t)))
-
-     (windmove-default-keybindings 'meta)
-   #+END_SRC
-** Custom Functions
-*** Reload Init File
-    #+BEGIN_SRC emacs-lisp
-      (defun reload-init()
-        (interactive)
-        (load-file "~/.emacs.d/init.el"))
-    #+END_SRC
-*** Dedicated Windows
-    #+BEGIN_SRC emacs-lisp
-      (defadvice pop-to-buffer (before cancel-other-window first)
-        (ad-set-arg 1 nil))
-
-      (ad-activate 'pop-to-buffer)
-
-      ;; Toggle window dedication
-      (defun toggle-window-dedicated ()
-        "Toggle whether the current active window is dedicated or not."
-        (interactive)
-        (message
-         (if (let (window (get-buffer-window (current-buffer)))
-               (set-window-dedicated-p window
-                                       (not (window-dedicated-p window))))
-             "Window '%s' is dedicated"
-           "Window '%s' is normal")
-         (current-buffer)))
-    #+END_SRC
-** Global Keybindings
-   #+BEGIN_SRC emacs-lisp
-     (global-set-key (kbd "<f1>") 'describe-mode)
-     (global-set-key (kbd "M-<f1>") 'helm-dash)
-     (global-set-key (kbd "C-<f1>") '(lambda () (interactive) (show-mybuffer)))
-
-     (global-set-key (kbd "C-<f3>") 'treemacs-add-project-to-workspace)
-
-     (global-set-key (kbd "M-<f5>") 'revert-buffer)
-     (global-set-key (kbd "C-<f5>") '(lambda () (interactive) (reload-init)))
-
-     (global-set-key (kbd "M-x") 'helm-M-x)
-     (global-set-key (kbd "C-x g") 'magit-status)
-     (global-set-key (kbd "<f4>") 'helm-buffers-list)
-
-     (global-set-key (kbd "<f2>") 'helm-projectile)
-     (global-set-key (kbd "<pause>") 'toggle-window-dedicated)
-
-     ;; open project
-
-     (global-set-key (kbd "M-<f2> g") 'helm-go-project-list)
-     (global-set-key (kbd "M-<f2> l") 'helm-landwehr-project-list)
-
-     ;; avoid freezing
-     (global-unset-key (kbd "C-z"))
-
-     ;; easy spell check
-     (global-set-key (kbd "<f8>") 'ispell-word)
-     (global-set-key (kbd "C-S-<f8>") 'flyspell-mode)
-     (global-set-key (kbd "C-M-<f8>") 'flyspell-buffer)
-     (global-set-key (kbd "C-<f8>") 'flyspell-check-previous-highlighted-word)
-     (defun flyspell-check-next-highlighted-word ()
-       "Custom function to spell check next highlighted word"
-       (interactive)
-       (flyspell-goto-next-error)
-       (ispell-word)
-       )
-     (global-set-key (kbd "M-<f8>") 'flyspell-check-next-highlighted-word)
-
-     (global-set-key [C-mouse-4] 'text-scale-increase)
-     (global-set-key [C-mouse-5] 'text-scale-decrease)
-   #+END_SRC
-* Autocomplete
+** Max Lisp Depth
+ #+BEGIN_SRC emacs-lisp
+ #+END_SRC
+* Keybindings
   #+BEGIN_SRC emacs-lisp
-    (use-package auto-complete
-      :ensure nil)
+    (windmove-default-keybindings 'meta)
 
-    (use-package company
-      :ensure t)
+    (global-set-key "\C-s" 'swiper)
 
-    (add-hook 'after-init-hook 'global-company-mode)
+    (global-set-key (kbd "<f2>") 'counsel-projectile)
+    (global-set-key (kbd "<f4>") 'ivy-switch-buffer)
+
+    (global-set-key (kbd "C-<f5>") '(lambda () (interactive) (reload-init)))
+    (global-set-key (kbd "C-M-l") 'indent-buffer)
+
+    (global-set-key (kbd "C-x g") 'magit-status)
+
+    (global-set-key (kbd "M-x") 'counsel-M-x)
+
+    (global-set-key [C-mouse-4] 'text-scale-increase)
+    (global-set-key [C-mouse-5] 'text-scale-decrease)
   #+END_SRC
-
-* Documentation
-** Org Mode
-#+BEGIN_SRC emacs-lisp
-  (use-package org-bullets
-    :ensure t
-    :config
-    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
-#+END_SRC
-** Markdown
-#+BEGIN_SRC emacs-lisp
-  (defun my-gfm-hook()
-    (setq markdown-command "multimarkdown")
-    (local-set-key (kbd "<f5>") 'markdown-live-preview-mode))
-
-  (use-package markdown-mode
-    :ensure t
-    :commands (markdown-mode gfm-mode)
-    :mode (("README\\.md\\'" . gfm-mode)
-           ("\\.md\\'" . markdown-mode)
-           ("\\.markdown\\'" . markdown-mode))
-    :init (my-gfm-hook))
-#+END_SRC
-
-* Helm
-#+BEGIN_SRC emacs-lisp
-  (use-package helm
-    :ensure t)
-
-  (use-package helm-dash
-    :ensure t
-    :init
-    (setq helm-dash-browser-func 'eww)
-    (setq helm-dash-docsets-path "~/.local/share/Zeal/Zeal/docsets"))
-#+END_SRC
-
-* Powerline
-#+BEGIN_SRC emacs-lisp
-  (use-package powerline
-    :ensure t)
-  ;;(powerline-default-theme)
-#+END_SRC
-
-* Projectile
-#+BEGIN_SRC emacs-lisp
-  (use-package projectile
-    :ensure t)
-
-  (use-package helm-projectile
-    :ensure t)
-
-#+END_SRC
-
-* git
-** Magit
-  #+BEGIN_SRC emacs-lisp
-    (use-package magit
-      :ensure t)
-
-    (add-hook 'git-commit-setup-hook
-              (lambda()
-                (flyspell-mode 1)))
-  #+END_SRC
-* Which-Key
-#+BEGIN_SRC emacs-lisp
-  (use-package which-key
-    :ensure t
-    :init
-    (which-key-mode))
-#+END_SRC
 * Programming
 ** Common
-   #+BEGIN_SRC emacs-lisp
-     (use-package multiple-cursors
-       :ensure t)
+*** Org Mode
+    #+BEGIN_SRC emacs-lisp
+     (use-package org-bullets
+      :ensure t
+      :config
+      (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+    #+END_SRC
+*** Autocomplete
+    #+BEGIN_SRC emacs-lisp
+       (use-package company
+	 :ensure t)
 
-     (use-package editorconfig
-       :ensure t
-       :config
-       (editorconfig-mode 1))
+       (add-hook 'after-init-hook 'global-company-mode)
+    #+END_SRC
+*** Parens and delimiters
+    #+BEGIN_SRC emacs-lisp
+      (use-package rainbow-delimiters
+        :ensure t)
 
-     (use-package hideshow
-       :ensure t)
+      (use-package smartparens
+        :ensure t
+        :config (add-hook 'prog-mode-hook 'smartparens-mode))
+    #+END_SRC  
+*** Snippets
+    #+BEGIN_SRC emacs-lisp
+      (use-package yasnippet
+	:ensure t
+	:config (yas-global-mode 1))
+    #+END_SRC
+*** LSP
+    #+BEGIN_SRC emacs-lisp
+      (use-package lsp-mode
+	:ensure t
+	:commands lsp)
 
-     (defun my-prog-bindings()
-       (global-set-key (kbd "C-<f6>") 'compile)
-       (global-set-key (kbd "<f6>") 'recompile)
-       (global-set-key (kbd "C-c SPC") 'hs-toggle-hiding)
-       (global-set-key (kbd "C-.") 'find-tag-other-window)
-       (global-set-key (kbd "C-<tab>") 'helm-imenu))
+      (use-package lsp-ui :ensure t :commands lsp-ui-mode)
+      (use-package company-lsp :ensure t :commands company-lsp)
+      (use-package lsp-ivy :ensure t :commands lsp-ivy-workspace-symbol)
+      (use-package lsp-treemacs :ensure t :commands lsp-treemacs-errors-list)
+    #+END_SRC
+*** Git
+    #+BEGIN_SRC emacs-lisp
+      (use-package magit
+	:ensure t)
+    #+END_SRC
+*** Projectile
+    #+BEGIN_SRC emacs-lisp
+      (use-package projectile :ensure t)
+      (use-package counsel-projectile :ensure t)
+    #+END_SRC
+*** Flycheck
+    #+BEGIN_SRC emacs-lisp
+      (use-package flycheck
+	:ensure t
+	:init
+	(global-flycheck-mode t))
+    #+END_SRC
+*** editorconfig
+    #+BEGIN_SRC emacs-lisp
+      (use-package editorconfig
+	:ensure t
+	:config (editorconfig-mode 1))
+    #+END_SRC
+** Languages
+*** Go
+    #+BEGIN_SRC emacs-lisp
+      (use-package go-mode :ensure t)
+      (use-package go-dlv :ensure t)
+      (use-package go-playground :ensure t)
 
-     (defun my-prog-hook()
-       (linum-mode 1)
-       (rainbow-delimiters-mode)
-       (smartparens-mode)
-       (my-prog-bindings)
-       (setq compilation-scroll-output t))
+      (defun my-go-init-hook()
+        (message "My Go Hook")
+        (add-hook 'before-save-hook #'lsp-format-buffer t t)
+        (add-hook 'before-save-hook #'lsp-organize-imports t t)
+
+        (yas-minor-mode)
+        (lsp))
+
+      (add-hook 'go-mode-hook #'my-go-init-hook)
+    #+END_SRC
+*** C/C++
+    #+BEGIN_SRC emacs-lisp
+      (use-package ccls
+        :ensure t
+        :hook ((c-mode c++-mode objc-mode cuda-mode) .
+               (lambda () (require 'ccls) (lsp))))
+    #+END_SRC
+*** HTML
+    #+BEGIN_SRC emacs-lisp
+      (use-package web-mode
+        :ensure t)
+
+      (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+      (add-to-list 'auto-mode-alist '("\\.jinja2?\\'" . web-mode))
+      (add-to-list 'auto-mode-alist '("\\.j2?\\'" . web-mode))
+      (add-to-list 'auto-mode-alist '("\\.djhtml?\\'" . web-mode))
+
+      (setq web-mode-engines-alist
+            '(("django"    . "\\.jinja2\\'")
+              ("django"    . "\\.djhtml\\'")))
+
+      (setq web-mode-enable-auto-closing t)
+    #+END_SRC
+*** Puppet
+    #+BEGIN_SRC emacs-lisp
+      (use-package puppet-mode
+        :ensure t)
+    #+END_SRC
+*** Python
+    #+BEGIN_SRC emacs-lisp
+      (add-hook 'python-mode #'lsp)
+    #+END_SRC
+*** Embedded
+    #+BEGIN_SRC emacs-lisp
+      (use-package platformio-mode
+        :ensure t)
+    #+END_SRC
+* Helper Functions
+  #+BEGIN_SRC emacs-lisp
+     (defun reload-init()
+       (interactive)
+       (load-file "~/.emacs.d/init.el"))
 
      (defun indent-buffer ()
        (interactive)
        (save-excursion
-         (indent-region (point-min) (point-max) nil)))
-
-     (global-set-key (kbd "C-M-l") 'indent-buffer)
-     (global-set-key (kbd "C-M-o") 'mc/edit-lines)
-
-     (add-hook 'prog-mode-hook 'my-prog-hook)
-     (add-hook 'prog-mode-hook 'hs-minor-mode)
-    #+END_SRC
-** GDB
-   #+BEGIN_SRC emacs-lisp
-     (defun my-gdb-hook()
-       (local-set-key (kbd "<f10>") 'gud-next)
-       (local-set-key (kbd "<f11>") 'gud-step)
-       (local-set-key (kbd "<f5>") 'gud-go)
-       (local-set-key (kbd "<f12>") 'gud-print)
-       (local-set-key (kbd "<f9>") 'gud-break))
-
-     (add-hook 'prog-mode-hook 'my-gdb-hook)
-   #+END_SRC
-** Dataformats
-   #+BEGIN_SRC emacs-lisp
-     (use-package json-mode
-       :ensure t)
-
-     (use-package yaml-mode
-       :ensure t)
-   #+END_SRC
-** Flycheck
-    #+BEGIN_SRC emacs-lisp
-      (use-package flycheck
-        :ensure t
-        :init
-        (global-flycheck-mode t))
-    #+END_SRC
-** Google Golang
-    #+BEGIN_SRC emacs-lisp
-      (use-package go-mode
-        :ensure t)
-
-      (use-package go-autocomplete
-        :ensure t)
-
-      (use-package go-playground
-        :ensure t)
-
-      (use-package go-dlv
-        :ensure t)
-
-      (defun my-go-mode-hook ()
-        (interactive)
-        ; Call Gofmt before saving
-        (add-hook 'before-save-hook 'gofmt-before-save)
-
-        ; Customize compile command to run go build
-        (if (not (string-match "go" compile-command))
-            (set (make-local-variable 'compile-command)
-                 "go build -v -gcflags '-N -l' && go test -v && go vet"))
-
-        ; Godef jump key binding
-        (local-set-key (kbd "M-.") 'godef-jump)
-        (require 'go-autocomplete)
-
-        (setq-local helm-dash-docsets '("Go"))
-        (message "Go Hook loaded"))
-
-      (add-hook 'go-mode-hook 'my-go-mode-hook)
-
-    #+END_SRC
-** Python
-    #+BEGIN_SRC emacs-lisp
-      (defun my-python-hook()
-        (local-set-key (kbd "M-.") 'jedi:goto-definition))
-
-      (use-package jedi
-        :ensure t
-        :init
-        (add-hook 'python-mode-hook 'jedi:setup)
-        (add-hook 'python-mode-hook 'jedi:ac-setup)
-        (add-hook 'python-mode-hook 'my-python-hook)
-        (add-hook 'python-mode-hook (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace))))
-
-    #+END_SRC
-** Ruby
-    #+BEGIN_SRC emacs-lisp
-      (use-package haml-mode
-        :ensure t)
-
-
-      (add-to-list 'auto-mode-alist
-                   '("\\.\\(?:gemspec\\|irbrc\\|gemrc\\|rake\\|rb\\|ru\\|thor\\)\\'" . ruby-mode))
-      (add-to-list 'auto-mode-alist
-                   '("\\(Capfile\\|Gemfile\\(?:\\.[a-zA-Z0-9._-]+\\)?\\|[rR]akefile\\)\\'" . ruby-mode))
-    #+END_SRC
-** Docker
-   #+BEGIN_SRC emacs-lisp
-     (use-package dockerfile-mode
-       :ensure t)
-   #+END_SRC
-** Groovy
-   #+BEGIN_SRC emacs-lisp
-     (use-package groovy-mode
-       :ensure t)
-   #+END_SRC
-** Jenkins
-   #+BEGIN_SRC emacs-lisp
-     (add-to-list 'auto-mode-alist
-                  '("Jenkinsfile" . groovy-mode))
-   #+END_SRC
-** LUA
-   #+BEGIN_SRC emacs-lisp
-     (use-package lua-mode
-       :ensure t)
-   #+END_SRC
-** Haskell
-#+BEGIN_SRC emacs-lisp
-  (use-package haskell-mode
-    :ensure t)
-#+END_SRC
-** Jira
-   #+BEGIN_SRC emacs-lisp
-     (setq jiralib-url "https://jira.lcs-landwehr.de")
-     (setq jiralib-use-restapi t)
-   #+END_SRC
-** Rust
-   #+BEGIN_SRC emacs-lisp
-     (use-package rust-mode
-       :ensure t)
-   #+END_SRC
-** Haxe
-   #+BEGIN_SRC emacs-lisp
-     (use-package haxe-mode
-       :ensure t)
-   #+END_SRC
-** HTML
-   #+BEGIN_SRC emacs-lisp
-     (use-package web-mode
-       :ensure t)
-
-     (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-     (add-to-list 'auto-mode-alist '("\\.jinja2?\\'" . web-mode))
-     (add-to-list 'auto-mode-alist '("\\.j2?\\'" . web-mode))
-     (add-to-list 'auto-mode-alist '("\\.djhtml?\\'" . web-mode))
-
-     (setq web-mode-engines-alist
-           '(("django"    . "\\.jinja2\\'")
-             ("django"    . "\\.djhtml\\'")))
-
-     (setq web-mode-enable-auto-closing t)
-   #+END_SRC
-** C/C++
-   #+BEGIN_SRC emacs-lisp
-     (use-package lsp-mode
-       :ensure t
-       :commands lsp)
-
-     (use-package lsp-ui
-       :ensure t
-       :commands lsp-ui-mode)
-
-     (use-package company-lsp
-       :ensure t
-       :commands company-lsp)
-
-     (use-package ccls
-       :ensure t
-       :hook ((c-mode c++-mode objc-mode cuda-mode) .
-              (lambda () (require 'ccls) (lsp))))
-   #+END_SRC
-** Puppet
-   #+BEGIN_SRC emacs-lisp
-     (use-package puppet-mode
-       :ensure t)
-   #+END_SRC
-** Embedded
-   #+BEGIN_SRC emacs-lisp
-     (use-package platformio-mode
-       :ensure t)
-   #+END_SRC
-* Miscellaneous
-#+BEGIN_SRC emacs-lisp
-  (use-package rainbow-delimiters
-    :ensure t)
-
-  (use-package smartparens
-    :ensure t)
-
-  (use-package treemacs
-    :ensure t)
-#+END_SRC
-* Fun/Social/Internet
-** Filebin Client
-#+BEGIN_SRC emacs-lisp
-  (defun filebin-upload-string(message)
-    (let ((command (concat
-                    "fb << 'EOF'\n"
-                    message
-                    "\nEOF")))
-      (message (shell-command-to-string command))))
-
-  (defun filebin-buffer-content()
-    (interactive)
-    (let ((content (buffer-string)))
-      (filebin-upload-string content)))
-
-  (defun filebin-buffer-file()
-    (interactive)
-    (let ((command (concat
-                    "fb "
-                    (buffer-file-name)
-                    )))
-      (message (shell-command-to-string command))))
-
-  (defun filebin-buffer-selection()
-    (interactive)
-    (let ((content (buffer-substring (region-beginning) (region-end))))
-      (filebin-upload-string content)))
-#+END_SRC
-*** nyan Mode
-#+BEGIN_SRC emacs-lisp
-  (use-package nyan-mode
-    :ensure t)
-
-  (nyan-mode)
-#+END_SRC
-** Restclient
-   #+BEGIN_SRC emacs-lisp
-     (use-package restclient
-       :ensure t)
-   #+END_SRC
-* Testing
+	 (indent-region (point-min) (point-max) nil)))
+  #+END_SRC
