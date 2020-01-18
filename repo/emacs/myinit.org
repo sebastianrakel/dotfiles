@@ -213,7 +213,7 @@
      (defun my-prog-bindings()
        (global-set-key (kbd "C-<f6>") 'compile)
        (global-set-key (kbd "<f6>") 'recompile)
-       (global-set-key (kbd "C-+") 'hs-toggle-hiding)
+       (global-set-key (kbd "C-c SPC") 'hs-toggle-hiding)
        (global-set-key (kbd "C-.") 'find-tag-other-window)
        (global-set-key (kbd "C-<tab>") 'helm-imenu))
 
