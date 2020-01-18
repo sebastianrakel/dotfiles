@@ -53,7 +53,7 @@ bar_pids = monitor_count.times.map do |index|
   monitor = poly_displays[index].split(":")[0]
   
   command = start_polybar(index)  
-  pad_command = "herbstclient pad #{index} 30"
+  pad_command = "herbstclient pad #{index} 22"
   Process.spawn(pad_command)
   Process.spawn({"MONITOR" => monitor}, command)
 end
