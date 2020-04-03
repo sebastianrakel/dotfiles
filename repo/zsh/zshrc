@@ -1,5 +1,5 @@
 export ZSH=~/.zsh
-
+[[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ ' && return
 # Load all of the config files in ~/oh-my-zsh that end in .zsh
 for config_file ($ZSH/*.zsh) source $config_file
 
