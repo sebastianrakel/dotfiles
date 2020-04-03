@@ -14,21 +14,22 @@ screenchange-reload = true
 margin-top = 5
 margin-bottom = 5
 
+
 [colors]
-transparent = #00000000
-background = ${xrdb:color0:#222}
-background-alt = ${xrdb:color0:#444}
-foreground = ${xrdb:color7:#FFF}
-foreground-alt = ${xrdb:color8:#222}
-primary = ${xrdb:color1:#222}
-secondary = ${xrdb:color2:#222}
-alert = ${xrdb:color3:#222}
+;background = ${xrdb:color0:#222}
+background = #002b36
+background-alt = #073642
+;foreground = ${xrdb:color7:#222}
+foreground = #93a1a1
+foreground-alt = #eee8d5
+primary = #ffb52a
+secondary = #e60053
+alert = #bd2c40
 
 
 [bar/0]
-monitor = ${env:MONITOR:HDMI-1}
 width = 100%
-height = 22
+height = 28
 radius = 0
 fixed-center = false
 
@@ -47,25 +48,36 @@ padding-right = 0
 module-margin-left = 0
 module-margin-right = 0
 
-font-0 = Monospace:style=Regular:size=10;1
-font-1 = Font Awesome 5 Free:pixelsize=10;1
-font-2 = Font Awesome 5 Free Solid:pixelsize=10;1
-font-3 = Font Awesome 5 Brands:pixelsize=10;1
-modules-left = herbstluftwm
+font-0 = Monospace:style=Regular:size=16;1
+font-1 = Font Awesome 5 Free:pixelsize=16;1
+font-2 = Font Awesome 5 Free Solid:pixelsize=16;1
+font-3 = Font Awesome 5 Brands:pixelsize=16;1
 
 tray-position = right
 tray-padding = 2
-tray-maxsize = 20
+tray-maxsize = 26
 tray-background = ${colors.background}
 
-[bar/loki]
+bottom = true
+
+[bar/1]
 inherit = bar/0
+monitor = ${env:MONITOR:HDMI-1}
+modules-left = herbstluftwm
+modules-center = xwindow
+
+[bar/loki]
+inherit = bar/1
 monitor = ${env:MONITOR:HDMI-1}
 modules-right = mail-sync space battery0 space battery1 space date
 
 [bar/odin]
-inherit = bar/0
+inherit = bar/1
 monitor = ${env:MONITOR:HDMI-1}
+modules-right = mail-sync space octo space date space
+
+[bar/openbox]
+inherit = bar/0
 modules-right = mail-sync space octo space date space
 
 [bar/ws-rakel-seb.landwehr.it]

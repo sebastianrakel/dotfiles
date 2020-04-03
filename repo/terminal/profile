@@ -56,19 +56,10 @@ PATH="$HOME/.local/bin:$PATH"
 # Base 16 - Color Switching
 #
 
-BASE16_SHELL="$HOME/.bin/base16-shell/scripts/base16-monokai.sh"
-[[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
-
-b16() {
-    BASE16_SHELL="$@"
-    [[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
-}
-
-if [ -n "$ZSH_VERSION" ]; then
-	compdef '_files -g "$HOME/.bin/base16-shell/*"' b16
-#elif [ -n "$BASH_VERSION" ]; then
-	# todo: auto complete for bash
-fi
+BASE16_SHELL="$HOME/.bin/base16-shell/"
+[ -n "$PS1" ] && \
+    [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
+        eval "$("$BASE16_SHELL/profile_helper.sh")"
 
 #vim() {
 #	if [[ "${BASE16_SHELL}" == *".light.sh" ]]; then
