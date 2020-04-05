@@ -16,8 +16,8 @@
    #+BEGIN_SRC emacs-lisp
      (progn
        (message "Setting Monospace")
-       (add-to-list 'default-frame-alist '(font . "monospace-16"))
-       (set-frame-font "monospace-16"))
+       (add-to-list 'default-frame-alist '(font . "monospace-14"))
+       (set-frame-font "monospace-14"))
    #+END_SRC
 ** Powerline
    #+BEGIN_SRC emacs-lisp
