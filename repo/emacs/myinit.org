@@ -215,6 +215,20 @@
     #+BEGIN_SRC emacs-lisp
       (use-package puppet-mode
         :ensure t)
+
+      (defun puppet-lint-file()
+        (interactive)
+        (message "Fixing Puppet File")
+        (shell-command (concat "puppet-lint  --only-check 'arrow_alignment,trailing_whitespace'  --fix " (buffer-file-name))))
+
+      (defun puppet-lint-file-revert()
+        (interactive)
+        (puppet-lint-file)
+        (revert-buffer t t))
+
+      (add-hook 'puppet-mode-hook
+                (lambda ()
+                  (add-hook 'after-save-hook #'puppet-lint-file-revert)))
     #+END_SRC
 *** Python
     #+BEGIN_SRC emacs-lisp
