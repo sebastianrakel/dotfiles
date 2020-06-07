@@ -1,8 +1,9 @@
 #!/usr/bin/env ruby
 
+wm_name = ENV["XDG_SESSION_DESKTOP"]
 choice = nil
 
-actions = ['l. Lock', 'h. Suspend', 'r. Reboot', 's. Shutdown', 'q. Quit HLWM']
+actions = ['l. Lock', 'h. Suspend', 'r. Reboot', 's. Shutdown', "q. Quit #{wm_name}"]
 IO.popen(['rofi', '-p', 'Choose action: ', '-format', 'i', '-dmenu'], 'w+') do |io|
   io.puts(*actions)
   io.close_write
@@ -22,5 +23,10 @@ when 2
 when 3
   IO.popen(['systemctl', 'poweroff'])
 when 4
-  IO.popen(['herbstclient', 'quit'])
+  case wm_name
+  when 'herbstluftwm'
+    IO.popen(['herbstclient', 'quit'])
+  when 'bspwm'
+    IO.popen(['bspc', 'quit'])
+  end
 end
