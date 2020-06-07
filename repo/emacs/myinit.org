@@ -11,8 +11,6 @@
      (set-keyboard-coding-system 'utf-8)
      (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
 
-     (setq x-select-enable-primary t)
-     (setq x-select-enable-clipboard t)
    #+END_SRC
 ** Theme
    #+BEGIN_SRC emacs-lisp
