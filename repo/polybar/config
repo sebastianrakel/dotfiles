@@ -11,26 +11,27 @@
 screenchange-reload = true
 
 [global/wm]
-margin-top = 5
-margin-bottom = 5
+margin-top = 100
+margin-bottom = 100
 
 
 [colors]
-;background = ${xrdb:color0:#222}
-background = #002b36
+background = #16161d
 background-alt = #073642
 ;foreground = ${xrdb:color7:#222}
-foreground = #93a1a1
-foreground-alt = #eee8d5
-primary = #ffb52a
-secondary = #e60053
+foreground =  #f7f7f7
+foreground-alt = #f7f7f7
+primary = #1D1F28
+secondary = #f7f7f7
 alert = #bd2c40
 
 
 [bar/0]
-width = 100%
-height = 28
-radius = 0
+width = 80%
+height = 40
+offset-x = 10%
+offset-y = 0
+radius = 3
 fixed-center = false
 
 background = ${colors.background}
@@ -74,7 +75,7 @@ modules-right = mail-sync space battery0 space battery1 space date
 [bar/odin]
 inherit = bar/1
 monitor = ${env:MONITOR:HDMI-1}
-modules-right = mail-sync space octo space date space
+modules-right = mumble space mail-sync space octo space date space 
 
 [bar/openbox]
 inherit = bar/0
@@ -208,12 +209,11 @@ format-background = ${colors.background}
 [module/octo]
 type = custom/script
 
-exec-if = ~/.bin/local/octo_status.py
-exec = ~/.bin/local/octo_status.py
+exec = echo "Conky"
 tail = true
 format-prefix = " "
 format-background = ${colors.background}
-click-left = xdg-open "http://192.168.20.29"
+click-left = ~/.config/polybar/scripts/start_conky.sh 
 
 [module/mpd]
 type = internal/mpd
@@ -247,5 +247,11 @@ format-prefix = " "
 interval = 1
 click-left = systemctl --user start mail-sync.service
 
-; vim:ft=dosini
+[module/mumble]
+type = custom/script
+
+exec = python ~/.bin/local/mumble-ping.py futev.de 64738
+interval = 10
+
+
 

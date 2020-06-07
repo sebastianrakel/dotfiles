@@ -2,25 +2,28 @@
 
 hash herbstclient xrandr
 
+declare -A icons
+icons=( ["main"]="" ["www"]="" ["media"]="" ["dev"]="" ["virt"]="" ["remote"]="" ["stuff"]="" ["games"]="")
+
 print_tags() {
 	for tag in $(herbstclient tag_status "$1"); do
 		name=${tag#?}
 		state=${tag%$name}
 		case "$state" in
 		'#')
-			printf '%%{R} %s %%{R} ' "$name" 
+			printf '%%{R} %s %%{R} ' "${icons[$name]}" 
 			;;
 		'+')
-			printf '%%{F#cccccc}%%{R} %s %%{R}%%{F-}' "$name"
+			printf '%%{F#cccccc}%%{R} %s %%{R}%%{F-}' "${icons[$name]}"
 			;;
 		'!')
-			printf '%%{R} %s! %%{R}' "$name"
+			printf '%%{R} %s! %%{R}' "${icons[$name]}"
 			;;
 		'.')
-			printf '%%{F#cccccc} %s %%{F-}' "$name"
+			printf '%%{F#cccccc} %s %%{F-}' "${icons[$name]}"
 			;;
 		*)
-			printf ' %s ' "$name"
+			printf ' %s ' "${icons[$name]}"
 		esac
 	done
 	printf '\n'

@@ -17,22 +17,6 @@ def start_polybar(index)
   command = "polybar -r -c ~/.config/polybar/config #{hostname}"
   return command
 end
-
-def start_trayer()
-  trayer_width = 1
-  trayer_x_pos = main_x + main_width
-
-  trayer_command = "stalonetray --background '#000000' -i 16 --geometry #{trayer_width}x1+#{trayer_x_pos}+#{main_y} --max-geometry 5x1 --no-shrink true --icon-gravity NE"
-  trayer_pid = Process.spawn(trayer_command)
-  return trayer_pid
-end
-
-def start_plank()
-  plank_command = "plank"
-  plank_pid = Process.spawn(plank_command)
-  return plank_pid
-end
-
 monitor_count = `herbstclient list_monitors`.lines.size
 poly_displays = `polybar -m`.lines
 
@@ -52,9 +36,12 @@ bar_pids = monitor_count.times.map do |index|
 
   monitor = poly_displays[index].split(":")[0]
   
-  command = start_polybar(index)  
-  pad_command = "herbstclient pad #{index} 0 0 30"
+  command = start_polybar(index)
+  pad_command = "herbstclient pad #{index} 0 0 500 0"
+  p pad_command
+  p command
   Process.spawn(pad_command)
+  
   Process.spawn({"MONITOR" => monitor}, command)
 end
 
