@@ -1,16 +1,25 @@
 * Style
 ** Hide Startup Message, Toolbar, Scrollbar, Menubar
    #+BEGIN_SRC emacs-lisp
-       (setq inhibit-startup-message nil)
-       (tool-bar-mode -1)
-       (menu-bar-mode -1)
-       (scroll-bar-mode -1)
+     (setq inhibit-startup-message nil)
+     (tool-bar-mode -1)
+     (menu-bar-mode -1)
+     (scroll-bar-mode -1)
+     (prefer-coding-system 'utf-8)
+     (set-default-coding-systems 'utf-8)
+     (set-terminal-coding-system 'utf-8)
+     (set-keyboard-coding-system 'utf-8)
+     (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
+
+     (setq x-select-enable-primary t)
+     (setq x-select-enable-clipboard t)
    #+END_SRC
 ** Theme
    #+BEGIN_SRC emacs-lisp
-      (use-package base16-theme
-	:ensure t
-	:config (load-theme 'base16-solarized-dark t))
+     (use-package base16-theme
+       :ensure t
+       :config (load-theme 'base16-3024 t))
+     ;(load-theme ' t)
    #+END_SRC
 ** Font
    #+BEGIN_SRC emacs-lisp
@@ -251,6 +260,11 @@
         (eval-after-load 'nginx-mode
           '(add-hook 'nginx-mode-hook #'company-nginx-keywords)))
     #+END_SRC
+*** Powershell
+  #+BEGIN_SRC emacs-lisp
+    (use-package powershell
+      :ensure t)
+  #+END_SRC
 * Helper Functions
   #+BEGIN_SRC emacs-lisp
      (defun reload-init()
