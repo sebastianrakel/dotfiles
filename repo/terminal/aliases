@@ -9,7 +9,7 @@ alias grep='grep --color'
 if [[ "$uname_string" == 'OpenBSD' || "$uname_string" == 'FreeBSD' ]]; then
     alias ls='ls -G'
 else
-    alias ls='ls --color=auto'
+    alias ls='lsd'
     alias ip='ip -c'
     alias ips='ip -br a'
     alias dmesg='dmesg -T --color'
