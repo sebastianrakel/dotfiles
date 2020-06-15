@@ -90,6 +90,7 @@
     (global-set-key (kbd "<f4>") 'ivy-switch-buffer)
 
     (global-set-key (kbd "C-<f5>") '(lambda () (interactive) (reload-init)))
+    (global-set-key (kbd "<f5>") '(lambda () (interactive) (compile)))
     (global-set-key (kbd "C-M-l") 'indent-buffer)
 
     (global-set-key (kbd "C-x g") 'magit-status)
@@ -188,8 +189,13 @@
 
       (defun my-go-init-hook()
         (message "My Go Hook")
+        (set 'gofmt-command "goimports")
         (add-hook 'before-save-hook #'lsp-format-buffer t t)
         (add-hook 'before-save-hook #'lsp-organize-imports t t)
+
+        (if (not (string-match "go" compile-command))
+            (set (make-local-variable 'compile-command)
+                 "go build -v && go test -v && go vet"))
 
         (yas-minor-mode)
         (lsp))
