@@ -92,14 +92,15 @@ export ALTERNATE_EDITOR=emacs
 export EDITOR=emacsclient
 export VISUAL=emacsclient
 
-if [ "${uname_string}" != "FreeBSD" ]; then
+if [ "${uname_string}" = "Archlinux" ]; then
     # Archlinux Kernel check
     PRINT="0" archlinux_check_kernel.sh
 
-    # GPG
-    if [ -e "${HOME}/.bin/gpg-agent.sh" ] ; then
-        . "${HOME}/.bin/gpg-agent.sh"
-    fi
+fi
+
+# GPG
+if [ -e "${HOME}/.bin/gpg-agent.sh" ] ; then
+    . "${HOME}/.bin/gpg-agent.sh"
 fi
 
 # Music

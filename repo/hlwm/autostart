@@ -186,8 +186,8 @@ hc detect_monitors
 
 feh --bg-fill "${HOME}/Pictures/Wallpaper/xkcd_computer.jpg"
 
-if [ -e "${HOME}/.config/systemd/user/bar.service" ]; then
-    systemctl --user restart bar    
+if [ -e "${HOME}/.bin/bar_starter.rb" ]; then
+    "${HOME}/.bin/bar_starter.rb"
 else
   panel=~/.config/herbstluftwm/panel.sh
   [ -x "$panel" ] || panel=/etc/xdg/herbstluftwm/panel.sh

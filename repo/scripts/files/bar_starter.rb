@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-
 require 'socket'
 
 def start_conquer(index)
@@ -37,7 +36,7 @@ bar_pids = monitor_count.times.map do |index|
   monitor = poly_displays[index].split(":")[0]
   
   command = start_polybar(index)
-  pad_command = "herbstclient pad #{index} 0 0 500 0"
+  pad_command = "herbstclient pad #{index} 0 0 50 0"
   p pad_command
   p command
   Process.spawn(pad_command)
@@ -57,5 +56,6 @@ IO.popen(%w(herbstclient --idle)) do |io|
     }
 
     Process.kill('TERM', trayer_pid) unless trayer_pid == 0
+    exit(0)
   end
 end

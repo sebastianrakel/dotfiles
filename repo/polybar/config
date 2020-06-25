@@ -11,8 +11,8 @@
 screenchange-reload = true
 
 [global/wm]
-margin-top = 100
-margin-bottom = 100
+margin-top = 0
+margin-bottom = 0
 
 
 [colors]
