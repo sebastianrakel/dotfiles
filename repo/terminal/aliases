@@ -10,6 +10,9 @@ alias ☸='kubectl'
 alias hc='herbstclient'
 alias em='emacsclient -n'
 alias o='openstack'
+alias ddd='dd oflag=direct status=progress'
+alias ddf='dd conv=fsynci status=progress'
+alias sudo='sudo '
 
 if [[ "$uname_string" == 'OpenBSD' || "$uname_string" == 'FreeBSD' ]]; then
     alias ls='ls -G'
