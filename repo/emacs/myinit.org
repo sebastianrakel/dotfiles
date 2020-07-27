@@ -276,6 +276,14 @@
         :ensure t)
     #+END_SRC
 * Internet
+** Twitter
+   #+BEGIN_SRC emacs-lisp
+     (use-package twittering-mode
+       :ensure t)
+
+     (setq twittering-icon-mode t)
+     (setq twittering-use-icon-storage t)
+   #+END_SRC
 ** Notmuch
    #+BEGIN_SRC emacs-lisp
      (setq notmuch-search-oldest-first nil)
