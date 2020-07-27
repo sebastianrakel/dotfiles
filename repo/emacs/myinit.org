@@ -270,6 +270,16 @@
     (use-package powershell
       :ensure t)
   #+END_SRC
+*** PKGBUILD
+    #+BEGIN_SRC emacs-lisp
+      (use-package pkgbuild-mode
+        :ensure t)
+    #+END_SRC
+* Internet
+** Notmuch
+   #+BEGIN_SRC emacs-lisp
+     (setq notmuch-search-oldest-first nil)
+   #+END_SRC
 * Helper Functions
   #+BEGIN_SRC emacs-lisp
      (defun reload-init()
