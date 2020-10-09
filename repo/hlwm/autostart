@@ -164,7 +164,6 @@ hc rule focus=on # normally focus new clients
 hc rule class~'jetbrains-.*' tag=dev
 hc rule instance='jetbrains-toolbox' tag=dev
 
-hc rule instance='Godot_Engine' tag=games
 
 hc rule instance=VirtualBox tag=virt
 
