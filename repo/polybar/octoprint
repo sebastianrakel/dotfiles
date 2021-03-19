@@ -1,0 +1,17 @@
+[bar/0]
+width = 256
+height = 256
+radius = 0
+fixed-center = false
+
+modules-center = a10-temp a10-duration
+
+[module/a10-temp]
+type = custom/script
+exec = echo "test"
+interval = 5
+
+[module/a10-duration]
+type = custom/script
+exec = echo "test2"
+interval = 5

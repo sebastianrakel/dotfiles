@@ -59,12 +59,6 @@ re-downloaded in order to locate PACKAGE."
 (add-to-list 'default-frame-alist '(font . "Hack-14"))
 
 ;; Load Packages
-
-(use-package auto-complete
-  :ensure t
-  :init
-  (ac-config-default))
-
 (use-package magit
   :defer 2
   :ensure t
@@ -90,7 +84,11 @@ re-downloaded in order to locate PACKAGE."
   :config (powerline-default-theme))
 
 (use-package company
-  :ensure t)
+  :ensure t
+  :bind (
+	 ("C-SPC" . company-complete))
+  :init
+  (add-hook 'after-init-hook 'global-company-mode))
 
 (use-package flymake
   :ensure t)
@@ -217,6 +215,13 @@ re-downloaded in order to locate PACKAGE."
 (use-package platformio-mode
   :ensure t)
 
+;; Miscialous
+(use-package toml-mode
+  :ensure t)
+
+(use-package web-mode
+  :ensure t)
+
 ;; Hooks
 (add-hook 'prog-mode-hook 'hs-minor-mode)
 
@@ -234,7 +239,7 @@ re-downloaded in order to locate PACKAGE."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(meson-mode yasnippet ccls platformio-mode dashboard go-mode lsp-dart lsp-sourcekit swift-mode helm-lsp powerline helm-swoop yaml-mode helm-projectile projectile ansible puppet-mode helm which-key lsp-mode company-mode use-package magit gruvbox-theme auto-complete)))
+   '(web-mode meson-mode yasnippet ccls platformio-mode dashboard go-mode lsp-dart lsp-sourcekit swift-mode helm-lsp powerline helm-swoop yaml-mode helm-projectile projectile ansible puppet-mode helm which-key lsp-mode company-mode use-package magit gruvbox-theme auto-complete)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

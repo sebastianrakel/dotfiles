@@ -37,3 +37,5 @@
 
 [include]
     path = ~/.config/git/conf.d/user
+[init]
+	defaultBranch = main

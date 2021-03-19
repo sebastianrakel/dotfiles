@@ -26,6 +26,8 @@ hc keybind $Mod-Shift+p spawn rofi-pass --root .password-store:.password-store-f
 hc keybind $Mod-Shift+o spawn ~/Projects/Fun/splatmoji/splatmoji type
 hc keybind $Mod+w spawn rofi -show window
 hc keybind $Mod-Print spawn flameshot gui
+hc keybind $Mod-Shift-s spawn ~/.bin/local/sink-select.sh
+
 
 # basic movement
 # focusing clients
@@ -75,6 +77,7 @@ hc keybind $Mod-Next spawn ${HOME}/.bin/volume_control.sh decrease
 hc keybind XF86AudioRaiseVolume spawn ${HOME}/.bin/volume_control.sh increase
 hc keybind XF86AudioLowerVolume spawn ${HOME}/.bin/volume_control.sh decrease
 hc keybind XF86AudioMute spawn ${HOME}/.bin/volume_control.sh mute
+hc keybind XF86Launch5 spawn ${HOME}/.bin/local/mute_toggle.sh
 
 # tags
 tag_names=( {main,www,media,dev,virt,remote,stuff,games} )
@@ -166,6 +169,9 @@ hc rule instance='jetbrains-toolbox' tag=dev
 
 
 hc rule instance=VirtualBox tag=virt
+
+# Games
+hc rule title='Kerbal Space Program' pseudotle=on
 
 hc rule windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH)' pseudotile=on
 hc rule windowtype='_NET_WM_WINDOW_TYPE_DIALOG' focus=on
