@@ -25,7 +25,8 @@
         dependencies = ['computer']
         packages = ['mpd']
 
-[configurations.mimir.rakel-net.de]
+[configurations.mimir]
+        pattern = '^mimir.*$'
         dependencies = ['base']
 
 [configurations.ws-rakel-seb]
