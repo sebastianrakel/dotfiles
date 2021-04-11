@@ -231,6 +231,7 @@ re-downloaded in order to locate PACKAGE."
 
 (global-set-key (kbd "C-c <f12>") 'reload-dotemacs)
 (global-set-key (kbd "C-M-l") 'indent-buffer)
+(global-set-key (kbd "C-S-/") 'comment-or-uncomment-region)
 
 ;; Custom Stuff
 (custom-set-variables
