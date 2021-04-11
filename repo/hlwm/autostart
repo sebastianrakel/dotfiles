@@ -80,7 +80,7 @@ hc keybind XF86AudioMute spawn ${HOME}/.bin/volume_control.sh mute
 hc keybind XF86Launch5 spawn ${HOME}/.bin/local/mute_toggle.sh
 
 # tags
-tag_names=( {main,www,media,dev,virt,remote,stuff,games} )
+tag_names=( {main,www,cad,dev,virt,remote,stuff,games} )
 tag_keys=( {1..9} 0 )
 
 hc rename default "${tag_names[0]}" || true
