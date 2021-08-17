@@ -56,7 +56,7 @@ re-downloaded in order to locate PACKAGE."
 
 ;; Font Settings
 
-(add-to-list 'default-frame-alist '(font . "Hack-14"))
+(add-to-list 'default-frame-alist '(font . "Monospace-14"))
 
 ;; Load Packages
 (use-package magit
@@ -159,6 +159,11 @@ re-downloaded in order to locate PACKAGE."
 (use-package yasnippet
   :ensure t)
 
+;; Powershell
+
+(use-package powershell
+  :ensure t)
+
 ;; Puppet
 (use-package puppet-mode
   :ensure t)
@@ -179,6 +184,14 @@ re-downloaded in order to locate PACKAGE."
   :after lsp-mode
   :config
   (setq lsp-sourcekit-executable "/usr/bin/sourcekit-lsp"))
+
+;; Rust
+
+(use-package cargo
+  :ensure t)
+
+(use-package rust-mode
+  :ensure t)
 
 ;; C/C++
 
@@ -222,6 +235,14 @@ re-downloaded in order to locate PACKAGE."
 (use-package web-mode
   :ensure t)
 
+;; Mail Stuff
+
+(use-package notmuch
+  :ensure t)
+
+(use-package helm-notmuch
+  :ensure t)
+
 ;; Hooks
 (add-hook 'prog-mode-hook 'hs-minor-mode)
 
@@ -240,7 +261,7 @@ re-downloaded in order to locate PACKAGE."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(web-mode meson-mode yasnippet ccls platformio-mode dashboard go-mode lsp-dart lsp-sourcekit swift-mode helm-lsp powerline helm-swoop yaml-mode helm-projectile projectile ansible puppet-mode helm which-key lsp-mode company-mode use-package magit gruvbox-theme auto-complete)))
+   '(powershell rust-mode cargo helm-notmuch notmuch groovy-mode basic-mode web-mode meson-mode yasnippet ccls platformio-mode dashboard go-mode lsp-dart lsp-sourcekit swift-mode helm-lsp powerline helm-swoop yaml-mode helm-projectile projectile ansible puppet-mode helm which-key lsp-mode company-mode use-package magit gruvbox-theme auto-complete)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
