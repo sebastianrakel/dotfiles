@@ -189,15 +189,18 @@ herbstclient set tree_style '╾│ ├└╼─┐'
 # or simply:
 hc detect_monitors
 
-feh --bg-fill "${HOME}/Pictures/Wallpaper/xkcd_computer.jpg"
+feh --bg-fill "${HOME}/Pictures/Wallpaper/c64_polished.jpg"
 
 if [ -e "${HOME}/.bin/bar_starter.rb" ]; then
+    echo "Will start bar"
     "${HOME}/.bin/bar_starter.rb"
 else
-  panel=~/.config/herbstluftwm/panel.sh
+    echo "Use herbstluftwm panel"
+  panel="${HOME}/.config/herbstluftwm/panel.sh"
   [ -x "$panel" ] || panel=/etc/xdg/herbstluftwm/panel.sh
   
-  for monitor in $(herbstclient list_monitors | cut -d: -f1) ; do  
+  for monitor in $(herbstclient list_monitors | cut -d: -f1) ; do 
+	  echo "Start panel for monitor ${monitor}"
     "${panel}" "${monitor}" &
   done  
 fi
