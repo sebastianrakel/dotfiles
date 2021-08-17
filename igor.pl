@@ -2030,6 +2030,2326 @@ $fatpacked{"Algorithm/DiffOld.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".
   1;
 ALGORITHM_DIFFOLD
 
+$fatpacked{"App/Igor/CLI.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'APP_IGOR_CLI';
+  package App::Igor::CLI;
+  
+  use warnings;
+  use strict;
+  
+  use Const::Fast;
+  use Data::Dumper;
+  use Getopt::Long::Subcommand;
+  use App::Igor::Config;
+  use App::Igor::Repository;
+  use App::Igor::Package;
+  use App::Igor::Util qw(colored);
+  use Try::Tiny;
+  use Pod::Usage;
+  
+  use sort 'stable';
+  
+  # Configure Logging
+  use Log::ger::Output Composite => (
+  	outputs => {
+  		Screen => [
+  			{
+  				level => ['trace', 'info'],
+  				conf  => { stderr => 0
+  				         , use_color => 0},
+  			},
+  			{
+  				level => 'warn',
+  				conf  => { stderr => 1
+  				         , use_color => -t STDERR},
+  			},
+  		],
+  	}
+  );
+  use Log::ger;
+  use Log::ger::Util;
+  
+  # Emit usage
+  sub usage {
+  	# -verbosity == 99: Only print sections in -section
+  	pod2usage( -verbose  => 99
+  	         , -exitval  => 'NOEXIT'
+  	         , -sections => 'SYNOPSIS'
+  	         );
+  }
+  
+  sub usage_full {
+  	# -verbose > 2: Print all sections
+  	pod2usage( -verbose  => 42
+  	         , -exitval  => 'NOEXIT'
+  	         );
+  
+  }
+  
+  # Find out which task to run based on the --task variable or the system hostname
+  sub find_task {
+  	my ($opts, $cfgs) = @_;
+  
+  	my $task = $opts->{task};
+  	return $task if defined $task;
+  
+  	my $identifier = App::Igor::Util::guess_identifier;
+  	my @tasks = grep {
+  		my $re = $cfgs->{$_}->{pattern} // $_;
+  		$identifier =~ /$re/
+  	} sort keys %$cfgs;
+  
+  	die "Automatic task selection using identifier '$identifier' not unique: " . @tasks if @tasks > 1;
+  	die "Task selection using identifier '$identifier' matched no configurations" unless @tasks;
+  
+  	return $tasks[0];
+  }
+  
+  sub parse_commandline {
+  	local @ARGV = @_;
+  
+  	# Setup the defaults
+  	my %opts = (
+  		configfile => './config.toml',
+  		verbositylevel  => 0,
+  		help => 0,
+  
+  	);
+  
+  	my $res = GetOptions(
+  		summary => 'Frankensteins configuration management',
+  
+  		# common options recognized by all subcommands
+  		options => {
+  			'help|h|?+' => {
+  				summary => 'Display help message',
+  				handler => \$opts{help}
+  			},
+  			'config|c=s' => {
+  				summary => 'Specified config',
+  				handler => \$opts{configfile}
+  			},
+  			'verbose|v+' => {
+  				summary => 'Verbosity level',
+  				handler => \$opts{verbositylevel}
+  			},
+  			'task=s' => {
+  				summary => 'Task to execute',
+  				handler => \$opts{task}
+  			},
+  		},
+  
+  		subcommands => {
+  			apply => {
+  				summary => 'Apply a given configuration',
+  				options => {
+  					'dry-run' => {
+  						summary => 'Only simulate the operations',
+  						handler => \$opts{dryrun}
+  					},
+  				}
+  			},
+  			gc => {
+  				summary => 'List obsolete files'
+  			},
+  			diff => {
+  				summary => 'Show the difference between applied and configured states'
+  			},
+  		},
+  	);
+  
+  	# Display help on illegal input
+  	unless ($res->{success} && ($opts{help} || @{$res->{subcommand}})) {
+  		print STDERR "Parsing of commandline options failed.\n";
+  		usage();
+  		exit(-1);
+  	}
+  
+  	# Emit a help message
+  	if ($opts{help}) {
+  		# For a specific subcommand
+  		if (@{$res->{subcommand}}) {
+  			pod2usage( -verbose  => 99
+  					 , -sections => "SUBCOMMANDS/@{$res->{subcommand}}"
+  					 , -exitval  => 0
+  					 );
+  		} else {
+  			# General help
+  			if ($opts{help} >= 2) {
+  				usage_full();
+  			} else {
+  				usage();
+  			}
+  			exit(0);
+  		}
+  	}
+  
+  	# Assert: only one subcommand given
+  	if (@{$res->{subcommand}} != 1) {
+  		die "Igor expectes just one subcommand, but received @{[scalar(@{$res->{subcommand}})]}:"
+  		  . " @{$res->{subcommand}}";
+  	}
+  
+  	$opts{subcommand} = $res->{subcommand};
+  
+  	return \%opts;
+  }
+  
+  # Parse and dispatch the commands
+  sub main {
+  	my $opts = parse_commandline(@_);
+  
+  	# Set log level based on verbosity
+  	# 4 = loglevel "info"
+  	my $loglevel = 4 + $opts->{verbositylevel};
+  	# Log::ger is a bit weird, I found no documentation on it, but numeric
+  	# levels seem to need a scaling factor of 10
+  	Log::ger::Util::set_level($loglevel * 10);
+  	# I want log_warn to be red (also undocumented behaviour)
+  	$Log::ger::Output::Screen::colors{20} = "\e[0;31m";
+  
+  	# Parse the configfile
+  	my $config = App::Igor::Config::from_file($opts->{configfile});
+  
+  	# Determine the task to run
+  	my $task = find_task($opts, $config->configurations);
+  	log_info colored(['bold'], "Running task @{[colored(['bold blue'], $task)]}");
+  
+  	# Layer the dependencies of the task and merge their configurations
+  	my $effective_configuration = $config->determine_effective_configuration($task);
+  	log_trace "Effective configuration:\n" . Dumper($effective_configuration);
+  
+  	# Determine which packages need to be installed
+  	# FIXME: Run factors before expanding perl-based packages.
+  	my @packages = $config->expand_packages( $effective_configuration->{repositories}
+  	                                       , $effective_configuration->{packages}
+  	                                       , $effective_configuration
+  	                                       );
+  	log_debug "Packages to be installed: @{[map {$_->qname} @packages]}";
+  	log_trace "Packages to be installed:\n" . Dumper(\@packages);
+  
+  	# Now dispatch the subcommands
+  	my ($subcommand) = @{$opts->{subcommand}};
+  	log_info colored(['bold'], "Running subcommand @{[colored(['bold blue'], $subcommand)]}");
+  
+  	# Get the transactions required for our packages
+  	my @transactions = map { $_->to_transactions } @packages;
+  
+  	if      (("apply" eq $subcommand) || ("diff" eq $subcommand)) {
+  		# We now make three passes through the transactions:
+  		#   prepare (this will run sideeffect preparations like expanding templates, etc.)
+  		#   check   (this checks for file-conflicts etc as far as possible)
+  		# And depending on dry-run mode:
+  		#   apply   (acutally perform the operations)
+  		# or
+  		#   log     (only print what would be done)
+  		# or
+  		#   diff    (show differences between repository- and filesystem-state
+  
+  		# Build the context and create the "EmitCollection" transactions for the collections
+  		my ($ctx, $colltrans) = $config->build_collection_context($effective_configuration);
+  		push @transactions, @$colltrans;
+  		$ctx->{$_} = $effective_configuration->{$_} for qw(facts packages);
+  
+  
+  		my @files = map {
+  			$_->get_files()
+  		} @packages;
+  		my %uniq;
+  		for my $f (@files) {
+  			if ($uniq{$f}++) {
+  				die "Multiple packages produce file '$f' which is not an collection";
+  			}
+  		}
+  
+  
+  		# Run the factors defined in the configuration
+  		push @transactions, @{$config->build_factor_transactions($effective_configuration->{factors})};
+  		push @transactions, @{$config->build_vault_transactions($effective_configuration->{vaults}, $effective_configuration->{merger}, $effective_configuration->{cachedirectory})};
+  
+  		# Make sure they are ordered correctly:
+  		@transactions = sort {$a->order cmp $b->order} @transactions;
+  
+  		# Wrapper for safely executing actions
+  		my $run = sub {
+  			my ($code, $transactions) = @_;
+  
+  			for my $trans (@$transactions) {
+  				try {
+  					$code->($trans);
+  				} catch {
+  					my $id;
+  					if (defined($trans->package)) {
+  						$id = "package @{[$trans->package->qname]}";
+  					} else {
+  						$id = "toplevel or automatic transaction";
+  					}
+  					log_error("Error occured when processing $id:");
+  					log_error($_);
+  					die "Got a terminal failure for $id";
+  				}
+  			}
+  		};
+  
+  		log_info colored(['bold'], "Running stage \"prepare\":");
+  		$run->(sub { $_[0]->prepare($ctx) }, \@transactions);
+  		log_info colored(['bold'], "Running stage \"check\":");
+  		$run->(sub { $_[0]->check($ctx) }, \@transactions);
+  
+  		if    ("apply" eq $subcommand) {
+  			if ($opts->{dryrun}) {
+  				log_info colored(['bold'], "Running stage \"log\":");
+  				$run->(sub { $_[0]->log($ctx) }, \@transactions);
+  			} else {
+  				log_info colored(['bold'], "Running stage \"apply\":");
+  				$run->(sub { $_[0]->apply($ctx) }, \@transactions);
+  			}
+  		} elsif ("diff"  eq $subcommand) {
+  			log_info colored(['bold'], "Running stage \"diff\":");
+  			$run->(sub { print $_[0]->diff($ctx) }, \@transactions);
+  		} else {
+  			die "Internal: wrong subcommand $subcommand";
+  		}
+  	} elsif ("gc"    eq $subcommand) {
+  		# Show artifacts that exist in the filesystem which stem from
+  		# absent packages
+  		my @blacklist = map {
+  			$_->gc()
+  		} $config->complement_packages(\@packages);
+  
+  		# Remove duplicates
+  		my %uniq;
+  		$uniq{$_} = 1 for @blacklist;
+  
+  		# Remove files created by installed packages
+  		# (e.g.: two packages provide ~/config/tmux.conf, one of which is installed)
+  		my @whitelist = map {
+  			$_->get_files()
+  		} @packages;
+  		delete $uniq{$_} for @whitelist;
+  
+  		# Rewrite urls to use ~ for $HOME if possible
+  		if (defined($ENV{HOME})) {
+  			@blacklist = map { $_ =~ s/^\Q$ENV{HOME}\E/~/; $_ } keys %uniq;
+  		} else {
+  			@blacklist = keys %uniq;
+  		}
+  
+  		print $_ . "\n" for sort @blacklist;
+  	} else {
+  		die "Internal: Unknown subcommand $subcommand";
+  	}
+  }
+  
+  1;
+APP_IGOR_CLI
+
+$fatpacked{"App/Igor/Config.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'APP_IGOR_CONFIG';
+  package App::Igor::Config;
+  use strict;
+  use warnings;
+  
+  use Class::Tiny qw(file configurations), {
+     	defaults     => {},
+     	repositories => {},
+  	packagedb    => undef,
+  };
+  
+  use Data::Dumper;
+  use Data::Diver;
+  use Graph;
+  use App::Igor::Merge;
+  use App::Igor::Repository;
+  use App::Igor::Util;
+  use List::Util qw(reduce);
+  use Log::ger;
+  use Path::Tiny;
+  use Try::Tiny;
+  use Types::Standard qw(Any ArrayRef Bool Dict HashRef Map Optional Str);
+  use Storable qw(dclone);
+  
+  # Config file Schemata for TOML validation
+  my $packageschema = Str;
+  my $collectionschema = Dict[
+  	destination => Str,
+  	merger      => Optional[Str],
+  	perm        => Optional[Str],
+  ];
+  my $repositoryschema = Dict[
+  	path => Str,
+  ];
+  my $factorschema = Dict [
+  	path => Str,
+  	type => Optional[Str],
+  ];
+  my $vaultschema = Dict [
+  	path      => Str,
+  	command   => Str,
+  	cacheable => Optional[Bool],
+  	type      => Optional[Str],
+  ];
+  my $mergers = Map[Str, Str];
+  my $configurationschema = Dict[
+  	mergers        => Optional[$mergers],
+  	mergeconfig    => Optional[HashRef],
+  	dependencies   => Optional[ArrayRef[Str]],
+  	packages       => Optional[ArrayRef[$packageschema]],
+  	repositories   => Optional[HashRef[$repositoryschema]],
+  	facts          => Optional[Any],
+  	factors        => Optional[ArrayRef[$factorschema]],
+  	vaults         => Optional[ArrayRef[$vaultschema]],
+  	collections    => Optional[HashRef[$collectionschema]],
+  	pattern        => Optional[Str],
+  	cachedirectory => Optional[Str],
+  ];
+  my $configschema = Dict[
+  	defaults       => Optional[$configurationschema],
+  	configurations => HashRef[$configurationschema],
+  ];
+  
+  sub BUILD {
+  	my ($self, $args) = @_;
+  
+  	# Merge configurations can only be applied configured in the defaults configuration
+  	for my $key (keys %{$args->{configurations}}) {
+  		if (exists($args->{configurations}->{$key}->{mergeconfig})) {
+  			die "Syntax error for configuration $key: mergeconfigs may only be applied in the defaults section";
+  		}
+  	}
+  
+  	$args->{defaults} //= {};
+  	$args->{defaults}->{cachedirectory} //= "./.cache";
+  
+  	# Build Path::Tiny objects
+  	for my $cfg (values %{$args->{configurations}}, $args->{defaults}) {
+  		$cfg //= {};
+  		$cfg->{repositories} //= {};
+  		my $base = $args->{file}->parent;
+  		my $make_abs = sub {
+  			my $path = path($_[0]);
+  			if ($path->is_relative) {
+  				# Resolve relative paths in relation to the config file
+  				$path = path("$base/$path");
+  			}
+  			$path
+  		};
+  		if (exists $cfg->{cachedirectory}) {
+  			$cfg->{cachedirectory} = $make_abs->($cfg->{cachedirectory});
+  		}
+  		for my $factor (@{$cfg->{factors}}) {
+  			if (exists $factor->{path}) {
+  				$factor->{path} = $make_abs->($factor->{path});
+  			}
+  		}
+  		for my $vault (@{$cfg->{vaults}}) {
+  			if (exists $vault->{path}) {
+  				$vault->{path} = $make_abs->($vault->{path});
+  			}
+  		}
+  		for my $repokey (keys %{$cfg->{repositories}}) {
+  			my $repo = $cfg->{repositories}->{$repokey};
+  			if (exists $repo->{path}) {
+  				$repo->{path} = $make_abs->($repo->{path});
+  			}
+  		}
+  		$cfg->{collections} //= {};
+  		for my $collkey (keys %{$cfg->{collections}}) {
+  			my $coll = $cfg->{collections}->{$collkey};
+  			$coll->{destination} = path($coll->{destination}) if exists $coll->{destination};
+  		}
+  		$cfg->{mergers} //= {};
+  		for my $merger (keys %{$cfg->{mergers}}) {
+  			$cfg->{mergers}->{$merger} = $make_abs->($cfg->{mergers}->{$merger});
+  		}
+  	}
+  }
+  
+  sub from_file {
+  	my ($filepath) = @_;
+  
+  	# Parse and read the config file
+  	my $conf = App::Igor::Util::read_toml($filepath);
+  	log_debug "Parsed configuration at '$filepath':\n" . Dumper($conf);
+  
+  	try {
+  		# Validate the config
+  		$configschema->($conf);
+  	} catch {
+  		die "Validating $filepath failed:\n$_";
+  	};
+  
+  	return App::Igor::Config->new(file => path($filepath), %{$conf});
+  }
+  
+  sub expand_dependencies {
+  	my ($cfgs, $root) = @_;
+  
+  	# Expand the configuration dependencies by depth first search
+  	return App::Igor::Util::toposort_dependencies($cfgs, $root, sub { $_[0]->{dependencies} });
+  }
+  
+  sub determine_effective_configuration {
+  	my ($self, $root) = @_;
+  
+  	die "No such configuration: $root" unless defined $self->configurations->{$root};
+  
+  	my @cfgnames = expand_dependencies($self->configurations, $root);
+  	log_debug "Topological sort of dependencies: @cfgnames";
+  
+  	# Merge in reverse topological order
+  	my @cfgs     = map {
+  		my $cfg = $self->configurations->{$_};
+  		die "No such configuration: $_" unless defined ($cfg);
+  		$cfg;
+  	} reverse @cfgnames;
+  
+  	my $configmergers = {
+  		factors      => \&App::Igor::Merge::list_concat,
+  		packages     => \&App::Igor::Merge::uniq_list_merge,
+  		dependencies => \&App::Igor::Merge::uniq_list_merge,
+  		# repositories and collections use the default hash merger, same for facts
+  	};
+  	my $mergers = $self->defaults->{mergers} // {};
+  	my $cm = App::Igor::Util::traverse_nested_hash($self->defaults->{mergeconfig} // {}, sub {
+  			my ($name, $bc) = @_;
+  			unless(exists $mergers->{$name}) {
+  				die "Configured merger '$name' for path @{$bc} is not defined";
+  			}
+  			App::Igor::Util::file_to_coderef($mergers->{$name});
+  		});
+  	$configmergers->{$_} = $cm->{$_} for (keys %$cm);
+  
+  	my $merger = App::Igor::Merge->new(
+  		mergers => $configmergers,
+  	);
+  
+  	# Prepend the defaults to the cfg list
+  	unshift @cfgs, $self->defaults;
+  
+  	# Now merge the configurations, with entries of the later ones overlaying old values
+  	my $effective = reduce { $merger->merge($a, $b) } @cfgs;
+  	log_trace "Merged configuration: " . Dumper($effective);
+  
+  	# Store the merger within the effective configuration for later use
+  	$effective->{merger} = $merger;
+  
+  	return $effective;
+  }
+  
+  sub resolve_package {
+  	my ($packagename, $repositories, $packagedb) = @_;
+  
+  	# Packagenames can optionally be qualified "repo/packagename" or
+  	# unqualified "packagename" Unqualified packagenames have to be unique
+  	# among all repositories
+  
+  	# Step one: determine $repo and $pkgname
+  	my ($reponame, $pkgname);
+  
+  	my @fragments = split /\//,$packagename,2;
+  	if (@fragments == 2) {
+  		# Qualified name, resolve repo -> package
+  		my ($parent, $packagename) = @fragments;
+  		$reponame = $parent;
+  		$pkgname  = $packagename;
+  	} elsif (@fragments == 1) {
+  		# Unqualified name: search packagedb
+  		my $alternatives = $packagedb->{$packagename};
+  
+  		# Do we have at least one packages?
+  		die "No repository provides a package '$packagename': "
+  		  . "Searched repositories: @{[sort keys %$repositories]}"
+  		  unless defined($alternatives) &&  (@$alternatives);
+  
+  		# Do we have more than one alternative -> Qualification needed
+  		die "Ambiguous packagename '$packagename': Instances include @$alternatives"
+  			unless (@$alternatives == 1);
+  
+  		# We have exactly one instance for the package
+  		$reponame = $alternatives->[0];
+  		$pkgname  = $packagename;
+  	} else {
+  		# This should be unreachable
+  		die "Internal: Invalid packagename $packagename\n";
+  	}
+  
+  	# Actually lookup the package
+  	my $repo = $repositories->{$reponame};
+  	die "Unable to resolve qualified packagename '$packagename':"
+  	  . " No such repository: $reponame" unless defined $repo;
+  
+  	return  $repo->resolve_package($pkgname);
+  }
+  
+  # Given a list of packages and a list repositories, first resolve all
+  # packages in the given repositories and build the dependency-graph
+  #
+  # Returns all packages that need to be installed
+  sub expand_packages {
+  	my ($self, $repositories, $packages, $config) = @_;
+  
+  	# This sets $self->repositories and $self->packagedb
+  	$self->build_package_db($repositories, $config);
+  
+  	# Resolve all packages to qnames
+  	my @resolved = map {
+  			resolve_package( $_
+  						   , $self->repositories
+  						   , $self->packagedb)->qname
+  		} @$packages;
+  
+  	# Now build the dependency graph
+  	my $g = Graph::Directed->new;
+  	for my $reponame (sort keys %{$self->repositories}) {
+  		my $repo = $self->repositories->{$reponame};
+  		# Subgraph for the repo
+  		my $rg = $repo->dependency_graph;
+  		# Merge it with the global graph, prefixing all vertexes
+  		$g->add_vertex($_) for map { "$reponame/$_" } @{[$rg->vertices]};
+  		for my $edge (@{[$rg->edges]}) {
+  			my ($x,$y) = @{$edge};
+  			$g->add_edge("$reponame/$x", "$reponame/$y");
+  		}
+  	}
+  
+  	# Now add a virtual 'start' and link it to all requested packages
+  	$g->add_vertex("start");
+  	for my $res (@resolved) {
+  		$g->add_edge('start', $res);
+  	}
+  
+  	my @packages = sort $g->all_reachable("start");
+  	return map {
+  		resolve_package( $_
+  		               , $self->repositories
+  		               , $self->packagedb)
+  		} @packages;
+  }
+  
+  # Given a list of packages (as App::Igor::Package) get all inactive packages
+  sub complement_packages {
+  	my ($self, $packages) = @_;
+  
+  	my %blacklist;
+  	$blacklist{$_->id} = 1 for (@$packages);
+  
+  	my @complement;
+  	my $packagedb = $self->packagedb;
+  	my $repos     = $self->repositories;
+  	for my $name (keys %$packagedb) {
+  		next if $blacklist{$name};
+  		for my $repo (@{$packagedb->{$name}}) {
+  			$repo = $repos->{$repo};
+  
+  			push @complement, $repo->resolve_package($name);
+  		}
+  	}
+  
+  	return @complement;
+  }
+  
+  sub build_package_db {
+  	my ($self, $repositories, $config) = @_;
+  
+  	log_debug "Building packagedb";
+  
+  	my %repos     = ();
+  	my %packagedb = ();
+  
+  	for my $name (sort keys %$repositories) {
+  		my $repo = App::Igor::Repository->new(id => $name, directory => $repositories->{$name}->{path}, config => $config);
+  		$repos{$name} = $repo;
+  
+  		for my $pkg (keys %{$repo->packagedb}) {
+  			push(@{$packagedb{$pkg}}, $name);
+  		}
+  	}
+  
+  	log_trace "Build packagedb:\n" . Dumper(\%packagedb);
+  
+  	$self->repositories(\%repos);
+  	$self->packagedb(\%packagedb);
+  
+  	return \%packagedb;
+  }
+  
+  sub build_collection_context {
+  	my ($self, $configuration) = @_;
+  	my $collections = $configuration->{collections};
+  
+  	my @transactions;
+  	my $ctx = { collections => {} };
+  
+  	for my $coll (keys %$collections) {
+  		$ctx->{collections}->{$coll} = {};
+  		my $pkg = App::Igor::Package->new(basedir => $self->file, repository => undef, id => "collection_$coll");
+  		my $merger;
+  		if (defined $collections->{$coll}->{merger}) {
+  			my $mergerid   = $collections->{$coll}->{merger};
+  			my $mergerfile = $configuration->{mergers}->{$mergerid};
+  			die "No such merger defined: $mergerid" unless defined $mergerfile;
+  			try {
+  				$merger = App::Igor::Util::file_to_coderef($mergerfile);
+  			} catch {
+  				die "Error while processing collection '$coll': cannot create merger from $mergerfile: $_";
+  			}
+  		} else {
+  			$merger = sub { my $hash = shift;
+  				my @keys = sort { $a cmp $b } keys %$hash;
+  				join('', map {$hash->{$_}} @keys)
+  			};
+  		}
+  		push @transactions, App::Igor::Operation::EmitCollection->new(
+  			collection => $coll,
+  			merger => $merger,
+  			sink => App::Igor::Sink::File->new( path => $collections->{$coll}->{destination}
+  				                         , id => $pkg
+  				                         , perm => $collections->{$coll}->{perm}
+  									     ),
+  			package => $pkg,
+  			order   => 50,
+  		);
+  	}
+  
+  	return ($ctx, \@transactions);
+  }
+  
+  sub build_factor_transactions {
+  	my ($self, $factors) = @_;
+  
+  	my @transactions;
+  	for my $factor (@$factors) {
+  		push @transactions, App::Igor::Operation::RunFactor->new(%$factor, order => 1);
+  	}
+  
+  	return \@transactions;
+  }
+  
+  
+  sub build_vault_transactions {
+  	my ($self, $vaults, $merger, $cachedirectory) = @_;
+  
+  	my @transactions;
+  	for my $vault (@$vaults) {
+  		push @transactions, App::Igor::Operation::UnlockVault->new(%$vault, order => 1, merger => $merger, cachedirectory => $cachedirectory);
+  	}
+  
+  	return \@transactions;
+  }
+  
+  1;
+  
+  __END__
+APP_IGOR_CONFIG
+
+$fatpacked{"App/Igor/Diff.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'APP_IGOR_DIFF';
+  package App::Igor::Diff;
+  use Exporter 'import';
+  @EXPORT = qw(diff);
+  
+  use warnings;
+  use strict;
+  
+  { package App::Igor::Colordiff;
+  	use warnings;
+  	use strict;
+  
+  	use App::Igor::Util qw(colored);
+  	use Text::Diff;
+  	our @ISA = qw(Text::Diff::Unified);
+  
+  	sub file_header {
+  		my $self = shift;
+  		colored(['bold bright_yellow'], $self->SUPER::file_header(@_));
+  	}
+  
+  	sub hunk_header {
+  		my $self = shift;
+  		colored(['bold bright_magenta'], $self->SUPER::hunk_header(@_));
+  	}
+  
+  	sub hunk {
+  		my $self = shift;
+  		my (undef, undef, $ops, undef) = @_;
+  		my @lines = split /\n/, $self->SUPER::hunk(@_), -1;
+  		my %ops2col = ( "+" => "bold bright_green"
+  		              , " " => ""
+  		              , "-" => "bold bright_red");
+  		use Data::Dumper;
+  		@lines = map {
+  			my $color = $ops2col{$ops->[$_]->[2] // " "};
+  			if ($color) {
+  				colored([$color], $lines[$_]);
+  			} else {
+  				$lines[$_];
+  			}
+  		} 0 .. $#lines;
+  		return join "\n", @lines;
+  	}
+  }
+  
+  sub diff {
+  	my ($x, $y, $opts) = @_;
+  
+  	# Set style, allowing overrides
+  	$opts->{STYLE} //= 'App::Igor::Colordiff';
+  
+  	return Text::Diff::diff($x, $y, $opts);
+  }
+APP_IGOR_DIFF
+
+$fatpacked{"App/Igor/Merge.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'APP_IGOR_MERGE';
+  package App::Igor::Merge;
+  use warnings;
+  use strict;
+  
+  use Class::Tiny {
+  	mergers => {},
+  	clone   => 1,
+  };
+  
+  use Log::ger;
+  use Data::Diver qw(Dive);
+  use Storable qw(dclone);
+  
+  sub select_merger {
+  	my ($self) = @_;
+  
+  	my $merger = Dive($self->mergers, @{$self->{breadcrumb}});
+  
+  	return undef unless ref($merger) eq 'CODE';
+  	return $merger;
+  }
+  
+  # Implementation strongly influenced by Hash::Merge and Hash::Merge::Simple,
+  # which in turn borrowed from Catalyst::Utils... thanks!
+  sub _merge {
+  	my ($self, $left, $right) = @_;
+  
+  	for my $key (keys %$right) {
+  		my ($er, $el) = map { exists $_->{$key} } $right, $left;
+  
+  		# We only have to merge duplicate keys
+  		if ($er and not $el) {
+  			# copy keys that don't exist in $right to $left
+  			$left->{$key} = $right->{$key};
+  			next;
+  		} elsif (not $er) {
+  			# Key only in right
+  			next;
+  		}
+  
+  		push @{$self->{breadcrumb}}, $key;
+  		my $merger = $self->select_merger;
+  
+  		if (defined $merger) {
+  			log_trace "Running a custom merger on @{$self->{breadcrumb}}";
+  			# A custom merger was defined for this value
+  			$left->{$key} = $merger->($left->{$key}, $right->{$key}, $self->{breadcrumb});
+  		} else {
+  			my ($hr, $hl) = map { ref $_->{$key} eq 'HASH' } $right, $left;
+  			if ($hr and $hl) {
+  				log_trace "Running hash-merge on @{$self->{breadcrumb}}";
+  				# Both are hashes: Recurse
+  				$left->{$key} = $self->_merge($left->{$key}, $right->{$key});
+  			} else {
+  				log_trace "Copying $key at @{$self->{breadcrumb}}";
+  				# Mixed types or non HASH types: Overlay wins
+  				$left->{$key} = $right->{$key};
+  			}
+  		}
+  		pop @{$self->{breadcrumb}};
+  	}
+  
+  	return $left;
+  }
+  
+  sub merge {
+  	my ($self, $left, $right) = @_;
+  
+  	# optionally deeply duplicate the hashes before merging
+  	if ($self->clone) {
+  		$left  = dclone($left);
+  		$right = dclone($right);
+  	}
+  
+  	return $self->_merge($left, $right);
+  }
+  
+  sub list_concat {
+  	my ($lista, $listb, $breadcrumbs) = @_;
+  
+  	log_trace "Running list_concat on @{$breadcrumbs}";
+  
+  	push @$lista, @$listb;
+  
+  	return $lista;
+  }
+  
+  # Merges two lists, while eliminating duplicates in the latter list
+  sub uniq_list_merge {
+  	my ($lista, $listb, $breadcrumbs) = @_;
+  
+  	log_trace "Running uniq_list_merge on @{$breadcrumbs}";
+  
+  	# We want to do the removal of duplicates in a stable fashion...
+  	my @uniqs;
+  	for my $i (@$listb) {
+  		push @uniqs, $i unless grep /^$i$/, @$lista;
+  	}
+  	push @$lista, @uniqs;
+  
+  	return $lista;
+  }
+  
+  sub BUILD {
+  	my ($self, $args) = @_;
+  
+  	$self->{breadcrumb} //= [];
+  }
+  
+  1;
+APP_IGOR_MERGE
+
+$fatpacked{"App/Igor/Operation.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'APP_IGOR_OPERATION';
+  package App::Igor::Operation;
+  use strict;
+  use warnings;
+  
+  use Class::Tiny qw(package order);
+  use Data::Dumper;
+  use App::Igor::Sink;
+  
+  sub prepare { die 'Not implemented'; }
+  sub check   { die 'Not implemented'; }
+  sub apply   { die 'Not implemented'; }
+  sub diff    { die 'Not implemented'; }
+  sub log     { die 'Not implemented'; }
+  
+  sub select_backend {
+  	my ($self, $sink) = @_;
+  
+  	for my $backend (@{$sink->requires}) {
+  		return $backend if grep {$_ == $backend} @{$self->backends};
+  	}
+  
+  	die "No matching backend between @{[ref($self)]} and sink @{[ref($sink)]}";
+  }
+  
+  sub prepare_file_for_backend {
+  	my ($self, $file, $backend) = @_;
+  
+  	if ($backend == App::Igor::Pipeline::Type::FILE) {
+  		# File backend: Simply pass the file
+  		return $file->absolute;
+  	} elsif ($backend == App::Igor::Pipeline::Type::TEXT) {
+  		# Text backend: Pass by content
+  		die "@{[$file->stringify]}: Is no regular file\n" .
+  		    "Only operation 'symlink' with regular file targets (no collections)" unless -f $file;
+  		return $file->slurp;
+  	}
+  
+  	die "Internal: Unknown backend: $backend";
+  }
+  
+  
+  package App::Igor::Operation::Template;
+  use strict;
+  use warnings;
+  
+  use App::Igor::Sink;
+  
+  use Class::Tiny qw(template sink), {
+  	content  => undef,
+  	delimiters => undef,
+  	backends => [App::Igor::Pipeline::Type::TEXT]
+  };
+  use parent 'App::Igor::Operation';
+  
+  use Const::Fast;
+  use Data::Dumper;
+  use Log::ger;
+  use Safe;
+  use Scalar::Util qw(reftype);
+  use Text::Template;
+  use Time::localtime;
+  
+  =begin
+  Generate variable declarations for C<Text::Template>'s C<HASH> parameter when used in
+  conjunction with C<use strict>.
+  
+  Params:
+  	datahash - the HASH parameter passed to C<Text::Template>
+  
+  Returns:
+  	Multiple C<use> declarations that predeclare the variables that will be autogenerated
+  	by C<Text::Template>.
+  
+  	Supported Referencetypes are:
+  	- plain strings and numbers
+  	- HASH
+  	- ARRAY
+  	- SCALAR
+  	- REF
+  
+  Exceptions:
+  	Dies on unknown reftypes
+  =cut
+  sub gen_template_variable_declarations {
+  	my ($datahash) = @_;
+  
+  	# For use strict to work, we have predeclare the relevant variables
+  	# and therefore mangle accordingly.
+  	my @variables;
+  	for my $key (sort keys %$datahash) {
+  		my $value = $datahash->{$key};
+  		# Mangling is described in
+  		# https://metacpan.org/pod/Text::Template#PREPEND-feature-and-using-strict-in-templates
+  
+  		if (not defined $value) {
+  			# "If the value is undef, then any variables named $key, @key,
+  			#  %key, etc., are undefined."
+  			push @variables, ("\$$key", "\%$key", "\@$key");
+  			next;
+  		}
+  
+  		my $type = reftype($value) // '';
+  		if ($type eq '') {
+  			# If the value is a string or a number, then $key is set to
+  			# that value in the template. For anything else, you must pass a
+  			# reference."
+  			push @variables, "\$$key";
+  		} elsif ($type eq 'ARRAY') {
+  			# If the value is a reference to an array, then @key is set to that
+  			# array.
+  			push @variables, "\@$key";
+  		} elsif ($type eq 'HASH') {
+  			# If the value is a reference to a hash, then %key is set to that
+  			# hash.
+  			push @variables, "\%$key";
+  		} elsif ($type eq 'SCALAR' || $type eq 'REF') {
+  			# Similarly if value is any other kind of reference. This means that
+  			#
+  			#   var => "foo" and var => \"foo"
+  			#
+  			# have almost exactly the same effect. (The difference is that in
+  			# the former case, the value is copied, and in the latter case it is
+  			# aliased.)
+  			push @variables, "\$$key";
+  		} else {
+  			log_error "Unexpected reference type '$type' passed to template";
+  			die "Unexpected reference type '$type' passed to template";
+  		}
+  	}
+  	my $decl = join('', map { "our $_;" } @variables);
+  	log_trace "gen_template_variable_declaration: $decl";
+  	return $decl;
+  }
+  
+  sub prepare {
+  	my ($self, $ctx) = @_;
+  
+  	my $facts     = $ctx->{facts};
+  	my $packages  = $ctx->{packages};
+  	my $automatic = $ctx->{automatic};
+  	my $secrets   = $ctx->{secrets};
+  	my $srcfile   = $self->template;
+  
+  	die "Template $srcfile is not a regular file" unless -f $srcfile;
+  
+  	log_debug "Preparing Template: $srcfile";
+  
+  	# Hash for passing gathered facts and installed packages into templates
+  	const my $data => {
+  		facts     => $facts,
+  		packages  => $packages,
+  		automatic => $automatic,
+  		secrets   => $secrets,
+  	};
+  
+  	# Use stricts requires that we predeclare those variables
+  	my $decls = gen_template_variable_declarations($data);
+  
+  	# Create a Safe compartment for evaluation, with the opcodes
+  	# in :default being whitelisted:
+  	#   https://metacpan.org/pod/Opcode#Predefined-Opcode-Tags
+  	my $compartment = Safe->new();
+  
+  	my %templateconfig = (
+  		TYPE => 'FILE',
+  		SOURCE => $srcfile,
+  		PREPEND => q{use warnings; use strict;} . $decls,
+  		SAFE => $compartment,
+  		BROKEN => sub { my %data = @_;
+  			die "Error encountered for $srcfile:$data{lineno}: $data{error}";
+  		},
+  	);
+  
+  	# Optionally enable custom delimiters
+  	if (defined($self->delimiters)) {
+  		$templateconfig{DELIMITERS} = [$self->delimiters->{open}, $self->delimiters->{close}];
+  	}
+  
+  	# Build the actual template
+  	my $template = Text::Template->new(
+  		%templateconfig
+  	) or die "Couldn't create template from '$srcfile': $Text::Template::ERROR";
+  
+  	log_trace "Evaluating Template: $srcfile over:\n" . Dumper($data);
+  	my $content = $template->fill_in(HASH => $data);
+  	unless (defined $content) {
+  		die "Error while filling in template '$srcfile': $Text::Template::ERROR";
+  	}
+  	$self->content($content);
+  
+  	log_trace "Result:\n" . Dumper($self->content);
+  
+  	return $self->content;
+  }
+  
+  sub apply {
+  	my ($self, $ctx) = @_;
+  
+  	# Write $content to outfile or collection...
+  	unless (defined $self->content) {
+  		log_warn "@{[ref($self)]}: prepare not called for template @{[$self->template]} when applying";
+  		$self->prepare($ctx);
+  	}
+  
+  	return $self->sink->emit(App::Igor::Pipeline::Type::TEXT, $self->content, $ctx);
+  }
+  
+  sub log {
+  	my ($self) = @_;
+  
+  	log_info "Applying  @{[$self->template]} to '@{[$self->sink->stringify]}'";
+  }
+  
+  sub check {
+  	my ($self, $ctx) = @_;
+  
+  	unless (defined $self->content) {
+  		log_warn "@{[ref($self)]}: prepare not called for template @{[$self->template]} when checking\n";
+  	}
+  
+  	return $self->sink->check(App::Igor::Pipeline::Type::TEXT, $self->content, $ctx);
+  }
+  
+  sub diff {
+  	my ($self, $ctx) = @_;
+  
+  	unless (defined $self->content) {
+  		log_warn "@{[ref($self)]}: prepare not called for template @{[$self->template]} when diffing\n";
+  	}
+  
+  	return $self->sink->diff( App::Igor::Pipeline::Type::TEXT, $self->content, $ctx
+  	                        , FILENAME_A => $self->template
+  							, MTIME_A => $self->template->stat->mtime());
+  }
+  
+  package App::Igor::Operation::FileTransfer;
+  use strict;
+  use warnings;
+  
+  use App::Igor::Sink;
+  
+  use Class::Tiny qw(source sink), {
+  	backends => [App::Igor::Pipeline::Type::FILE, App::Igor::Pipeline::Type::TEXT],
+  	data => undef,
+  	backend => undef,
+  };
+  use parent 'App::Igor::Operation';
+  
+  use Log::ger;
+  use Time::localtime;
+  
+  sub prepare {
+  	my ($self) = @_;
+  
+  	my $backend = $self->select_backend($self->sink);
+  	$self->backend($backend);
+  	$self->data($self->prepare_file_for_backend($self->source, $backend));
+  }
+  
+  sub check   {
+  	my ($self, $ctx) = @_;
+  
+  	return $self->sink->check($self->backend, $self->data, $ctx);
+  }
+  
+  sub apply   {
+  	my ($self, $ctx) = @_;
+  
+  	my $backend = $self->backend;
+  	my $data    = $self->data;
+  
+  	log_trace "Filetransfer: @{[$self->sink->stringify]} with $data";
+  	# Symlink the two files...
+  	return $self->sink->emit($backend, $data, $ctx);
+  }
+  
+  sub diff {
+  	my ($self, $ctx) = @_;
+  
+  	my $backend = $self->backend;
+  	my $data    = $self->data;
+  
+  	return $self->sink->diff( $backend, $data, $ctx
+  	                        , FILENAME_A => $self->source
+  	                        , MTIME_A => $self->source->stat->mtime);
+  }
+  
+  sub log {
+  	my ($self) = @_;
+  
+  	log_info "Linking   '@{[$self->source]}' to '@{[$self->sink->stringify]}'";
+  }
+  
+  
+  package App::Igor::Operation::EmitCollection;
+  use strict;
+  use warnings;
+  
+  use parent 'App::Igor::Operation';
+  use Class::Tiny qw(collection merger sink), {
+  	data => undef,
+  };
+  
+  use Log::ger;
+  use Data::Dumper;
+  
+  sub prepare {
+  	my ($self, $ctx) = @_;
+  
+  	my $collection = $ctx->{collections}->{$self->collection};
+  	die "Unknown collection '@{[$self->collection]}'" unless defined $collection;
+  
+  	return 1;
+  }
+  
+  sub check   {
+  	my ($self, $ctx) = @_;
+  
+  	my $collection = $ctx->{collections}->{$self->collection};
+  	my $data = $self->merger->($collection, $self->collection);
+  	log_trace "Merged collection '@{[$self->collection]}': $data";
+  	$self->data($data);
+  
+  	return $self->sink->check(App::Igor::Pipeline::Type::TEXT, $self->data, $ctx);
+  }
+  
+  sub apply   {
+  	my ($self, $ctx) = @_;
+  
+  	log_trace "Emitting collection '@{[$self->sink->path]}': @{[$self->data]}";
+  	return $self->sink->emit(App::Igor::Pipeline::Type::TEXT, $self->data, $ctx);
+  }
+  
+  sub diff {
+  	my ($self, $ctx) = @_;
+  
+  	return $self->sink->diff( App::Igor::Pipeline::Type::TEXT, $self->data, $ctx
+  	                        , FILENAME_A => "Collection " . $self->collection
+  	                        , MTIME_A    => time());
+  }
+  
+  sub log {
+  	my ($self) = @_;
+  
+  	log_info "Emitting  collection '@{[$self->sink->stringify]}'";
+  }
+  
+  package App::Igor::Operation::RunCommand;
+  use strict;
+  use warnings;
+  
+  use App::Igor::Sink;
+  
+  use Class::Tiny qw(command), {
+  	basedir  => "",
+  	backends => [],
+  };
+  use parent 'App::Igor::Operation';
+  
+  use Cwd;
+  use Log::ger;
+  use File::pushd;
+  use File::Which;
+  
+  sub prepare { 1; } # No preparation needed
+  
+  sub check   {
+  	my ($self) = @_;
+  
+  	# If we execute a proper command (vs relying on sh),
+  	# we can actually check whether the binary exists...
+  	if (ref($self->command) eq 'ARRAY') {
+  		my $cmd = $self->command->[0];
+  		my $binary;
+  		if (-x $cmd) {
+  			$binary = $cmd;
+  		} elsif (-x "@{[$self->basedir]}/$cmd") {
+  			$binary = "@{[$self->basedir]}/$cmd";
+  		}else {
+  			$binary = File::Which::which($cmd);
+  		}
+  		log_debug "Resolved $cmd to @{[$binary // 'undef']}";
+  		return defined($binary);
+  	}
+  
+  	log_trace "Cannot check shell expression @{[$self->command]}";
+  	1;
+  }
+  
+  sub apply {
+  	my ($self) = @_;
+  
+  	# If possible, we run the commands from the package directory
+  	my $basedir = $self->basedir;
+  	unless ($basedir) {
+  		$basedir = getcwd;
+  	}
+  	my $dir = pushd($basedir);
+  
+  	# Execute
+  	my $retval;
+  	my $strcmd;
+  	if (ref($self->command) eq 'ARRAY') {
+  		$retval = system(@{$self->command});
+  		$strcmd = join(' ', @{$self->command});
+  	} else {
+  		$retval = system($self->command);
+  		$strcmd = $self->command;
+  	}
+  
+  	$retval == 0 or die "system($strcmd) in @{[$self->basedir]} failed with exitcode: $?";
+  	1;
+  }
+  
+  sub log {
+  	my ($self) = @_;
+  
+  	if (ref($self->command) eq 'ARRAY') {
+  		log_info "Executing (safe)   system('@{[@{$self->command}]}')"
+  	} else {
+  		log_info "Executing (unsafe) system('@{[$self->command]}')"
+  	}
+  	1;
+  }
+  
+  sub diff {
+  	my ($self) = @_;
+  
+  	return '';
+  }
+  
+  package App::Igor::Operation::RunFactor;
+  use strict;
+  use warnings;
+  
+  use Class::Tiny qw(path), {
+  	type  => "perl",
+  };
+  use parent 'App::Igor::Operation';
+  
+  use App::Igor::Merge;
+  use String::ShellQuote;
+  use TOML;
+  use TOML::Parser;
+  use Try::Tiny;
+  use Log::ger;
+  
+  sub prepare {
+  	my ($self, $ctx) = @_;
+  
+  	my $facts;
+  	if ($self->type eq 'perl') {
+  		log_debug "Executing file '@{[$self->path]}' as perl-factor";
+  		my $factor = App::Igor::Util::file_to_coderef($self->path);
+  		$facts = $factor->();
+  	} elsif ($self->type eq 'script') {
+  		log_debug "Executing file '@{[$self->path]}' as script-factor";
+  		my $cmd = shell_quote($self->path);
+  		my $output = App::Igor::Util::capture($cmd);
+  
+  		try {
+  			$facts = App::Igor::Util::read_toml_str($output);
+  		} catch {
+  			die "Factor '$cmd' failed: Invalid TOML produced:\n$_";
+  		};
+  	} else {
+  		die "Unknown factor type: @{[$self->type]}";
+  	}
+  
+  	# Use the HashMerger to merge the automatic variables
+  	my $auto = $ctx->{automatic} // {};
+  	my $merger = App::Igor::Merge->new();
+  	$ctx->{automatic} = $merger->merge($auto, $facts);
+  	1;
+  }
+  
+  sub check   {
+  	1;
+  }
+  
+  sub apply {
+  	1;
+  }
+  
+  sub log {
+  	my ($self) = @_;
+  	log_info "Already executed factor '@{[$self->path]}' of type @{[$self->type]}";
+  	1;
+  }
+  
+  sub diff {
+  	my ($self) = @_;
+  	return '';
+  }
+  
+  
+  package App::Igor::Operation::UnlockVault;
+  use strict;
+  use warnings;
+  
+  use Class::Tiny qw(path command merger cachedirectory), {
+  	type      => "shell",
+  	cacheable => 0,
+  };
+  use parent 'App::Igor::Operation';
+  
+  use App::Igor::Merge;
+  use Data::Dumper;
+  use Digest::SHA;
+  use Log::ger;
+  use Path::Tiny;
+  use String::ShellQuote;
+  use TOML::Parser;
+  use TOML;
+  use Try::Tiny;
+  
+  sub checksum {
+  	my ($filename) = @_;
+  
+  	my $sha256 = Digest::SHA->new(256);
+  	try {
+  		# Forcing stringification of $filename is imprtant here
+  		# Might be a Path::Tiny object and Digest::SHA inspects reftypes
+  		$sha256->addfile("$filename", "b");
+  	} catch {
+  		die "Failed to checksum vault '$filename': $_";
+  	};
+  
+  	return $sha256->hexdigest();
+  }
+  
+  sub decrypt {
+  	my ($command, $file) = @_;
+  
+  	my $vault = shell_quote($file);
+  	my $cmd   = "$command";
+  	log_info "Unlocking vault file '$file' using command: $cmd";
+  	$ENV{IGOR_VAULT} = $file;
+  	my $outfile = File::Temp->new();
+  	$ENV{IGOR_OUTFILE} = $outfile->filename;
+  
+  	try {
+  		App::Igor::Util::execute($cmd);
+  	} catch {
+  		die "Failed to decrypt vault '$vault' using command '$cmd':\n$_";
+  	};
+  	my $output = path($outfile->filename)->slurp();
+  
+  	delete $ENV{IGOR_VAULT};
+  	delete $ENV{IGOR_OUTFILE};
+  
+  	return $output;
+  }
+  
+  # Cache logic. Cached, decoded vaults are stored in $cachedir and identified
+  # by their sha256sum as a filename.
+  sub cache_lookup {
+  	my ($cachedir, $vaultfile) = @_;
+  
+  	my $digest = checksum($vaultfile->stringify);
+  	my $cached = $cachedir->child($digest);
+  	if ($cached->is_file) {
+  		log_debug "Vault $vaultfile found in cache: $cached";
+  		return $cached->slurp();
+  	} else {
+  		log_debug "Vault $vaultfile not found in cache: $cached does not exist";
+  		return undef;
+  	}
+  }
+  
+  sub cache_store {
+  	my ($cachedir, $vaultfile, $content) = @_;
+  
+  	my $digest = checksum($vaultfile->stringify);
+  	# ensure the cachedirectory exists
+  	$cachedir->mkpath;
+  	my $cached = $cachedir->child($digest);
+  
+  	
+  	# Create
+  	$cached->touch;
+  	# Cached files are most likely to be kept private
+  	$cached->chmod(0700);
+  	# actually write the data (spew will not work due to permissions
+  	# ending up to be the umask)
+  	$cached->append({truncate => 1}, $content);
+  }
+  
+  sub retrieve {
+  	my ($filepath, $command, $cacheable, $cachedir) = @_;
+  	my $content = cache_lookup($cachedir, $filepath);
+  	if (!defined $content) {
+  		$content = decrypt($command, $filepath);
+  		if ($cacheable) {
+  			cache_store($cachedir, $filepath, $content);
+  		}
+  	}
+  
+  	return $content;
+  }
+  
+  sub prepare {
+  	my ($self, $ctx) = @_;
+  
+  	# Currently, we only support one type of vaults
+  	die "Unsupported vault type '@{[$self->type]}" unless $self->type eq "shell";
+  
+  	my $data = retrieve($self->{path}, $self->command, $self->cacheable, $self->cachedirectory);
+  
+  	my $facts;
+  	try {
+  		$facts = App::Igor::Util::read_toml_str($data);
+  	} catch {
+  		die "Unlocking vault '@{[$self->{path}]}' failed: Invalid TOML produced:\n$_";
+  	};
+  	log_trace "Retrieved vault '@{[$self->{path}]}':\n" . Dumper($facts);
+  
+  	# Use the HashMerger to merge the automatic variables
+  	my $secrets     = $ctx->{secrets} // {};
+  	my $merger      = $self->merger;
+  	$ctx->{secrets} = $merger->merge($secrets, $facts);
+  	1;
+  }
+  
+  sub check   {
+  	1;
+  }
+  
+  sub apply {
+  	1;
+  }
+  
+  sub log {
+  	my ($self) = @_;
+  	log_info "Already unlocked vault '@{[$self->{path}]}'";
+  	1;
+  }
+  
+  sub diff {
+  	my ($self) = @_;
+  	return '';
+  }
+  
+  1;
+  __END__
+APP_IGOR_OPERATION
+
+$fatpacked{"App/Igor/Package.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'APP_IGOR_PACKAGE';
+  package App::Igor::Package;
+  use strict;
+  use warnings;
+  
+  use Class::Tiny qw(basedir repository id), {
+  	dependencies => [],
+  	files        => [],
+  	precmds      => [],
+  	postcmds     => [],
+  	templates    => [],
+  	artifacts    => [],
+  };
+  
+  use Data::Dumper;
+  use File::pushd;
+  use Path::Tiny;
+  use Try::Tiny;
+  use Type::Tiny;
+  use Types::Standard qw(Any ArrayRef Dict HashRef Optional Str);
+  
+  use App::Igor::Operation;
+  use App::Igor::Util;
+  
+  # Config file Schemata for TOML validation
+  my $commandschema  = Str | ArrayRef[Str];
+  my $fileschema     = Dict[
+  	source     => Str,
+  	collection => Str,
+  ] | Dict[
+  	source     => Str,
+  	dest       => Str,
+  	perm       => Optional[Str],
+  	operation  => Optional[Str]
+  ];
+  # Dependencies are files with a special preprocessingstep...
+  my $templatedelimiter = Dict[
+  	open  => Str,
+  	close => Str,
+  ];
+  my $templateschema = Dict[
+  	source     => Str,
+  	collection => Str,
+  	delimiters => Optional[$templatedelimiter],
+  ] | Dict[
+  	source     => Str,
+  	dest       => Str,
+  	delimiters => Optional[$templatedelimiter],
+  	perm       => Optional[Str],
+  ];
+  my $dependencyschema = Str;
+  my $globschema = Str;
+  
+  my $packageschema = Dict[
+  	dependencies => Optional[ArrayRef[$dependencyschema]],
+  	files        => Optional[ArrayRef[$fileschema]],
+  	templates    => Optional[ArrayRef[$templateschema]],
+  	precmds      => Optional[ArrayRef[$commandschema]],
+  	postcmds     => Optional[ArrayRef[$commandschema]],
+  	artifacts    => Optional[ArrayRef[$globschema]],
+  ];
+  
+  sub BUILD {
+  	my ($self, $args) = @_;
+  
+  	# Build Path::Tiny objects for all filepaths
+  	for my $ent (@{$args->{templates}}, @{$args->{files}}) {
+  		for my $key (qw(source dest)) {
+  			$ent->{$key} = path($ent->{$key}) if exists $ent->{$key};
+  		}
+  	}
+  }
+  
+  sub from_file {
+  	my ($filepath, $repository) = @_;
+  
+  	# Parse and read the config file
+  	my $conf = App::Igor::Util::read_toml($filepath);
+  	my $packagedir = path($filepath)->parent;
+  
+  	return from_hash($conf, $packagedir, $repository);
+  }
+  
+  sub from_perl_file {
+  	my ($filepath, $repository, $config) = @_;
+  
+  	my $packagedir = path($filepath)->parent;
+  	my $packagesub = App::Igor::Util::file_to_coderef($filepath);
+  	my $conf;
+  	{ # execute this from the packageidr
+  		my $dir = pushd($packagedir);
+  		$conf = $packagesub->($config);
+  	}
+  
+  	return from_hash($conf, $packagedir, $repository);
+  }
+  
+  sub from_hash {
+  	my ($conf, $basedir, $repository) = @_;
+  	try {
+  		# Validate the config
+  		$packageschema->($conf);
+  	} catch {
+  		die "Validating package-configuration at $basedir failed:\n$_";
+  	};
+  
+  	return App::Igor::Package->new(basedir => $basedir
+  		, repository => $repository
+  		, id => $basedir->basename
+  		, %{$conf});
+  }
+  
+  sub qname {
+  	my ($self) = @_;
+  
+  	my @segments;
+  	if (defined $self->repository) {
+  		push @segments, $self->repository->id;
+  	}
+  	push @segments, $self->id;
+  
+  	return join('/', @segments);
+  }
+  
+  sub determine_sink {
+  	 my ($file, $id) = @_;
+  
+  	if (defined($file->{dest})) {
+  		return App::Igor::Sink::File->new(path => $file->{dest}, id => $id, perm => $file->{perm}, operation => $file->{operation});
+  	} elsif (defined($file->{collection})) {
+  		return App::Igor::Sink::Collection->new(collection => $file->{collection}, id => $id);
+  	} else {
+  		die "Failed to determine sink for file: " . Dumper($file);
+  	}
+  }
+  
+  sub to_transactions {
+  	my ($self) = @_;
+  	my @transactions;
+  
+  	# Run precommands
+  	for my $cmd (@{$self->precmds}) {
+  		push @transactions, App::Igor::Operation::RunCommand->new(
+  			package => $self,
+  			command => $cmd,
+  			basedir => $self->basedir,
+  			order   => 10,
+  		);
+  	}
+  
+  	# Symlink and create files
+  	for my $file (@{$self->files}) {
+  		my $source = path("@{[$self->basedir]}/$file->{source}");
+  		# File mode bits: 07777 -> parts to copy
+  		$file->{perm} //= $source->stat->mode & 07777;
+  		push @transactions, App::Igor::Operation::FileTransfer->new(
+  			package => $self,
+  			source  => $source,
+  			sink    => determine_sink($file, $self->qname),
+  			order   => 20,
+  		);
+  	}
+  
+  	# Run the templates
+  	for my $tmpl (@{$self->templates}) {
+  		push @transactions, App::Igor::Operation::Template->new(
+  			package    => $self,
+  			template   => path("@{[$self->basedir]}/$tmpl->{source}"),
+  			sink       => determine_sink($tmpl, $self->qname),
+  			delimiters => $tmpl->{delimiters},
+  			order      => 30,
+  		);
+  	}
+  
+  	# Now run the postcommands
+  	for my $cmd (@{$self->postcmds}) {
+  		push @transactions, App::Igor::Operation::RunCommand->new(
+  			package => $self,
+  			command => $cmd,
+  			basedir => $self->basedir,
+  			order   => 90,
+  		);
+  	}
+  
+  	@transactions;
+  }
+  
+  sub get_files {
+  	my ($self) = @_;
+  
+  	my @files     = map { $_->{dest} } @{$self->files}, @{$self->templates};
+  	return map {
+  		my $file = $_;
+  		try {
+  			$file = path($file)->realpath->stringify
+  		} catch {
+  			# Nonexistent file -> realpath does not work
+  			$file = path($file)->absolute->stringify
+  		};
+  		$file
+  	} grep { defined($_) } @files;
+  }
+  
+  sub gc {
+  	my ($self) = @_;
+  
+  	my @files     = map { $_->{dest} } @{$self->files}, @{$self->templates};
+  	my @artifacts = map { App::Igor::Util::glob($_) } @{$self->artifacts};
+  
+  	return map {
+  		path($_)->realpath->stringify
+  	} grep { defined($_) } @files, @artifacts;
+  }
+  
+  1;
+  
+  __END__
+APP_IGOR_PACKAGE
+
+$fatpacked{"App/Igor/Repository.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'APP_IGOR_REPOSITORY';
+  package App::Igor::Repository;
+  use strict;
+  use warnings;
+  
+  use Class::Tiny qw(id directory), {
+  	packagedb => {}
+  };
+  
+  use App::Igor::Package;
+  use App::Igor::Util;
+  use Path::Tiny;
+  use Data::Dumper;
+  use Log::ger;
+  
+  # Collect the packages contained in this repository from the filesystem at
+  # C<dir> with effective configuration C<conf>
+  sub collect_packages {
+  	my ($self, $dir, $conf) = @_;
+  
+  	# Sanity check
+  	die "Configured Repository at $dir is not an directory" unless $dir->is_dir;
+  
+  	# Visit all subdirectories, and create a package for it if there is a package.toml file
+  	my $packages = $dir->visit(
+  		sub {
+  			my ($path, $state) = @_;
+  
+  			my $package;
+  			if ((my $packagedesc = $path->child("package.toml"))->is_file) {
+  				$package = App::Igor::Package::from_file($packagedesc, $self);
+  			} elsif ((my $packagedescpl = $path->child("package.pl"))->is_file) {
+  				$package = App::Igor::Package::from_perl_file($packagedescpl, $self, $conf);
+  				log_debug ("Evaluated @{[$packagedescpl->stringify]}: " . Dumper($package));
+  			}
+  			return unless defined($package);
+  
+  			$state->{$path->basename} = $package;
+  		}
+  	);
+  
+  	return $packages;
+  }
+  
+  sub dependency_graph {
+  	my ($self) = @_;
+  
+  	my $g = App::Igor::Util::build_graph($self->packagedb, sub {
+  			$_[0]->dependencies;
+  		});
+  
+  	return $g;
+  }
+  
+  sub resolve_package {
+  	my ($self, $package) = @_;
+  
+  	my $resolved = $self->packagedb->{$package};
+  
+  	die "No such package '$package' in repository '$self->id'" unless defined $resolved;
+  
+  	return $resolved;
+  }
+  
+  sub BUILD {
+  	my ($self, $args) = @_;
+  
+  	# Make sure we've got a Path::Tiny object
+  	# Dynamic typing IS funny :D
+  	unless (ref($self->directory) eq 'Path::Tiny') {
+  		$self->directory(path($self->directory));
+  	}
+  
+  	$self->packagedb($self->collect_packages($self->directory, $args->{config}));
+  }
+  
+  1;
+  
+  __END__
+APP_IGOR_REPOSITORY
+
+$fatpacked{"App/Igor/Sink.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'APP_IGOR_SINK';
+  use strict;
+  
+  package App::Igor::Sink {
+  use strict;
+  use warnings;
+  
+  use Class::Tiny;
+  
+  sub requires { die "Not implemented"; }
+  sub check    { die "Not implemented"; }
+  sub emit     { die "Not implemented"; }
+  sub diff     { die "Not implemented"; }
+  
+  }
+  
+  
+  package App::Igor::Pipeline::Type {
+  use strict;
+  
+  use constant {
+  	TEXT => 0,
+  	FILE => 1,
+  };
+  
+  use constant {
+  	CHANGED   => 0,
+  	UNCHANGED => 1,
+  };
+  }
+  
+  package App::Igor::Sink::File {
+  use strict;
+  use warnings;
+  
+  use parent 'App::Igor::Sink';
+  use Class::Tiny qw(path), {
+  	perm => undef,
+  	operation => undef,
+  };
+  
+  use Const::Fast;
+  use Data::Dumper;
+  use Log::ger;
+  use App::Igor::Diff ();
+  use Try::Tiny;
+  use Fcntl ':mode';
+  
+  const my @REQUIRES => (App::Igor::Pipeline::Type::FILE, App::Igor::Pipeline::Type::TEXT);
+  
+  sub BUILD {
+  	my ($self, $args) = @_;
+  	$args->{operation} //= 'symlink';
+  
+  	unless (grep { /^\Q$args->{operation}\E$/ } qw(symlink copy)) {
+  		die "Illegal file operation specified for @{[$args->{path}]}: $args->{operation}";
+  	}
+  }
+  
+  sub requires { return \@REQUIRES; }
+  
+  sub prepare_for_copy {
+  	my ($self, $typeref, $dataref) = @_;
+  
+  	if (defined $self->operation && $self->operation eq "copy") {
+  		$$typeref = App::Igor::Pipeline::Type::TEXT;
+  		# Text backend: Pass by content
+  		die "@{[$$dataref->stringify]}: Is no regular file\n" .
+  		    "Only operation 'symlink' with regular file targets (no collections) are supported for directories" unless -f $$dataref;
+  		$$dataref = $$dataref->slurp();
+  	}
+  }
+  
+  sub check {
+  	my ($self, $type, $data) = @_;
+  
+  	my $changeneeded = 0;
+  
+  	prepare_for_copy($self, \$type, \$data);
+  
+  	if ($type == App::Igor::Pipeline::Type::TEXT) {
+  		try {
+  			$changeneeded = $self->path->slurp() ne $data;
+  		} catch {
+  			$changeneeded = 1;
+  		};
+  		if (-e $self->path && not S_ISREG($self->path->lstat->mode)) {
+  			die ("File @{[$self->path]} of Template/Copy operation already exists and is not a regular file");
+  		}
+  	} elsif ($type == App::Igor::Pipeline::Type::FILE) {
+  		try {
+  			$changeneeded = not (S_ISLNK($self->path->lstat->mode) && ($self->path->realpath eq $data->realpath));
+  		} catch {
+  			$changeneeded = 1;
+  		};
+  		if (-e $self->path && not S_ISLNK($self->path->lstat->mode)) {
+  			die ("File @{[$self->path]} already exists and is not a symlink");
+  		}
+  	} else {
+  		die "Unsupported type \"$type\" at \"@{[ __PACKAGE__ ]}\" when checking file @{[$self->path]}";
+  	}
+  
+  	return $changeneeded;
+  }
+  
+  sub emit {
+  	my ($self, $type, $data) = @_;
+  
+  	return App::Igor::Pipeline::Type::UNCHANGED unless $self->check($type, $data);
+  
+  	prepare_for_copy($self, \$type, \$data);
+  
+  	# Create directory if the target directory does not exist
+  	unless ($self->path->parent->is_dir) {
+  		$self->path->parent->mkpath;
+  	}
+  
+  	if ($type == App::Igor::Pipeline::Type::TEXT) {
+  		log_trace "spew(@{[$self->path]}, " . Dumper($data) . ")";
+  
+  		# write the data
+  		$self->path->spew($data);
+  
+  		# Fix permissions if requested
+  		if (defined $self->perm) {
+  			$self->path->chmod($self->perm);
+  		}
+  	} elsif ($type == App::Igor::Pipeline::Type::FILE) {
+  		my $dest = $self->path->absolute;
+  
+  		# Remove the link if it exists
+  		unlink $dest if -l $dest;
+  
+  		# symlink
+  		symlink $data,$dest or die "Failed to symlink: $dest -> $data: $!";
+  	} else {
+  		die "Unsupported type \"$type\" at \"" . __PACKAGE__ . "\" when emitting file @{[$self->path]}";
+  	}
+  
+  	return App::Igor::Pipeline::Type::CHANGED;
+  }
+  
+  sub diff {
+  	my ($self, $type, $data, undef, %opts) = @_;
+  
+  	prepare_for_copy($self, \$type, \$data);
+  
+  	my $diff;
+  	if ($type == App::Igor::Pipeline::Type::TEXT) {
+  		try {
+  			$diff = App::Igor::Diff::diff \$data, $self->path->stringify, \%opts;
+  		} catch {
+  			$diff = $_;
+  		}
+  	} elsif ($type == App::Igor::Pipeline::Type::FILE) {
+  		try {
+  			$diff = App::Igor::Diff::diff $data->stringify, $self->path->stringify, \%opts;
+  		} catch {
+  			$diff = $_;
+  		}
+  	} else {
+  		die "Unsupported type \"$type\" at \"" . __PACKAGE__ . "\" when checking file $self->path";
+  	}
+  
+  	return $diff;
+  }
+  
+  sub stringify {
+  	my ($self) = @_;
+  
+  	my $name = $self->path->stringify;
+  	if(defined $self->perm) {
+  		my $perm = sprintf("%o", $self->perm);
+  		$name .= " (chmod $perm)";
+  	}
+  
+  	return $name;
+  }
+  }
+  
+  package App::Igor::Sink::Collection {
+  use strict;
+  use warnings;
+  
+  # Collection sinks are a bit of a hack: They simply export to a context, which
+  # will later be used to fuse the collection. Therefore check, emit and diff
+  # are subs, only crating a suitable ctx for the actual ops.
+  
+  use parent 'App::Igor::Sink';
+  use Class::Tiny qw(collection id), {
+  	checked => 0,
+  };
+  
+  use Const::Fast;
+  use Data::Dumper;
+  use Log::ger;
+  use Text::Diff ();
+  
+  const my @REQUIRES => (App::Igor::Pipeline::Type::TEXT);
+  
+  sub requires { \@REQUIRES }
+  
+  sub check {
+  	my ($self, $type, $data, $ctx) = @_;
+  
+  	# Only build the context once
+  	return 1 if $self->checked;
+  
+  	# Sanity-check: Input type
+  	die   "Unsupported type \"$type\" at \"@{[__PACKAGE__]}\" "
+  	    . "when emitting to collection @{[$self->collection]} for @{[$self->id]}" if App::Igor::Pipeline::Type::TEXT != $type;
+  
+  	# Ensure that collection exists
+  	die "Unknown collection '@{[$self->collection]}' for package '@{[$self->id]}'"
+  		unless exists $ctx->{collections}->{$self->collection};
+  	my $collection = $ctx->{collections}->{$self->collection};
+  
+  	# Ensure that a package only writes to the context once
+  	die "Duplicate entry for @{[$self->id]} in collection @{[$self->collection]}" if (exists $collection->{$self->id});
+  
+  	# Write to the context
+  	$collection->{$self->id} = $data;
+  
+  	# Check has run
+  	$self->checked(1);
+  
+  	return 1;
+  }
+  
+  sub emit {
+  	my ($self, $type, $data, $ctx) = @_;
+  
+  	# Sets $ctx
+  	$self->check($type, $data, $ctx);
+  
+  	return App::Igor::Pipeline::Type::UNCHANGED;
+  }
+  
+  sub diff {
+  	my ($self, $type, $data, $ctx) = @_;
+  
+  	# Diff happens in a dedicated operation, based on $ctx
+  	# Sets $ctx
+  	$self->check($type, $data, $ctx);
+  
+  	return '';
+  }
+  
+  sub stringify {
+  	my ($self) = @_;
+  
+  	my $name = "collection(@{[$self->collection]})";
+  	return $name;
+  }
+  }
+  
+  1;
+  
+  __END__
+APP_IGOR_SINK
+
+$fatpacked{"App/Igor/Types.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'APP_IGOR_TYPES';
+  package App::Igor::Types;
+  use warnings;
+  use strict;
+  
+  use Type::Library -base;
+  use Type::Utils -all;
+  
+  use Path::Tiny;
+  
+  BEGIN { extends "Types::Standard" };
+  
+  
+  our $PathTiny = class_type "PathTiny", { class => "Path::Tiny" };
+  coerce "PathTiny",
+  	from "Str", via { Path::Tiny->new($_) };
+  1;
+  
+  __END__
+APP_IGOR_TYPES
+
+$fatpacked{"App/Igor/Util.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'APP_IGOR_UTIL';
+  package App::Igor::Util;
+  use Exporter 'import';
+  @EXPORT_OK = qw(colored);
+  
+  use strict;
+  use warnings;
+  use feature 'state';
+  
+  use Data::Diver qw(DiveRef);
+  use Data::Dumper;
+  use File::Glob ':bsd_glob';
+  use Graph;
+  use Graph::Directed;
+  use Log::ger;
+  use Net::Domain;
+  use Path::Tiny;
+  use Scalar::Util qw(reftype);
+  use Sys::Hostname;
+  use Term::ANSIColor ();
+  use TOML;
+  use TOML::Parser;
+  
+  sub read_toml {
+  	my ($filepath) = @_;
+  
+  	state $parser = TOML::Parser->new(
+  		inflate_boolean => sub { $_[0] eq 'true' ? \1 : \0 },
+  	);
+  	my ($conf, $err) = $parser->parse_file($filepath);
+  	unless ($conf) {
+  		log_error "Parsing of $filepath failed: $err";
+  		die $err;
+  	}
+  
+  	return $conf;
+  }
+  
+  sub read_toml_str {
+  	my ($data) = @_;
+  
+  	state $parser = TOML::Parser->new(
+  		inflate_boolean => sub { $_[0] eq 'true' ? \1 : \0 },
+  	);
+  	my ($conv, $err) = $parser->parse($data);
+  	unless ($conv) {
+  		log_error "Parsing of toml data failed: $err";
+  		die $err;
+  	}
+  
+  	return $conv;
+  }
+  
+  sub build_graph {
+  	my ($hash, $lambda_deps) = @_;
+  
+  	# Build the graph
+  	my $g = Graph::Directed->new;
+  
+  	for my $key (sort keys %$hash) {
+  		$g->add_vertex($key);
+  		my $deps = $lambda_deps->($hash->{$key});
+  		next unless defined($deps);
+  		for my $child (@$deps) {
+  			$g->add_edge($key, $child);
+  		}
+  	}
+  
+  	return $g;
+  }
+  
+  sub toposort_dependencies {
+  	my ($hash, $root, $lambda_deps) = @_;
+  
+  	my $g = build_graph($hash, $lambda_deps);
+  	$g->add_vertex($root);
+  
+  	log_trace "Dependency graph: $g\n";
+  
+  	# Do a topological sort
+  	my @ts = $g->topological_sort;
+  
+  	# Now restrict that to the nodes reachable from the root
+  	my %r = ($root => 1);
+  	$r{$_}=1 for ($g->all_reachable($root));
+  
+  	my @order = grep { $r{$_} } @ts;
+  	return @order;
+  }
+  
+  # Tries to determine an identifier for the current computer from the following sources:
+  #    - fully qualified domain name (via Net::Domain)
+  #    - hostname (via Sys::Hostname)
+  # In the following order, this sources are probed, the first successful entry is returned
+  sub guess_identifier {
+  	# Try fqdn
+  	my $fqdn = Net::Domain::hostfqdn;
+  	return $fqdn if defined $fqdn;
+  
+  	# Try hostname
+  	return Sys::Hostname::hostname; # Croaks on error
+  }
+  
+  sub colored {
+  	if (-t STDOUT) { # outputting to terminal
+  		return Term::ANSIColor::colored(@_);
+  	} else {
+  		# Colored has two calling modes:
+  		#   colored(STRING, ATTR[, ATTR ...])
+  		#   colored(ATTR-REF, STRING[, STRING...])
+  
+  		unless (ref($_[0])) { # Called as option one
+  			return $_;
+  		} else { # Called as option two
+  			shift;
+  			return @_;
+  		}
+  	}
+  }
+  
+  { no warnings 'redefine';
+  	sub glob {
+  		my ($pattern) = @_;
+  
+  		return bsd_glob($pattern, GLOB_BRACE | GLOB_MARK | GLOB_NOSORT | GLOB_QUOTE | GLOB_TILDE);
+  	}
+  }
+  
+  # Read a file (as Path::Tiny instances) containing a sub and return the correspoding coderef
+  sub file_to_coderef {
+  	my ($path) = @_;
+  	my $source = $path->slurp;
+  	log_trace "Executing @{[$path]}:\n$source";
+  	my $coderef = eval { eval($source) };
+  	die "Failure while evaluating the coderef at @{[$path]}: $@\n" if not defined $coderef;
+  	return $coderef;
+  }
+  
+  # Traversal for HASH of HASH of HASH ... calls the callback with the value and current list of breadcrumbs
+  # i.e.: [key1, innerkey2, innermostkey3]
+  sub traverse_nested_hash {
+  	my ($hash, $cb) = @_;
+  
+  	my @worklist = ({
+  		breadcrumbs => [],
+  		data => $hash,
+  	});
+  
+  	my %result;
+  
+  	while(@worklist) {
+  		my $ctx = pop @worklist;
+  		my @breadcrumbs = @{$ctx->{breadcrumbs}};
+  		my $d = $ctx->{data};
+  		if (reftype($d) // '' eq 'HASH') {
+  			for my $k (keys %$d) {
+  				my $bc = [@breadcrumbs, $k];
+  				push @worklist, { breadcrumbs => $bc, data => $d->{$k}};
+  			}
+  		} else {
+  			my $ref = DiveRef(\%result, @breadcrumbs);
+  			$$ref = $cb->($d, \@breadcrumbs);
+  		}
+  	}
+  
+  	return \%result;
+  }
+  
+  sub capture {
+  	my ($cmd) = @_;
+  
+  	log_debug "Executing command '$cmd'";
+  	my $output = `$cmd`;
+  	if ($? == -1) {
+  		die "Failed to execute command '$cmd': $!\n";
+  	} elsif ($? & 127) {
+  		die "Command '$cmd' died with signal @{[($? & 127)]}\n";
+  	} elsif (($? >> 8) != 0) {
+  		die "Command '$cmd' failed: Factor exited with @{[$? >> 8]}\n";
+  	}
+  
+  	if (!defined($output)) {
+  		die "Failed to capture output for command '$cmd'";
+  	}
+  
+  	return $output;
+  }
+  
+  
+  sub execute {
+  	my ($cmd) = @_;
+  
+  	log_debug "Executing command '$cmd'";
+  	my $retval = system($cmd);
+  	if ($retval == -1) {
+  		die "Failed to execute command '$cmd': $!\n";
+  	} elsif ($retval & 127) {
+  		die "Command '$cmd' died with signal @{[($retval & 127)]}\n";
+  	} elsif (($retval >> 8) != 0) {
+  		die "Command '$cmd' failed: Factor exited with @{[$retval >> 8]}\n";
+  	}
+  
+  	return $retval;
+  }
+  
+  1;
+  
+  __END__
+APP_IGOR_UTIL
+
 $fatpacked{"Class/Tiny.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'CLASS_TINY';
   use 5.006;
   use strict;
@@ -15207,2098 +17527,6 @@ $fatpacked{"Heap071/Fibonacci.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".
   
   =cut
 HEAP071_FIBONACCI
-
-$fatpacked{"Igor/CLI.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'IGOR_CLI';
-  package Igor::CLI;
-  
-  use warnings;
-  use strict;
-  
-  use Const::Fast;
-  use Data::Dumper;
-  use Getopt::Long::Subcommand;
-  use Igor::Config;
-  use Igor::Repository;
-  use Igor::Package;
-  use Igor::Util qw(colored);
-  use Try::Tiny;
-  use Pod::Usage;
-  
-  use sort 'stable';
-  
-  # Configure Logging
-  use Log::ger::Output Composite => (
-  	outputs => {
-  		Screen => [
-  			{
-  				level => ['trace', 'info'],
-  				conf  => { stderr => 0
-  				         , use_color => 0},
-  			},
-  			{
-  				level => 'warn',
-  				conf  => { stderr => 1
-  				         , use_color => -t STDERR},
-  			},
-  		],
-  	}
-  );
-  use Log::ger;
-  use Log::ger::Util;
-  
-  # Emit usage
-  sub usage {
-  	# -verbosity == 99: Only print sections in -section
-  	pod2usage( -verbose  => 99
-  	         , -exitval  => 'NOEXIT'
-  	         , -sections => 'SYNOPSIS'
-  	         );
-  }
-  
-  sub usage_full {
-  	# -verbose > 2: Print all sections
-  	pod2usage( -verbose  => 42
-  	         , -exitval  => 'NOEXIT'
-  	         );
-  
-  }
-  
-  # Find out which task to run based on the --task variable or the system hostname
-  sub find_task {
-  	my ($opts, $cfgs) = @_;
-  
-  	my $task = $opts->{task};
-  	return $task if defined $task;
-  
-  	my $identifier = Igor::Util::guess_identifier;
-  	my @tasks = grep {
-  		my $re = $cfgs->{$_}->{pattern} // $_;
-  		$identifier =~ /$re/
-  	} sort keys %$cfgs;
-  
-  	die "Automatic task selection using identifier '$identifier' not unique: " . @tasks if @tasks > 1;
-  	die "Task selection using identifier '$identifier' matched no configurations" unless @tasks;
-  
-  	return $tasks[0];
-  }
-  
-  sub parse_commandline {
-  	local @ARGV = @_;
-  
-  	# Setup the defaults
-  	my %opts = (
-  		configfile => './config.toml',
-  		verbositylevel  => 0,
-  		help => 0,
-  
-  	);
-  
-  	my $res = GetOptions(
-  		summary => 'Frankensteins configuration management',
-  
-  		# common options recognized by all subcommands
-  		options => {
-  			'help|h|?+' => {
-  				summary => 'Display help message',
-  				handler => \$opts{help}
-  			},
-  			'config|c=s' => {
-  				summary => 'Specified config',
-  				handler => \$opts{configfile}
-  			},
-  			'verbose|v+' => {
-  				summary => 'Verbosity level',
-  				handler => \$opts{verbositylevel}
-  			},
-  			'task=s' => {
-  				summary => 'Task to execute',
-  				handler => \$opts{task}
-  			},
-  		},
-  
-  		subcommands => {
-  			apply => {
-  				summary => 'Apply a given configuration',
-  				options => {
-  					'dry-run' => {
-  						summary => 'Only simulate the operations',
-  						handler => \$opts{dryrun}
-  					},
-  				}
-  			},
-  			gc => {
-  				summary => 'List obsolete files'
-  			},
-  			diff => {
-  				summary => 'Show the difference between applied and configured states'
-  			},
-  		},
-  	);
-  
-  	# Display help on illegal input
-  	unless ($res->{success} && ($opts{help} || @{$res->{subcommand}})) {
-  		print STDERR "Parsing of commandline options failed.\n";
-  		usage();
-  		exit(-1);
-  	}
-  
-  	# Emit a help message
-  	if ($opts{help}) {
-  		# For a specific subcommand
-  		if (@{$res->{subcommand}}) {
-  			pod2usage( -verbose  => 99
-  					 , -sections => "SUBCOMMANDS/@{$res->{subcommand}}"
-  					 , -exitval  => 0
-  					 );
-  		} else {
-  			# General help
-  			if ($opts{help} >= 2) {
-  				usage_full();
-  			} else {
-  				usage();
-  			}
-  			exit(0);
-  		}
-  	}
-  
-  	# Assert: only one subcommand given
-  	if (@{$res->{subcommand}} != 1) {
-  		die "Igor expectes just one subcommand, but received @{[scalar(@{$res->{subcommand}})]}:"
-  		  . " @{$res->{subcommand}}";
-  	}
-  
-  	$opts{subcommand} = $res->{subcommand};
-  
-  	return \%opts;
-  }
-  
-  # Parse and dispatch the commands
-  sub main {
-  	my $opts = parse_commandline(@_);
-  
-  	# Set log level based on verbosity
-  	# 4 = loglevel "info"
-  	my $loglevel = 4 + $opts->{verbositylevel};
-  	# Log::ger is a bit weird, I found no documentation on it, but numeric
-  	# levels seem to need a scaling factor of 10
-  	Log::ger::Util::set_level($loglevel * 10);
-  	# I want log_warn to be red (also undocumented behaviour)
-  	$Log::ger::Output::Screen::colors{20} = "\e[0;31m";
-  
-  	# Parse the configfile
-  	my $config = Igor::Config::from_file($opts->{configfile});
-  
-  	# Determine the task to run
-  	my $task = find_task($opts, $config->configurations);
-  	log_info colored(['bold'], "Running task @{[colored(['bold blue'], $task)]}");
-  
-  	# Layer the dependencies of the task and merge their configurations
-  	my $effective_configuration = $config->determine_effective_configuration($task);
-  	log_trace "Effective configuration:\n" . Dumper($effective_configuration);
-  
-  	# Determine which packages need to be installed
-  	# FIXME: Run factors before expanding perl-based packages.
-  	my @packages = $config->expand_packages( $effective_configuration->{repositories}
-  	                                       , $effective_configuration->{packages}
-  	                                       , $effective_configuration
-  	                                       );
-  	log_debug "Packages to be installed: @{[map {$_->qname} @packages]}";
-  	log_trace "Packages to be installed:\n" . Dumper(\@packages);
-  
-  	# Now dispatch the subcommands
-  	my ($subcommand) = @{$opts->{subcommand}};
-  	log_info colored(['bold'], "Running subcommand @{[colored(['bold blue'], $subcommand)]}");
-  
-  	# Get the transactions required for our packages
-  	my @transactions = map { $_->to_transactions } @packages;
-  
-  	if      (("apply" eq $subcommand) || ("diff" eq $subcommand)) {
-  		# We now make three passes through the transactions:
-  		#   prepare (this will run sideeffect preparations like expanding templates, etc.)
-  		#   check   (this checks for file-conflicts etc as far as possible)
-  		# And depending on dry-run mode:
-  		#   apply   (acutally perform the operations)
-  		# or
-  		#   log     (only print what would be done)
-  		# or
-  		#   diff    (show differences between repository- and filesystem-state
-  
-  		# Build the context and create the "EmitCollection" transactions for the collections
-  		my ($ctx, $colltrans) = $config->build_collection_context($effective_configuration);
-  		push @transactions, @$colltrans;
-  		$ctx->{$_} = $effective_configuration->{$_} for qw(facts packages);
-  
-  
-  		my @files = map {
-  			$_->get_files()
-  		} @packages;
-  		my %uniq;
-  		for my $f (@files) {
-  			if ($uniq{$f}++) {
-  				die "Multiple packages produce file '$f' which is not an collection";
-  			}
-  		}
-  
-  
-  		# Run the factors defined in the configuration
-  		push @transactions, @{$config->build_factor_transactions($effective_configuration->{factors})};
-  
-  		# Make sure they are ordered correctly:
-  		@transactions = sort {$a->order cmp $b->order} @transactions;
-  
-  		# Wrapper for safely executing actions
-  		my $run = sub {
-  			my ($code, $transactions) = @_;
-  
-  			for my $trans (@$transactions) {
-  				try {
-  					$code->($trans);
-  				} catch {
-  					my $id;
-  					if (defined($trans->package)) {
-  						$id = "package @{[$trans->package->qname]}";
-  					} else {
-  						$id = "toplevel or automatic transaction";
-  					}
-  					log_error("Error occured when processing $id:");
-  					log_error($_);
-  					die "Got a terminal failure for $id";
-  				}
-  			}
-  		};
-  
-  		log_info colored(['bold'], "Running stage \"prepare\":");
-  		$run->(sub { $_[0]->prepare($ctx) }, \@transactions);
-  		log_info colored(['bold'], "Running stage \"check\":");
-  		$run->(sub { $_[0]->check($ctx) }, \@transactions);
-  
-  		if    ("apply" eq $subcommand) {
-  			if ($opts->{dryrun}) {
-  				log_info colored(['bold'], "Running stage \"log\":");
-  				$run->(sub { $_[0]->log($ctx) }, \@transactions);
-  			} else {
-  				log_info colored(['bold'], "Running stage \"apply\":");
-  				$run->(sub { $_[0]->apply($ctx) }, \@transactions);
-  			}
-  		} elsif ("diff"  eq $subcommand) {
-  			log_info colored(['bold'], "Running stage \"diff\":");
-  			$run->(sub { print $_[0]->diff($ctx) }, \@transactions);
-  		} else {
-  			die "Internal: wrong subcommand $subcommand";
-  		}
-  	} elsif ("gc"    eq $subcommand) {
-  		# Show artifacts that exist in the filesystem which stem from
-  		# absent packages
-  		my @blacklist = map {
-  			$_->gc()
-  		} $config->complement_packages(\@packages);
-  
-  		# Remove duplicates
-  		my %uniq;
-  		$uniq{$_} = 1 for @blacklist;
-  
-  		# Remove files created by installed packages
-  		# (e.g.: two packages provide ~/config/tmux.conf, one of which is installed)
-  		my @whitelist = map {
-  			$_->get_files()
-  		} @packages;
-  		delete $uniq{$_} for @whitelist;
-  
-  		# Rewrite urls to use ~ for $HOME if possible
-  		if (defined($ENV{HOME})) {
-  			@blacklist = map { $_ =~ s/^\Q$ENV{HOME}\E/~/; $_ } keys %uniq;
-  		} else {
-  			@blacklist = keys %uniq;
-  		}
-  
-  		print $_ . "\n" for sort @blacklist;
-  	} else {
-  		die "Internal: Unknown subcommand $subcommand";
-  	}
-  }
-  
-  1;
-IGOR_CLI
-
-$fatpacked{"Igor/Config.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'IGOR_CONFIG';
-  package Igor::Config;
-  use strict;
-  use warnings;
-  
-  use Class::Tiny qw(file configurations), {
-     	defaults     => {},
-     	repositories => {},
-  	packagedb    => undef,
-  };
-  
-  use Data::Dumper;
-  use Data::Diver;
-  use Graph;
-  use Igor::Merge;
-  use Igor::Repository;
-  use Igor::Util;
-  use List::Util qw(reduce);
-  use Log::ger;
-  use Path::Tiny;
-  use Try::Tiny;
-  use Types::Standard qw(Any ArrayRef Dict HashRef Map Optional Str);
-  use Storable qw(dclone);
-  
-  # Config file Schemata for TOML validation
-  my $packageschema = Str;
-  my $collectionschema = Dict[
-  	destination => Str,
-  	merger      => Optional[Str],
-  	perm        => Optional[Str],
-  ];
-  my $repositoryschema = Dict[
-  	path => Str,
-  ];
-  my $factorschema = Dict [
-  	path => Str,
-  	type => Optional[Str],
-  ];
-  my $mergers = Map[Str, Str];
-  my $configurationschema = Dict[
-  	mergers      => Optional[$mergers],
-  	mergeconfig  => Optional[HashRef],
-  	dependencies => Optional[ArrayRef[Str]],
-  	packages     => Optional[ArrayRef[$packageschema]],
-  	repositories => Optional[HashRef[$repositoryschema]],
-  	facts        => Optional[Any],
-  	factors      => Optional[ArrayRef[$factorschema]],
-  	collections  => Optional[HashRef[$collectionschema]],
-  	pattern      => Optional[Str],
-  ];
-  my $configschema = Dict[
-  	defaults       => Optional[$configurationschema],
-  	configurations => HashRef[$configurationschema],
-  ];
-  
-  sub BUILD {
-  	my ($self, $args) = @_;
-  
-  	# Merge configurations can only be applied configured in the defaults configuration
-  	for my $key (keys %{$args->{configurations}}) {
-  		if (exists($args->{configurations}->{$key}->{mergeconfig})) {
-  			die "Syntax error for configuration $key: mergeconfigs may only be applied in the defaults section";
-  		}
-  	}
-  
-  	# Build Path::Tiny objects
-  	for my $cfg (values %{$args->{configurations}}, $args->{defaults}) {
-  		$cfg //= {};
-  		$cfg->{repositories} //= {};
-  		my $base = $args->{file}->parent;
-  		my $make_abs = sub {
-  			my $path = path($_[0]);
-  			if ($path->is_relative) {
-  				# Resolve relative paths in relation to the config file
-  				$path = path("$base/$path");
-  			}
-  			$path
-  		};
-  		for my $factor (@{$cfg->{factors}}) {
-  			if (exists $factor->{path}) {
-  				$factor->{path} = $make_abs->($factor->{path});
-  			}
-  		}
-  		for my $repokey (keys %{$cfg->{repositories}}) {
-  			my $repo = $cfg->{repositories}->{$repokey};
-  			if (exists $repo->{path}) {
-  				$repo->{path} = $make_abs->($repo->{path});
-  			}
-  		}
-  		$cfg->{collections} //= {};
-  		for my $collkey (keys %{$cfg->{collections}}) {
-  			my $coll = $cfg->{collections}->{$collkey};
-  			$coll->{destination} = path($coll->{destination}) if exists $coll->{destination};
-  		}
-  		$cfg->{mergers} //= {};
-  		for my $merger (keys %{$cfg->{mergers}}) {
-  			$cfg->{mergers}->{$merger} = $make_abs->($cfg->{mergers}->{$merger});
-  		}
-  	}
-  }
-  
-  sub from_file {
-  	my ($filepath) = @_;
-  
-  	# Parse and read the config file
-  	my $conf = Igor::Util::read_toml($filepath);
-  	log_debug "Parsed configuration at '$filepath':\n" . Dumper($conf);
-  
-  	try {
-  		# Validate the config
-  		$configschema->($conf);
-  	} catch {
-  		die "Validating $filepath failed:\n$_";
-  	};
-  
-  	return Igor::Config->new(file => path($filepath), %{$conf});
-  }
-  
-  sub expand_dependencies {
-  	my ($cfgs, $root) = @_;
-  
-  	# Expand the configuration dependencies by depth first search
-  	return Igor::Util::toposort_dependencies($cfgs, $root, sub { $_[0]->{dependencies} });
-  }
-  
-  sub determine_effective_configuration {
-  	my ($self, $root) = @_;
-  
-  	die "No such configuration: $root" unless defined $self->configurations->{$root};
-  
-  	my @cfgnames = expand_dependencies($self->configurations, $root);
-  	log_debug "Topological sort of dependencies: @cfgnames";
-  
-  	# Merge in reverse topological order
-  	my @cfgs     = map {
-  		my $cfg = $self->configurations->{$_};
-  		die "No such configuration: $_" unless defined ($cfg);
-  		$cfg;
-  	} reverse @cfgnames;
-  
-  	my $configmergers = {
-  		factors      => \&Igor::Merge::list_concat,
-  		packages     => \&Igor::Merge::uniq_list_merge,
-  		dependencies => \&Igor::Merge::uniq_list_merge,
-  		# repositories and collections use the default hash merger, same for facts
-  	};
-  	my $mergers = $self->defaults->{mergers} // {};
-  	my $cm = Igor::Util::traverse_nested_hash($self->defaults->{mergeconfig} // {}, sub {
-  			my ($name, $bc) = @_;
-  			unless(exists $mergers->{$name}) {
-  				die "Configured merger '$name' for path @{$bc} is not defined";
-  			}
-  			Igor::Util::file_to_coderef($mergers->{$name});
-  		});
-  	$configmergers->{$_} = $cm->{$_} for (keys %$cm);
-  
-  	my $merger = Igor::Merge->new(
-  		mergers => $configmergers,
-  	);
-  
-  	# Prepend the defaults to the cfg list
-  	unshift @cfgs, $self->defaults;
-  
-  	# Now merge the configurations, with entries of the later ones overlaying old values
-  	my $effective = reduce { $merger->merge($a, $b) } @cfgs;
-  	log_trace "Merged configuration: " . Dumper($effective);
-  
-  	return $effective;
-  }
-  
-  sub resolve_package {
-  	my ($packagename, $repositories, $packagedb) = @_;
-  
-  	# Packagenames can optionally be qualified "repo/packagename" or
-  	# unqualified "packagename" Unqualified packagenames have to be unique
-  	# among all repositories
-  
-  	# Step one: determine $repo and $pkgname
-  	my ($reponame, $pkgname);
-  
-  	my @fragments = split /\//,$packagename,2;
-  	if (@fragments == 2) {
-  		# Qualified name, resolve repo -> package
-  		my ($parent, $packagename) = @fragments;
-  		$reponame = $parent;
-  		$pkgname  = $packagename;
-  	} elsif (@fragments == 1) {
-  		# Unqualified name: search packagedb
-  		my $alternatives = $packagedb->{$packagename};
-  
-  		# Do we have at least one packages?
-  		die "No repository provides a package '$packagename': "
-  		  . "Searched repositories: @{[sort keys %$repositories]}"
-  		  unless defined($alternatives) &&  (@$alternatives);
-  
-  		# Do we have more than one alternative -> Qualification needed
-  		die "Ambiguous packagename '$packagename': Instances include @$alternatives"
-  			unless (@$alternatives == 1);
-  
-  		# We have exactly one instance for the package
-  		$reponame = $alternatives->[0];
-  		$pkgname  = $packagename;
-  	} else {
-  		# This should be unreachable
-  		die "Internal: Invalid packagename $packagename\n";
-  	}
-  
-  	# Actually lookup the package
-  	my $repo = $repositories->{$reponame};
-  	die "Unable to resolve qualified packagename '$packagename':"
-  	  . " No such repository: $reponame" unless defined $repo;
-  
-  	return  $repo->resolve_package($pkgname);
-  }
-  
-  # Given a list of packages and a list repositories, first resolve all
-  # packages in the given repositories and build the dependency-graph
-  #
-  # Returns all packages that need to be installed
-  sub expand_packages {
-  	my ($self, $repositories, $packages, $config) = @_;
-  
-  	# This sets $self->repositories and $self->packagedb
-  	$self->build_package_db($repositories, $config);
-  
-  	# Resolve all packages to qnames
-  	my @resolved = map {
-  			resolve_package( $_
-  						   , $self->repositories
-  						   , $self->packagedb)->qname
-  		} @$packages;
-  
-  	# Now build the dependency graph
-  	my $g = Graph::Directed->new;
-  	for my $reponame (sort keys %{$self->repositories}) {
-  		my $repo = $self->repositories->{$reponame};
-  		# Subgraph for the repo
-  		my $rg = $repo->dependency_graph;
-  		# Merge it with the global graph, prefixing all vertexes
-  		$g->add_vertex($_) for map { "$reponame/$_" } @{[$rg->vertices]};
-  		for my $edge (@{[$rg->edges]}) {
-  			my ($x,$y) = @{$edge};
-  			$g->add_edge("$reponame/$x", "$reponame/$y");
-  		}
-  	}
-  
-  	# Now add a virtual 'start' and link it to all requested packages
-  	$g->add_vertex("start");
-  	for my $res (@resolved) {
-  		$g->add_edge('start', $res);
-  	}
-  
-  	my @packages = sort $g->all_reachable("start");
-  	return map {
-  		resolve_package( $_
-  		               , $self->repositories
-  		               , $self->packagedb)
-  		} @packages;
-  }
-  
-  # Given a list of packages (as Igor::Package) get all inactive packages
-  sub complement_packages {
-  	my ($self, $packages) = @_;
-  
-  	my %blacklist;
-  	$blacklist{$_->id} = 1 for (@$packages);
-  
-  	my @complement;
-  	my $packagedb = $self->packagedb;
-  	my $repos     = $self->repositories;
-  	for my $name (keys %$packagedb) {
-  		next if $blacklist{$name};
-  		for my $repo (@{$packagedb->{$name}}) {
-  			$repo = $repos->{$repo};
-  
-  			push @complement, $repo->resolve_package($name);
-  		}
-  	}
-  
-  	return @complement;
-  }
-  
-  sub build_package_db {
-  	my ($self, $repositories, $config) = @_;
-  
-  	log_debug "Building packagedb";
-  
-  	my %repos     = ();
-  	my %packagedb = ();
-  
-  	for my $name (sort keys %$repositories) {
-  		my $repo = Igor::Repository->new(id => $name, directory => $repositories->{$name}->{path}, config => $config);
-  		$repos{$name} = $repo;
-  
-  		for my $pkg (keys %{$repo->packagedb}) {
-  			push(@{$packagedb{$pkg}}, $name);
-  		}
-  	}
-  
-  	log_trace "Build packagedb:\n" . Dumper(\%packagedb);
-  
-  	$self->repositories(\%repos);
-  	$self->packagedb(\%packagedb);
-  
-  	return \%packagedb;
-  }
-  
-  sub build_collection_context {
-  	my ($self, $configuration) = @_;
-  	my $collections = $configuration->{collections};
-  
-  	my @transactions;
-  	my $ctx = { collections => {} };
-  
-  	for my $coll (keys %$collections) {
-  		$ctx->{collections}->{$coll} = {};
-  		my $pkg = Igor::Package->new(basedir => $self->file, repository => undef, id => "collection_$coll");
-  		my $merger;
-  		if (defined $collections->{$coll}->{merger}) {
-  			my $mergerid   = $collections->{$coll}->{merger};
-  			my $mergerfile = $configuration->{mergers}->{$mergerid};
-  			die "No such merger defined: $mergerid" unless defined $mergerfile;
-  			try {
-  				$merger = Igor::Util::file_to_coderef($mergerfile);
-  			} catch {
-  				die "Error while processing collection '$coll': cannot create merger from $mergerfile: $_";
-  			}
-  		} else {
-  			$merger = sub { my $hash = shift;
-  				my @keys = sort { $a cmp $b } keys %$hash;
-  				join('', map {$hash->{$_}} @keys)
-  			};
-  		}
-  		push @transactions, Igor::Operation::EmitCollection->new(
-  			collection => $coll,
-  			merger => $merger,
-  			sink => Igor::Sink::File->new( path => $collections->{$coll}->{destination}
-  				                         , id => $pkg
-  				                         , perm => $collections->{$coll}->{perm}
-  									     ),
-  			package => $pkg,
-  			order   => 50,
-  		);
-  	}
-  
-  	return ($ctx, \@transactions);
-  }
-  
-  sub build_factor_transactions {
-  	my ($self, $factors) = @_;
-  
-  	my @transactions;
-  	for my $factor (@$factors) {
-  		push @transactions, Igor::Operation::RunFactor->new(%$factor, order => 1);
-  	}
-  
-  	return \@transactions;
-  }
-  
-  1;
-  
-  __END__
-IGOR_CONFIG
-
-$fatpacked{"Igor/Diff.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'IGOR_DIFF';
-  package Igor::Diff;
-  use Exporter 'import';
-  @EXPORT = qw(diff);
-  
-  use warnings;
-  use strict;
-  
-  { package Igor::Colordiff;
-  	use warnings;
-  	use strict;
-  
-  	use Igor::Util qw(colored);
-  	use Text::Diff;
-  	our @ISA = qw(Text::Diff::Unified);
-  
-  	sub file_header {
-  		my $self = shift;
-  		colored(['bold bright_yellow'], $self->SUPER::file_header(@_));
-  	}
-  
-  	sub hunk_header {
-  		my $self = shift;
-  		colored(['bold bright_magenta'], $self->SUPER::hunk_header(@_));
-  	}
-  
-  	sub hunk {
-  		my $self = shift;
-  		my (undef, undef, $ops, undef) = @_;
-  		my @lines = split /\n/, $self->SUPER::hunk(@_), -1;
-  		my %ops2col = ( "+" => "bold bright_green"
-  		              , " " => ""
-  		              , "-" => "bold bright_red");
-  		use Data::Dumper;
-  		@lines = map {
-  			my $color = $ops2col{$ops->[$_]->[2] // " "};
-  			if ($color) {
-  				colored([$color], $lines[$_]);
-  			} else {
-  				$lines[$_];
-  			}
-  		} 0 .. $#lines;
-  		return join "\n", @lines;
-  	}
-  }
-  
-  sub diff {
-  	my ($x, $y, $opts) = @_;
-  
-  	# Set style, allowing overrides
-  	$opts->{STYLE} //= 'Igor::Colordiff';
-  
-  	return Text::Diff::diff($x, $y, $opts);
-  }
-IGOR_DIFF
-
-$fatpacked{"Igor/Merge.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'IGOR_MERGE';
-  package Igor::Merge;
-  use warnings;
-  use strict;
-  
-  use Class::Tiny {
-  	mergers => {},
-  	clone   => 1,
-  };
-  
-  use Log::ger;
-  use Data::Diver qw(Dive);
-  use Storable qw(dclone);
-  
-  sub select_merger {
-  	my ($self) = @_;
-  
-  	my $merger = Dive($self->mergers, @{$self->{breadcrumb}});
-  
-  	return undef unless ref($merger) eq 'CODE';
-  	return $merger;
-  }
-  
-  # Implementation strongly influenced by Hash::Merge and Hash::Merge::Simple,
-  # which in turn borrowed from Catalyst::Utils... thanks!
-  sub _merge {
-  	my ($self, $left, $right) = @_;
-  
-  	for my $key (keys %$right) {
-  		my ($er, $el) = map { exists $_->{$key} } $right, $left;
-  
-  		# We only have to merge duplicate keys
-  		if ($er and not $el) {
-  			# copy keys that don't exist in $right to $left
-  			$left->{$key} = $right->{$key};
-  			next;
-  		} elsif (not $er) {
-  			# Key only in right
-  			next;
-  		}
-  
-  		push @{$self->{breadcrumb}}, $key;
-  		my $merger = $self->select_merger;
-  
-  		if (defined $merger) {
-  			log_trace "Running a custom merger on @{$self->{breadcrumb}}";
-  			# A custom merger was defined for this value
-  			$left->{$key} = $merger->($left->{$key}, $right->{$key}, $self->{breadcrumb});
-  		} else {
-  			my ($hr, $hl) = map { ref $_->{$key} eq 'HASH' } $right, $left;
-  			if ($hr and $hl) {
-  				log_trace "Running hash-merge on @{$self->{breadcrumb}}";
-  				# Both are hashes: Recurse
-  				$left->{$key} = $self->_merge($left->{$key}, $right->{$key});
-  			} else {
-  				log_trace "Copying $key at @{$self->{breadcrumb}}";
-  				# Mixed types or non HASH types: Overlay wins
-  				$left->{$key} = $right->{$key};
-  			}
-  		}
-  		pop @{$self->{breadcrumb}};
-  	}
-  
-  	return $left;
-  }
-  
-  sub merge {
-  	my ($self, $left, $right) = @_;
-  
-  	# optionally deeply duplicate the hashes before merging
-  	if ($self->clone) {
-  		$left  = dclone($left);
-  		$right = dclone($right);
-  	}
-  
-  	return $self->_merge($left, $right);
-  }
-  
-  sub list_concat {
-  	my ($lista, $listb, $breadcrumbs) = @_;
-  
-  	log_trace "Running list_concat on @{$breadcrumbs}";
-  
-  	push @$lista, @$listb;
-  
-  	return $lista;
-  }
-  
-  # Merges two lists, while eliminating duplicates in the latter list
-  sub uniq_list_merge {
-  	my ($lista, $listb, $breadcrumbs) = @_;
-  
-  	log_trace "Running uniq_list_merge on @{$breadcrumbs}";
-  
-  	# We want to do the removal of duplicates in a stable fashion...
-  	my @uniqs;
-  	for my $i (@$listb) {
-  		push @uniqs, $i unless grep /^$i$/, @$lista;
-  	}
-  	push @$lista, @uniqs;
-  
-  	return $lista;
-  }
-  
-  sub BUILD {
-  	my ($self, $args) = @_;
-  
-  	$self->{breadcrumb} //= [];
-  }
-  
-  1;
-IGOR_MERGE
-
-$fatpacked{"Igor/Operation.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'IGOR_OPERATION';
-  package Igor::Operation;
-  use strict;
-  use warnings;
-  
-  use Class::Tiny qw(package order);
-  use Data::Dumper;
-  use Igor::Sink;
-  
-  sub prepare { die 'Not implemented'; }
-  sub check   { die 'Not implemented'; }
-  sub apply   { die 'Not implemented'; }
-  sub diff    { die 'Not implemented'; }
-  sub log     { die 'Not implemented'; }
-  
-  sub select_backend {
-  	my ($self, $sink) = @_;
-  
-  	for my $backend (@{$sink->requires}) {
-  		return $backend if grep {$_ == $backend} @{$self->backends};
-  	}
-  
-  	die "No matching backend between @{[ref($self)]} and sink @{[ref($sink)]}";
-  }
-  
-  sub prepare_file_for_backend {
-  	my ($self, $file, $backend) = @_;
-  
-  	if ($backend == Igor::Pipeline::Type::FILE) {
-  		# File backend: Simply pass the file
-  		return $file->absolute;
-  	} elsif ($backend == Igor::Pipeline::Type::TEXT) {
-  		# Text backend: Pass by content
-  		die "@{[$file->stringify]}: Is no regular file\n" .
-  		    "Only operation 'symlink' with regular file targets (no collections)" unless -f $file;
-  		return $file->slurp_utf8;
-  	}
-  
-  	die "Internal: Unknown backend: $backend";
-  }
-  
-  
-  package Igor::Operation::Template;
-  use strict;
-  use warnings;
-  
-  use Igor::Sink;
-  
-  use Class::Tiny qw(template sink), {
-  	content  => undef,
-  	delimiters => undef,
-  	backends => [Igor::Pipeline::Type::TEXT]
-  };
-  use parent 'Igor::Operation';
-  
-  use Const::Fast;
-  use Data::Dumper;
-  use Log::ger;
-  use Safe;
-  use Scalar::Util qw(reftype);
-  use Text::Template;
-  use Time::localtime;
-  
-  =begin
-  Generate variable declarations for C<Text::Template>'s C<HASH> parameter when used in
-  conjunction with C<use strict>.
-  
-  Params:
-  	datahash - the HASH parameter passed to C<Text::Template>
-  
-  Returns:
-  	Multiple C<use> declarations that predeclare the variables that will be autogenerated
-  	by C<Text::Template>.
-  
-  	Supported Referencetypes are:
-  	- plain strings and numbers
-  	- HASH
-  	- ARRAY
-  	- SCALAR
-  	- REF
-  
-  Exceptions:
-  	Dies on unknown reftypes
-  =cut
-  sub gen_template_variable_declarations {
-  	my ($datahash) = @_;
-  
-  	# For use strict to work, we have predeclare the relevant variables
-  	# and therefore mangle accordingly.
-  	my @variables;
-  	for my $key (sort keys %$datahash) {
-  		my $value = $datahash->{$key};
-  		# Mangling is described in
-  		# https://metacpan.org/pod/Text::Template#PREPEND-feature-and-using-strict-in-templates
-  
-  		if (not defined $value) {
-  			# "If the value is undef, then any variables named $key, @key,
-  			#  %key, etc., are undefined."
-  			push @variables, ("\$$key", "\%$key", "\@$key");
-  			next;
-  		}
-  
-  		my $type = reftype($value) // '';
-  		if ($type eq '') {
-  			# If the value is a string or a number, then $key is set to
-  			# that value in the template. For anything else, you must pass a
-  			# reference."
-  			push @variables, "\$$key";
-  		} elsif ($type eq 'ARRAY') {
-  			# If the value is a reference to an array, then @key is set to that
-  			# array.
-  			push @variables, "\@$key";
-  		} elsif ($type eq 'HASH') {
-  			# If the value is a reference to a hash, then %key is set to that
-  			# hash.
-  			push @variables, "\%$key";
-  		} elsif ($type eq 'SCALAR' || $type eq 'REF') {
-  			# Similarly if value is any other kind of reference. This means that
-  			#
-  			#   var => "foo" and var => \"foo"
-  			#
-  			# have almost exactly the same effect. (The difference is that in
-  			# the former case, the value is copied, and in the latter case it is
-  			# aliased.)
-  			push @variables, "\$$key";
-  		} else {
-  			log_error "Unexpected reference type '$type' passed to template";
-  			die "Unexpected reference type '$type' passed to template";
-  		}
-  	}
-  	my $decl = join('', map { "our $_;" } @variables);
-  	log_trace "gen_template_variable_declaration: $decl";
-  	return $decl;
-  }
-  
-  sub prepare {
-  	my ($self, $ctx) = @_;
-  
-  	my $facts     = $ctx->{facts};
-  	my $packages  = $ctx->{packages};
-  	my $automatic = $ctx->{automatic};
-  	my $srcfile   = $self->template;
-  
-  	die "Template $srcfile is not a regular file" unless -f $srcfile;
-  
-  	log_debug "Preparing Template: $srcfile";
-  
-  	# Hash for passing gathered facts and installed packages into templates
-  	const my $data => {
-  		facts     => $facts,
-  		packages  => $packages,
-  		automatic => $automatic,
-  	};
-  
-  	# Use stricts requires that we predeclare those variables
-  	my $decls = gen_template_variable_declarations($data);
-  
-  	# Create a Safe compartment for evaluation, with the opcodes
-  	# in :default being whitelisted:
-  	#   https://metacpan.org/pod/Opcode#Predefined-Opcode-Tags
-  	my $compartment = Safe->new();
-  
-  	my %templateconfig = (
-  		TYPE => 'FILE',
-  		SOURCE => $srcfile,
-  		PREPEND => q{use warnings; use strict;} . $decls,
-  		SAFE => $compartment,
-  		BROKEN => sub { my %data = @_;
-  			die "Error encountered for $srcfile:$data{lineno}: $data{error}";
-  		},
-  	);
-  
-  	# Optionally enable custom delimiters
-  	if (defined($self->delimiters)) {
-  		$templateconfig{DELIMITERS} = [$self->delimiters->{open}, $self->delimiters->{close}];
-  	}
-  
-  	# Build the actual template
-  	my $template = Text::Template->new(
-  		%templateconfig
-  	) or die "Couldn't create template from '$srcfile': $Text::Template::ERROR";
-  
-  	log_trace "Evaluating Template: $srcfile over:\n" . Dumper($data);
-  	my $content = $template->fill_in(HASH => $data);
-  	unless (defined $content) {
-  		die "Error while filling in template '$srcfile': $Text::Template::ERROR";
-  	}
-  	$self->content($content);
-  
-  	log_trace "Result:\n" . Dumper($self->content);
-  
-  	return $self->content;
-  }
-  
-  sub apply {
-  	my ($self, $ctx) = @_;
-  
-  	# Write $content to outfile or collection...
-  	unless (defined $self->content) {
-  		log_warn "@{[ref($self)]}: prepare not called for template @{[$self->template]} when applying";
-  		$self->prepare($ctx);
-  	}
-  
-  	return $self->sink->emit(Igor::Pipeline::Type::TEXT, $self->content, $ctx);
-  }
-  
-  sub log {
-  	my ($self) = @_;
-  
-  	log_info "Applying  @{[$self->template]} to '@{[$self->sink->stringify]}'";
-  }
-  
-  sub check {
-  	my ($self, $ctx) = @_;
-  
-  	unless (defined $self->content) {
-  		log_warn "@{[ref($self)]}: prepare not called for template @{[$self->template]} when checking\n";
-  	}
-  
-  	return $self->sink->check(Igor::Pipeline::Type::TEXT, $self->content, $ctx);
-  }
-  
-  sub diff {
-  	my ($self, $ctx) = @_;
-  
-  	unless (defined $self->content) {
-  		log_warn "@{[ref($self)]}: prepare not called for template @{[$self->template]} when diffing\n";
-  	}
-  
-  	return $self->sink->diff( Igor::Pipeline::Type::TEXT, $self->content, $ctx
-  	                        , FILENAME_A => $self->template
-  							, MTIME_A => $self->template->stat->mtime());
-  }
-  
-  package Igor::Operation::FileTransfer;
-  use strict;
-  use warnings;
-  
-  use Igor::Sink;
-  
-  use Class::Tiny qw(source sink), {
-  	backends => [Igor::Pipeline::Type::FILE, Igor::Pipeline::Type::TEXT],
-  	data => undef,
-  	backend => undef,
-  };
-  use parent 'Igor::Operation';
-  
-  use Log::ger;
-  use Time::localtime;
-  
-  sub prepare {
-  	my ($self) = @_;
-  
-  	my $backend = $self->select_backend($self->sink);
-  	$self->backend($backend);
-  	$self->data($self->prepare_file_for_backend($self->source, $backend));
-  }
-  
-  sub check   {
-  	my ($self, $ctx) = @_;
-  
-  	return $self->sink->check($self->backend, $self->data, $ctx);
-  }
-  
-  sub apply   {
-  	my ($self, $ctx) = @_;
-  
-  	my $backend = $self->backend;
-  	my $data    = $self->data;
-  
-  	log_trace "Filetransfer: @{[$self->sink->stringify]} with $data";
-  	# Symlink the two files...
-  	return $self->sink->emit($backend, $data, $ctx);
-  }
-  
-  sub diff {
-  	my ($self, $ctx) = @_;
-  
-  	my $backend = $self->backend;
-  	my $data    = $self->data;
-  
-  	return $self->sink->diff( $backend, $data, $ctx
-  	                        , FILENAME_A => $self->source
-  	                        , MTIME_A => $self->source->stat->mtime);
-  }
-  
-  sub log {
-  	my ($self) = @_;
-  
-  	log_info "Linking   '@{[$self->source]}' to '@{[$self->sink->stringify]}'";
-  }
-  
-  
-  package Igor::Operation::EmitCollection;
-  use strict;
-  use warnings;
-  
-  use parent 'Igor::Operation';
-  use Class::Tiny qw(collection merger sink), {
-  	data => undef,
-  };
-  
-  use Log::ger;
-  use Data::Dumper;
-  
-  sub prepare {
-  	my ($self, $ctx) = @_;
-  
-  	my $collection = $ctx->{collections}->{$self->collection};
-  	die "Unknown collection '@{[$self->collection]}'" unless defined $collection;
-  
-  	return 1;
-  }
-  
-  sub check   {
-  	my ($self, $ctx) = @_;
-  
-  	my $collection = $ctx->{collections}->{$self->collection};
-  	my $data = $self->merger->($collection, $self->collection);
-  	log_trace "Merged collection '@{[$self->collection]}': $data";
-  	$self->data($data);
-  
-  	return $self->sink->check(Igor::Pipeline::Type::TEXT, $self->data, $ctx);
-  }
-  
-  sub apply   {
-  	my ($self, $ctx) = @_;
-  
-  	log_trace "Emitting collection '@{[$self->sink->path]}': @{[$self->data]}";
-  	return $self->sink->emit(Igor::Pipeline::Type::TEXT, $self->data, $ctx);
-  }
-  
-  sub diff {
-  	my ($self, $ctx) = @_;
-  
-  	return $self->sink->diff( Igor::Pipeline::Type::TEXT, $self->data, $ctx
-  	                        , FILENAME_A => "Collection " . $self->collection
-  	                        , MTIME_A    => time());
-  }
-  
-  sub log {
-  	my ($self) = @_;
-  
-  	log_info "Emitting  collection '@{[$self->sink->stringify]}'";
-  }
-  
-  package Igor::Operation::RunCommand;
-  use strict;
-  use warnings;
-  
-  use Igor::Sink;
-  
-  use Class::Tiny qw(command), {
-  	basedir  => "",
-  	backends => [],
-  };
-  use parent 'Igor::Operation';
-  
-  use Cwd;
-  use Log::ger;
-  use File::pushd;
-  use File::Which;
-  
-  sub prepare { 1; } # No preparation needed
-  
-  sub check   {
-  	my ($self) = @_;
-  
-  	# If we execute a proper command (vs relying on sh),
-  	# we can actually check whether the binary exists...
-  	if (ref($self->command) eq 'ARRAY') {
-  		my $cmd = $self->command->[0];
-  		my $binary;
-  		if (-x $cmd) {
-  			$binary = $cmd;
-  		} elsif (-x "@{[$self->basedir]}/$cmd") {
-  			$binary = "@{[$self->basedir]}/$cmd";
-  		}else {
-  			$binary = File::Which::which($cmd);
-  		}
-  		log_debug "Resolved $cmd to @{[$binary // 'undef']}";
-  		return defined($binary);
-  	}
-  
-  	log_trace "Cannot check shell expression @{[$self->command]}";
-  	1;
-  }
-  
-  sub apply {
-  	my ($self) = @_;
-  
-  	# If possible, we run the commands from the package directory
-  	my $basedir = $self->basedir;
-  	unless ($basedir) {
-  		$basedir = getcwd;
-  	}
-  	my $dir = pushd($basedir);
-  
-  	# Execute
-  	my $retval;
-  	my $strcmd;
-  	if (ref($self->command) eq 'ARRAY') {
-  		$retval = system(@{$self->command});
-  		$strcmd = join(' ', @{$self->command});
-  	} else {
-  		$retval = system($self->command);
-  		$strcmd = $self->command;
-  	}
-  
-  	$retval == 0 or die "system($strcmd) in @{[$self->basedir]} failed with exitcode: $?";
-  	1;
-  }
-  
-  sub log {
-  	my ($self) = @_;
-  
-  	if (ref($self->command) eq 'ARRAY') {
-  		log_info "Executing (safe)   system('@{[@{$self->command}]}')"
-  	} else {
-  		log_info "Executing (unsafe) system('@{[$self->command]}')"
-  	}
-  	1;
-  }
-  
-  sub diff {
-  	my ($self) = @_;
-  
-  	return '';
-  }
-  
-  package Igor::Operation::RunFactor;
-  use strict;
-  use warnings;
-  
-  use Class::Tiny qw(path), {
-  	type  => "perl",
-  };
-  use parent 'Igor::Operation';
-  
-  use Igor::Merge;
-  use String::ShellQuote;
-  use TOML;
-  use TOML::Parser;
-  use Try::Tiny;
-  use Log::ger;
-  
-  sub prepare {
-  	my ($self, $ctx) = @_;
-  
-  	my $facts;
-  	if ($self->type eq 'perl') {
-  		log_debug "Executing file '@{[$self->path]}' as perl-factor";
-  		my $factor = Igor::Util::file_to_coderef($self->path);
-  		$facts = $factor->();
-  	} elsif ($self->type eq 'script') {
-  		log_debug "Executing file '@{[$self->path]}' as script-factor";
-  		local $TOML::PARSER = TOML::Parser->new(
-  			inflate_boolean => sub { $_[0] eq 'true' ? \1 : \0 },
-  		);
-  		my $cmd = shell_quote($self->path);
-  		my $output = `$cmd`;
-  		if ($? == -1) {
-  			die "Failed to execute factor $cmd: $!\n";
-  		} elsif ($? & 127) {
-  			die "Factor '$cmd' died with signal @{[($? & 127)]}\n";
-  		} elsif (($? >> 8) != 0) {
-  			die "Factor '$cmd' failed: Factor exited with @{[$? >> 8]}\n";
-  		}
-  
-  		if (!defined($output)) {
-  			die "Failed to run factor command: '$cmd'";
-  		}
-  
-  		try {
-  			$facts = from_toml($output);
-  		} catch {
-  			die "Factor '$cmd' failed: Invalid TOML produces:\n$_";
-  		}
-  	} else {
-  		die "Unknown factor type: @{[$self->type]}";
-  	}
-  
-  	# Use the HashMerger to merge the automatic variables
-  	my $auto = $ctx->{automatic} // {};
-  	my $merger = Igor::Merge->new();
-  	$ctx->{automatic} = $merger->merge($auto, $facts);
-  	1;
-  }
-  
-  sub check   {
-  	1;
-  }
-  
-  sub apply {
-  	1;
-  }
-  
-  sub log {
-  	my ($self) = @_;
-  	log_info "Already executed factor '@{[$self->path]}' of type @{[$self->type]}";
-  	1;
-  }
-  
-  sub diff {
-  	my ($self) = @_;
-  	return '';
-  }
-  
-  1;
-  __END__
-IGOR_OPERATION
-
-$fatpacked{"Igor/Package.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'IGOR_PACKAGE';
-  package Igor::Package;
-  use strict;
-  use warnings;
-  
-  use Class::Tiny qw(basedir repository id), {
-  	dependencies => [],
-  	files        => [],
-  	precmds      => [],
-  	postcmds     => [],
-  	templates    => [],
-  	artifacts    => [],
-  };
-  
-  use Data::Dumper;
-  use File::pushd;
-  use Path::Tiny;
-  use Try::Tiny;
-  use Type::Tiny;
-  use Types::Standard qw(Any ArrayRef Dict HashRef Optional Str);
-  
-  use Igor::Operation;
-  use Igor::Util;
-  
-  # Config file Schemata for TOML validation
-  my $commandschema  = Str | ArrayRef[Str];
-  my $fileschema     = Dict[
-  	source     => Str,
-  	collection => Str,
-  ] | Dict[
-  	source     => Str,
-  	dest       => Str,
-  	perm       => Optional[Str],
-  	operation  => Optional[Str]
-  ];
-  # Dependencies are files with a special preprocessingstep...
-  my $templatedelimiter = Dict[
-  	open  => Str,
-  	close => Str,
-  ];
-  my $templateschema = Dict[
-  	source     => Str,
-  	collection => Str,
-  	delimiters => Optional[$templatedelimiter],
-  ] | Dict[
-  	source     => Str,
-  	dest       => Str,
-  	delimiters => Optional[$templatedelimiter],
-  	perm       => Optional[Str],
-  ];
-  my $dependencyschema = Str;
-  my $globschema = Str;
-  
-  my $packageschema = Dict[
-  	dependencies => Optional[ArrayRef[$dependencyschema]],
-  	files        => Optional[ArrayRef[$fileschema]],
-  	templates    => Optional[ArrayRef[$templateschema]],
-  	precmds      => Optional[ArrayRef[$commandschema]],
-  	postcmds     => Optional[ArrayRef[$commandschema]],
-  	artifacts    => Optional[ArrayRef[$globschema]],
-  ];
-  
-  sub BUILD {
-  	my ($self, $args) = @_;
-  
-  	# Build Path::Tiny objects for all filepaths
-  	for my $ent (@{$args->{templates}}, @{$args->{files}}) {
-  		for my $key (qw(source dest)) {
-  			$ent->{$key} = path($ent->{$key}) if exists $ent->{$key};
-  		}
-  	}
-  }
-  
-  sub from_file {
-  	my ($filepath, $repository) = @_;
-  
-  	# Parse and read the config file
-  	my $conf = Igor::Util::read_toml($filepath);
-  	my $packagedir = path($filepath)->parent;
-  
-  	return from_hash($conf, $packagedir, $repository);
-  }
-  
-  sub from_perl_file {
-  	my ($filepath, $repository, $config) = @_;
-  
-  	my $packagedir = path($filepath)->parent;
-  	my $packagesub = Igor::Util::file_to_coderef($filepath);
-  	my $conf;
-  	{ # execute this from the packageidr
-  		my $dir = pushd($packagedir);
-  		$conf = $packagesub->($config);
-  	}
-  
-  	return from_hash($conf, $packagedir, $repository);
-  }
-  
-  sub from_hash {
-  	my ($conf, $basedir, $repository) = @_;
-  	try {
-  		# Validate the config
-  		$packageschema->($conf);
-  	} catch {
-  		die "Validating package-configuration at $basedir failed:\n$_";
-  	};
-  
-  	return Igor::Package->new(basedir => $basedir
-  		, repository => $repository
-  		, id => $basedir->basename
-  		, %{$conf});
-  }
-  
-  sub qname {
-  	my ($self) = @_;
-  
-  	my @segments;
-  	if (defined $self->repository) {
-  		push @segments, $self->repository->id;
-  	}
-  	push @segments, $self->id;
-  
-  	return join('/', @segments);
-  }
-  
-  sub determine_sink {
-  	 my ($file, $id) = @_;
-  
-  	if (defined($file->{dest})) {
-  		return Igor::Sink::File->new(path => $file->{dest}, id => $id, perm => $file->{perm}, operation => $file->{operation});
-  	} elsif (defined($file->{collection})) {
-  		return Igor::Sink::Collection->new(collection => $file->{collection}, id => $id);
-  	} else {
-  		die "Failed to determine sink for file: " . Dumper($file);
-  	}
-  }
-  
-  sub to_transactions {
-  	my ($self) = @_;
-  	my @transactions;
-  
-  	# Run precommands
-  	for my $cmd (@{$self->precmds}) {
-  		push @transactions, Igor::Operation::RunCommand->new(
-  			package => $self,
-  			command => $cmd,
-  			basedir => $self->basedir,
-  			order   => 10,
-  		);
-  	}
-  
-  	# Symlink and create files
-  	for my $file (@{$self->files}) {
-  		my $source = path("@{[$self->basedir]}/$file->{source}");
-  		# File mode bits: 07777 -> parts to copy
-  		$file->{perm} //= $source->stat->mode & 07777;
-  		push @transactions, Igor::Operation::FileTransfer->new(
-  			package => $self,
-  			source  => $source,
-  			sink    => determine_sink($file, $self->qname),
-  			order   => 20,
-  		);
-  	}
-  
-  	# Run the templates
-  	for my $tmpl (@{$self->templates}) {
-  		push @transactions, Igor::Operation::Template->new(
-  			package    => $self,
-  			template   => path("@{[$self->basedir]}/$tmpl->{source}"),
-  			sink       => determine_sink($tmpl, $self->qname),
-  			delimiters => $tmpl->{delimiters},
-  			order      => 30,
-  		);
-  	}
-  
-  	# Now run the postcommands
-  	for my $cmd (@{$self->postcmds}) {
-  		push @transactions, Igor::Operation::RunCommand->new(
-  			package => $self,
-  			command => $cmd,
-  			basedir => $self->basedir,
-  			order   => 90,
-  		);
-  	}
-  
-  	@transactions;
-  }
-  
-  sub get_files {
-  	my ($self) = @_;
-  
-  	my @files     = map { $_->{dest} } @{$self->files}, @{$self->templates};
-  	return map {
-  		my $file = $_;
-  		try {
-  			$file = path($file)->realpath->stringify
-  		} catch {
-  			# Nonexistent file -> realpath does not work
-  			$file = path($file)->absolute->stringify
-  		};
-  		$file
-  	} grep { defined($_) } @files;
-  }
-  
-  sub gc {
-  	my ($self) = @_;
-  
-  	my @files     = map { $_->{dest} } @{$self->files}, @{$self->templates};
-  	my @artifacts = map { Igor::Util::glob($_) } @{$self->artifacts};
-  
-  	return map {
-  		path($_)->realpath->stringify
-  	} grep { defined($_) } @files, @artifacts;
-  }
-  
-  1;
-  
-  __END__
-IGOR_PACKAGE
-
-$fatpacked{"Igor/Repository.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'IGOR_REPOSITORY';
-  package Igor::Repository;
-  use strict;
-  use warnings;
-  
-  use Class::Tiny qw(id directory), {
-  	packagedb => {}
-  };
-  
-  use Igor::Package;
-  use Igor::Util;
-  use Path::Tiny;
-  use Data::Dumper;
-  use Log::ger;
-  
-  # Collect the packages contained in this repository from the filesystem at
-  # C<dir> with effective configuration C<conf>
-  sub collect_packages {
-  	my ($self, $dir, $conf) = @_;
-  
-  	# Sanity check
-  	die "Configured Repository at $dir is not an directory" unless $dir->is_dir;
-  
-  	# Visit all subdirectories, and create a package for it if there is a package.toml file
-  	my $packages = $dir->visit(
-  		sub {
-  			my ($path, $state) = @_;
-  
-  			my $package;
-  			if ((my $packagedesc = $path->child("package.toml"))->is_file) {
-  				$package = Igor::Package::from_file($packagedesc, $self);
-  			} elsif ((my $packagedescpl = $path->child("package.pl"))->is_file) {
-  				$package = Igor::Package::from_perl_file($packagedescpl, $self, $conf);
-  				log_debug ("Evaluated @{[$packagedescpl->stringify]}: " . Dumper($package));
-  			}
-  			return unless defined($package);
-  
-  			$state->{$path->basename} = $package;
-  		}
-  	);
-  
-  	return $packages;
-  }
-  
-  sub dependency_graph {
-  	my ($self) = @_;
-  
-  	my $g = Igor::Util::build_graph($self->packagedb, sub {
-  			$_[0]->dependencies;
-  		});
-  
-  	return $g;
-  }
-  
-  sub resolve_package {
-  	my ($self, $package) = @_;
-  
-  	my $resolved = $self->packagedb->{$package};
-  
-  	die "No such package '$package' in repository '$self->id'" unless defined $resolved;
-  
-  	return $resolved;
-  }
-  
-  sub BUILD {
-  	my ($self, $args) = @_;
-  
-  	# Make sure we've got a Path::Tiny object
-  	# Dynamic typing IS funny :D
-  	unless (ref($self->directory) eq 'Path::Tiny') {
-  		$self->directory(path($self->directory));
-  	}
-  
-  	$self->packagedb($self->collect_packages($self->directory, $args->{config}));
-  }
-  
-  1;
-  
-  __END__
-IGOR_REPOSITORY
-
-$fatpacked{"Igor/Sink.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'IGOR_SINK';
-  use strict;
-  
-  package Igor::Sink {
-  use strict;
-  use warnings;
-  
-  use Class::Tiny;
-  
-  sub requires { die "Not implemented"; }
-  sub check    { die "Not implemented"; }
-  sub emit     { die "Not implemented"; }
-  sub diff     { die "Not implemented"; }
-  
-  }
-  
-  
-  package Igor::Pipeline::Type {
-  use strict;
-  
-  use constant {
-  	TEXT => 0,
-  	FILE => 1,
-  };
-  
-  use constant {
-  	CHANGED   => 0,
-  	UNCHANGED => 1,
-  };
-  }
-  
-  package Igor::Sink::File {
-  use strict;
-  use warnings;
-  
-  use parent 'Igor::Sink';
-  use Class::Tiny qw(path), {
-  	perm => undef,
-  	operation => undef,
-  };
-  
-  use Const::Fast;
-  use Data::Dumper;
-  use Log::ger;
-  use Igor::Diff ();
-  use Try::Tiny;
-  use Fcntl ':mode';
-  
-  const my @REQUIRES => (Igor::Pipeline::Type::FILE, Igor::Pipeline::Type::TEXT);
-  
-  sub BUILD {
-  	my ($self, $args) = @_;
-  	$args->{operation} //= 'symlink';
-  
-  	unless (grep { /^\Q$args->{operation}\E$/ } qw(symlink copy)) {
-  		die "Illegal file operation specified for @{[$args->{path}]}: $args->{operation}";
-  	}
-  }
-  
-  sub requires { return \@REQUIRES; }
-  
-  sub prepare_for_copy {
-  	my ($self, $typeref, $dataref) = @_;
-  
-  	if (defined $self->operation && $self->operation eq "copy") {
-  		$$typeref = Igor::Pipeline::Type::TEXT;
-  		# Text backend: Pass by content
-  		die "@{[$$dataref->stringify]}: Is no regular file\n" .
-  		    "Only operation 'symlink' with regular file targets (no collections) are supported for directories" unless -f $$dataref;
-  		$$dataref = $$dataref->slurp_utf8();
-  	}
-  }
-  
-  sub check {
-  	my ($self, $type, $data) = @_;
-  
-  	my $changeneeded = 0;
-  
-  	prepare_for_copy($self, \$type, \$data);
-  
-  	if ($type == Igor::Pipeline::Type::TEXT) {
-  		try {
-  			$changeneeded = $self->path->slurp_utf8() ne $data;
-  		} catch {
-  			$changeneeded = 1;
-  		};
-  	} elsif ($type == Igor::Pipeline::Type::FILE) {
-  		try {
-  			$changeneeded = not (S_ISLNK($self->path->lstat->mode) && ($self->path->realpath eq $data->realpath));
-  		} catch {
-  			$changeneeded = 1;
-  		};
-  		if (-e $self->path && not S_ISLNK($self->path->lstat->mode)) {
-  			die ("File @{[$self->path]} already exists and is not a symlink");
-  		}
-  	} else {
-  		die "Unsupported type \"$type\" at \"@{[ __PACKAGE__ ]}\" when checking file @{[$self->path]}";
-  	}
-  
-  	return $changeneeded;
-  }
-  
-  sub emit {
-  	my ($self, $type, $data) = @_;
-  
-  	return Igor::Pipeline::Type::UNCHANGED unless $self->check($type, $data);
-  
-  	prepare_for_copy($self, \$type, \$data);
-  
-  	# Create directory if the target directory does not exist
-  	unless ($self->path->parent->is_dir) {
-  		$self->path->parent->mkpath;
-  	}
-  
-  	if ($type == Igor::Pipeline::Type::TEXT) {
-  		log_trace "spew(@{[$self->path]}, " . Dumper($data) . ")";
-  
-  		# write the data
-  		$self->path->spew_utf8($data);
-  
-  		# Fix permissions if requested
-  		if (defined $self->perm) {
-  			$self->path->chmod($self->perm);
-  		}
-  	} elsif ($type == Igor::Pipeline::Type::FILE) {
-  		my $dest = $self->path->absolute;
-  
-  		# Remove the link if it exists
-  		unlink $dest if -l $dest;
-  
-  		# symlink
-  		symlink $data,$dest or die "Failed to symlink: $dest -> $data: $!";
-  	} else {
-  		die "Unsupported type \"$type\" at \"" . __PACKAGE__ . "\" when emitting file @{[$self->path]}";
-  	}
-  
-  	return Igor::Pipeline::Type::CHANGED;
-  }
-  
-  sub diff {
-  	my ($self, $type, $data, undef, %opts) = @_;
-  
-  	prepare_for_copy($self, \$type, \$data);
-  
-  	my $diff;
-  	if ($type == Igor::Pipeline::Type::TEXT) {
-  		try {
-  			$diff = Igor::Diff::diff \$data, $self->path->stringify, \%opts;
-  		} catch {
-  			$diff = $_;
-  		}
-  	} elsif ($type == Igor::Pipeline::Type::FILE) {
-  		try {
-  			$diff = Igor::Diff::diff $data->stringify, $self->path->stringify, \%opts;
-  		} catch {
-  			$diff = $_;
-  		}
-  	} else {
-  		die "Unsupported type \"$type\" at \"" . __PACKAGE__ . "\" when checking file $self->path";
-  	}
-  
-  	return $diff;
-  }
-  
-  sub stringify {
-  	my ($self) = @_;
-  
-  	my $name = $self->path->stringify;
-  	if(defined $self->perm) {
-  		my $perm = sprintf("%o", $self->perm);
-  		$name .= " (chmod $perm)";
-  	}
-  
-  	return $name;
-  }
-  }
-  
-  package Igor::Sink::Collection {
-  use strict;
-  use warnings;
-  
-  # Collection sinks are a bit of a hack: They simply export to a context, which
-  # will later be used to fuse the collection. Therefore check, emit and diff
-  # are subs, only crating a suitable ctx for the actual ops.
-  
-  use parent 'Igor::Sink';
-  use Class::Tiny qw(collection id), {
-  	checked => 0,
-  };
-  
-  use Const::Fast;
-  use Data::Dumper;
-  use Log::ger;
-  use Text::Diff ();
-  
-  const my @REQUIRES => (Igor::Pipeline::Type::TEXT);
-  
-  sub requires { \@REQUIRES }
-  
-  sub check {
-  	my ($self, $type, $data, $ctx) = @_;
-  
-  	# Only build the context once
-  	return 1 if $self->checked;
-  
-  	# Sanity-check: Input type
-  	die   "Unsupported type \"$type\" at \"@{[__PACKAGE__]}\" "
-  	    . "when emitting to collection @{[$self->collection]} for @{[$self->id]}" if Igor::Pipeline::Type::TEXT != $type;
-  
-  	# Ensure that collection exists
-  	die "Unknown collection '@{[$self->collection]}' for package '@{[$self->id]}'"
-  		unless exists $ctx->{collections}->{$self->collection};
-  	my $collection = $ctx->{collections}->{$self->collection};
-  
-  	# Ensure that a package only writes to the context once
-  	die "Duplicate entry for @{[$self->id]} in collection @{[$self->collection]}" if (exists $collection->{$self->id});
-  
-  	# Write to the context
-  	$collection->{$self->id} = $data;
-  
-  	# Check has run
-  	$self->checked(1);
-  
-  	return 1;
-  }
-  
-  sub emit {
-  	my ($self, $type, $data, $ctx) = @_;
-  
-  	# Sets $ctx
-  	$self->check($type, $data, $ctx);
-  
-  	return Igor::Pipeline::Type::UNCHANGED;
-  }
-  
-  sub diff {
-  	my ($self, $type, $data, $ctx) = @_;
-  
-  	# Diff happens in a dedicated operation, based on $ctx
-  	# Sets $ctx
-  	$self->check($type, $data, $ctx);
-  
-  	return '';
-  }
-  
-  sub stringify {
-  	my ($self) = @_;
-  
-  	my $name = "collection(@{[$self->collection]})";
-  	return $name;
-  }
-  }
-  
-  1;
-  
-  __END__
-IGOR_SINK
-
-$fatpacked{"Igor/Types.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'IGOR_TYPES';
-  package Igor::Types;
-  use warnings;
-  use strict;
-  
-  use Type::Library -base;
-  use Type::Utils -all;
-  
-  use Path::Tiny;
-  
-  BEGIN { extends "Types::Standard" };
-  
-  
-  our $PathTiny = class_type "PathTiny", { class => "Path::Tiny" };
-  coerce "PathTiny",
-  	from "Str", via { Path::Tiny->new($_) };
-  1;
-  
-  __END__
-IGOR_TYPES
-
-$fatpacked{"Igor/Util.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'IGOR_UTIL';
-  package Igor::Util;
-  use Exporter 'import';
-  @EXPORT_OK = qw(colored);
-  
-  use strict;
-  use warnings;
-  use feature 'state';
-  
-  use Data::Diver qw(DiveRef);
-  use Data::Dumper;
-  use File::Glob ':bsd_glob';
-  use Graph;
-  use Graph::Directed;
-  use Log::ger;
-  use Net::Domain;
-  use Path::Tiny;
-  use Scalar::Util qw(reftype);
-  use Sys::Hostname;
-  use Term::ANSIColor ();
-  use TOML;
-  use TOML::Parser;
-  
-  sub read_toml {
-  	my ($filepath) = @_;
-  
-  	state $parser = TOML::Parser->new(
-  		inflate_boolean => sub { $_[0] eq 'true' ? \1 : \0 },
-  	);
-  	my ($conf, $err) = $parser->parse_file($filepath);
-  	unless ($conf) {
-  		log_error "Parsing of $filepath failed: $err";
-  		die $err;
-  	}
-  
-  	return $conf;
-  }
-  
-  sub build_graph {
-  	my ($hash, $lambda_deps) = @_;
-  
-  	# Build the graph
-  	my $g = Graph::Directed->new;
-  
-  	for my $key (sort keys %$hash) {
-  		$g->add_vertex($key);
-  		my $deps = $lambda_deps->($hash->{$key});
-  		next unless defined($deps);
-  		for my $child (@$deps) {
-  			$g->add_edge($key, $child);
-  		}
-  	}
-  
-  	return $g;
-  }
-  
-  sub toposort_dependencies {
-  	my ($hash, $root, $lambda_deps) = @_;
-  
-  	my $g = build_graph($hash, $lambda_deps);
-  	$g->add_vertex($root);
-  
-  	log_trace "Dependency graph: $g\n";
-  
-  	# Do a topological sort
-  	my @ts = $g->topological_sort;
-  
-  	# Now restrict that to the nodes reachable from the root
-  	my %r = ($root => 1);
-  	$r{$_}=1 for ($g->all_reachable($root));
-  
-  	my @order = grep { $r{$_} } @ts;
-  	return @order;
-  }
-  
-  # Tries to determine an identifier for the current computer from the following sources:
-  #    - fully qualified domain name (via Net::Domain)
-  #    - hostname (via Sys::Hostname)
-  # In the following order, this sources are probed, the first successful entry is returned
-  sub guess_identifier {
-  	# Try fqdn
-  	my $fqdn = Net::Domain::hostfqdn;
-  	return $fqdn if defined $fqdn;
-  
-  	# Try hostname
-  	return Sys::Hostname::hostname; # Croaks on error
-  }
-  
-  sub colored {
-  	if (-t STDOUT) { # outputting to terminal
-  		return Term::ANSIColor::colored(@_);
-  	} else {
-  		# Colored has two calling modes:
-  		#   colored(STRING, ATTR[, ATTR ...])
-  		#   colored(ATTR-REF, STRING[, STRING...])
-  
-  		unless (ref($_[0])) { # Called as option one
-  			return $_;
-  		} else { # Called as option two
-  			shift;
-  			return @_;
-  		}
-  	}
-  }
-  
-  sub glob {
-  	my ($pattern) = @_;
-  
-  	return bsd_glob($pattern, GLOB_BRACE | GLOB_MARK | GLOB_NOSORT | GLOB_QUOTE | GLOB_TILDE);
-  }
-  
-  # Read a file (as Path::Tiny instances) containing a sub and return the correspoding coderef
-  sub file_to_coderef {
-  	my ($path) = @_;
-  	my $source = $path->slurp;
-  	log_trace "Executing @{[$path]}:\n$source";
-  	my $coderef = eval { eval($source) };
-  	die "Failure while evaluating the coderef at @{[$path]}: $@\n" if not defined $coderef;
-  	return $coderef;
-  }
-  
-  # Traversal for HASH of HASH of HASH ... calls the callback with the value and current list of breadcrumbs
-  # i.e.: [key1, innerkey2, innermostkey3]
-  sub traverse_nested_hash {
-  	my ($hash, $cb) = @_;
-  
-  	my @worklist = ({
-  		breadcrumbs => [],
-  		data => $hash,
-  	});
-  
-  	my %result;
-  
-  	while(@worklist) {
-  		my $ctx = pop @worklist;
-  		my @breadcrumbs = @{$ctx->{breadcrumbs}};
-  		my $d = $ctx->{data};
-  		if (reftype($d) // '' eq 'HASH') {
-  			for my $k (keys %$d) {
-  				my $bc = [@breadcrumbs, $k];
-  				push @worklist, { breadcrumbs => $bc, data => $d->{$k}};
-  			}
-  		} else {
-  			my $ref = DiveRef(\%result, @breadcrumbs);
-  			$$ref = $cb->($d, \@breadcrumbs);
-  		}
-  	}
-  
-  	return \%result;
-  }
-  
-  1;
-  
-  __END__
-IGOR_UTIL
 
 $fatpacked{"Log/ger.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'LOG_GER';
   package Log::ger;
@@ -42291,10 +42519,10 @@ $fatpacked{"common/sense.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'X8
   sub import {
      local $^W; # work around perl 5.16 spewing out warnings for next statement
      # use warnings
-     ${^WARNING_BITS} ^= ${^WARNING_BITS} ^ "\x0c\x3f\x33\x00\x0f\xf0\x0f\xc0\xf0\xfc\x33\x00\x00\x00\x0c\x00\x00";
+     ${^WARNING_BITS} ^= ${^WARNING_BITS} ^ "\x0c\x3f\x33\x00\x0f\xf0\x0f\xc0\xf0\xfc\x33\x00\x00\x00\x0c\x00\x00\x00\x00";
      # use strict, use utf8; use feature;
      $^H |= 0x1c820fc0;
-     @^H{qw(feature_switch feature___SUB__ feature_state feature_say feature_fc feature_evalbytes feature_unicode)} = (1) x 7;
+     @^H{qw(feature_state feature_fc feature_evalbytes feature_unicode feature_switch feature_say feature___SUB__)} = (1) x 7;
   }
   
   1
@@ -42356,12 +42584,12 @@ unshift @INC, bless \%fatpacked, $class;
 use warnings;
 use strict;
 
-BEGIN { unshift @INC, './lib'; }
+use version; our $VERSION = version->declare("v0.2.1");
 
-use Igor::CLI;
+use App::Igor::CLI;
 
 # Simply dispatch, wuhu
-Igor::CLI::main(@ARGV);
+App::Igor::CLI::main(@ARGV);
 
 __END__
 
@@ -42629,7 +42857,7 @@ Please see the L<section TOML|/TOML> for a full description of the individual
 fields.
 
 The TOML-style package description is the preferred way of package description.
-However, in some cases, a more programmatic way of specifiying package-contents
+However, in some cases, a more programmatic way of specifying package-contents
 might be desired: For instance by omitting certain files or by automatically
 generating a large number of file operations to cope with hundreds of
 individual files inside a package.
@@ -42702,7 +42930,7 @@ The above snippet configures igor to search for packages in two repositories loc
 at F<./repo1> and F<./repo2> I<relative to the configuration file> and installs three
 packages from those repositories.
 Repositories are named (C<repository1> and C<repository2>).
-The list of packages to be installed in specified in the C<packages> list.  By
+The list of packages to be installed is specified in the C<packages> list.  By
 default, igor tries to resolve packagenames in all configured repositories.
 However, in case the package name is ambiguous, an error will be reported and
 the execution is terminated. In that case, the packagename can be explicitly
@@ -42730,6 +42958,55 @@ In the configuration, facts are represented as a (potentially nested) hash:
 In addition to explicitly specified facts, some facts (e.g. C<hostname> above)
 can be automatically gathered for all hosts using L<factors|/Custom factors>.
 Inside templates, those automatic facts are stored in the hash C<%automatic>.
+
+=item Vaults
+
+Sometimes, credentials are required within configuration files. While
+it may be unproblematic to have these stored in plaintext on certain
+boxes (e.g. my feedreader password on my private laptop), it is often
+not desireable to have them stored in the clear on all other
+(potentially less trusted) computers igor is run on. While this
+problem can be mitigated by using multiple
+L<repositories|/Repositories and Packages>, it is overkill for only
+this paticular item. Vaults offer a way to store facts in an
+encrypted fashion and decrypt them automatically when required.
+
+	[[configurations.computer.vaults]]
+	path      = './vaults/newsboat.gpg'
+	type      = 'shell'
+	cacheable = 1
+	command   = 'gpg --batch --yes -o "${IGOR_OUTFILE}" -d "${IGOR_VAULT}"'
+
+Each configuration can store a list of vaults that will automatically
+be unlocked when the configuration is activated on the host.
+
+A vault consists of a filepath to the vault and a type.  Currently,
+only the C<shell> type is implemented. It allows to run a provided
+C<command> to decrypt the vault. The commandline used may refer to two
+environment variables for the filepath to the vault file
+(C<$IGOR_VAULT>) and the output file (C<$IGOR_OUTFILE>).
+
+The vault itself should decrypt to a TOML-File containing the
+secrets. After decryption, the vault will be merged into the context
+and available to Perl-style packages and Templates as
+C<%secrets>.
+
+However, it is laborous to repeatedly enter the vault password for every
+igor run being performed. So igor can cache unlocked faults for you.
+the unlocked vaults are stored in C<defaults.cachedirectory> (defaulting
+to F<./.cache>):
+
+	[defaults]
+	cachedirectory = './.cache'
+
+B<IMPORTANT:> The cache is currently B<not> cleared by igor
+itself. Old unlocked vaultfile-states will be cached indefinitly.
+It is the responsiblity of the user to clean the cache (by deleting
+the files within the cache directory).
+
+Caching has to be manually activated for the individual vaults by
+setting C<cacheable> to C<1>. Setting it to C<0> (default) will
+disable caching.
 
 =item Collections
 
@@ -42782,8 +43059,8 @@ C<mergeconfigs>, see below.
 =head3 Cascade
 
 However, igor does not confine itself to merely defining individual
-configurations.  Instead, at the core of igor is a cascading configuration
-system: The basic idea is that each system's configuration actually consits of
+configurations. Instead, at the core of igor is a cascading configuration
+system: The basic idea is that each system's configuration actually consists of
 several aspects.
 
 For instance, all configurations share a common set of default values and basic
@@ -42838,7 +43115,7 @@ inside the configuration block in F<config.toml>.
 
 Igor merges the set of (transitively) active configurations from top to bottom:
 
-	defaults -> cfg2 -> cfg3 -> cfg5 -> cfg5
+	defaults -> cfg2 -> cfg3 -> cfg5 -> cfg6
 
 Therefore, the above results in the following effective configuration:
 
@@ -42893,7 +43170,7 @@ Of course, you can call utility functions from igors codebase where useful:
 
 	sub {
 		# Cheating, actually we simply call the default hash merging strategy... :)
-		Igor::Merge::uniq_list_merge(@_)
+		App::Igor::Merge::uniq_list_merge(@_)
 	}
 
 =item 2.
@@ -43034,7 +43311,8 @@ unavailable.
 The C<configuration.pattern> options and configuration names are matched
 against this guessed identifier. If the selection is unique, this
 configuration will be automatically used and applied. If multiple patterns
-match, an error will be signaled instead.
+match, an error will be signaled instead. Patterns are matched as perl-style
+regexes.
 
 =head2 EXAMPLE
 
@@ -43108,36 +43386,31 @@ page or build it yourself:
 	# Install all dependencies locally to ./local using carton
 	# See DEVELOPMENT SETUP below for details
 	carton install
-	./bin/fatpack.sh
+	./maint/fatpack.sh
 
-The fatpacked script can be found in F<./bin/igor.fatpacked.pl> and be executed
+The fatpacked script can be found in F<./igor.fatpacked.pl> and be executed
 standalone.
 
 =head2 HACKING
 
-=head3 DESGIN/CODE STRUCTURE
+=head3 DESIGN/CODE STRUCTURE
 
-C<Igor::CLI::main> in F<lib/Igor/CLI.pl> constitutes igor's entrypoint and
+C<App::Igor::CLI::main> in F<lib/Igor/CLI.pl> constitutes igor's entrypoint and
 outlines the overall execution flow.
 
 The main steps are:
 
 =over 4
 
-=item 1.
-Command line parsing and setup
+=item 1.  Command line parsing and setup
 
-=item 2.
-Parsing the config
+=item 2.  Parsing the config
 
-=item 3.
-Using the layering system to determine the config to apply
+=item 3.  Using the layering system to determine the config to apply
 
-=item 4.
-Building the package database and configuring the individual packages
+=item 4.  Building the package database and configuring the individual packages
 
-=item 5.
-Applying the relevant subcommand (eiter applying a configuration, diff, gc...)
+=item 5.  Applying the relevant subcommand (eiter applying a configuration, diff, gc...)
 
 =back
 
@@ -43169,7 +43442,7 @@ construction in a lightweight fashion.
 =item C<Log::ger>
 
 Used internally for logging. Provides C<log_(trace|debug|info|warn|error)>
-functions to log on different verbosity levels. C<Igor::Util::colored> can be
+functions to log on different verbosity levels. C<App::Igor::Util::colored> can be
 used to modify the text printed to the terminal (e.g. C<log_info colored(['bold
 blue'] "Text")> will print C<Text> to stdout in bold blue).
 
@@ -43198,7 +43471,7 @@ the required nonstandard libraries:
 
 Carton can then be used to execute C<igor> with those locally installed libs:
 
-	carton exec -- ./igor.pl --help
+	carton exec -- ./scripts/igor.pl --help
 
 =head4 Running tests
 
@@ -43211,28 +43484,51 @@ an integration test case.
 B<WARNING:> Running the following command on your development machine might
 overwrite configuration files on the host. Only execute them in a virtual
 machine or container.
-	igor.pl apply -vv --dry-run -c ./test/test_minimal/config.toml --task computer
+	./scripts/igor.pl apply -vv --dry-run -c ./test/test_minimal/config.toml --task computer
 
 To ease development, two scripts are provided to create and manage docker
 containers for igor development.
-F<bin/builddocker.pl> will generate a set of dockerfiles in the folder
+F<maint/builddocker.pl> will generate a set of dockerfiles in the folder
 F<./docker> for minimal configurations of various operating systems configured
-in F<bin/builddocker.pl> and builds the corresponding images.
-F<bin/devup.sh> will start the archlinux-image and mount the igor-folder into
+in F<maint/builddocker.pl> and builds the corresponding images.
+F<maint/devup.sh> will start the archlinux-image and mount the igor-folder into
 the container in read-only mode. There, new changes of igor can be tested.
 Instead of using carton, you can use the fatpacked script inside the container,
 which emulates the behaviour on typical hosts. (Yet, igor will prefer local
 modules from the F<lib/Igor> folder to those fatpacked: that way, changes
-can be tested without rerunning F<bin/fatpack.sh>).
+can be tested without rerunning F<maint/fatpack.sh>).
 
 	# On host
 	# Build/Prepare
-	./bin/builddocker.pl # just once
-	./bin/fatpack.sh     # just once
+	./maint/builddocker.pl # just once
+	./maint/fatpack.sh     # just once
 	# Start the container
-	./bin/devup.sh
+	./maint/devup.sh
 
 	# In the container
 	./igor.packed.pl --help
+
+=head1 AUTHOR
+
+Simon Schuster C<perl -e 'print "git . remove stuff like this . rationality.eu" =~ s/ . remove stuff like this . /@/rg'>
+
+=head1 COPYRIGHT
+
+Copyright 2019- Simon Schuster
+
+=head1 LICENSE
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 =cut
