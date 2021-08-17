@@ -1,4 +1,5 @@
+postcmds = ["./install_iosevka.sh"]
+
 [[files]]
 source = "./fonts.conf"
 dest   = "~/.config/fontconfig/fonts.conf"
-
