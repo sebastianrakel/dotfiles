@@ -18,7 +18,6 @@ margin-bottom = 0
 [colors]
 background = #16161d
 background-alt = #073642
-;foreground = ${xrdb:color7:#222}
 foreground =  #f7f7f7
 foreground-alt = #f7f7f7
 primary = #1D1F28
@@ -27,11 +26,11 @@ alert = #bd2c40
 
 
 [bar/0]
-width = 80%
-height = 40
-offset-x = 10%
+width = 100%
+height = 30
+offset-x = 0
 offset-y = 0
-radius = 3
+radius = 0
 fixed-center = false
 
 background = ${colors.background}
