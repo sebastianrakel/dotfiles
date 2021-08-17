@@ -13,6 +13,7 @@ alias o='openstack'
 alias ddd='dd oflag=direct status=progress'
 alias ddf='dd conv=fsynci status=progress'
 alias sudo='sudo '
+alias audiodownload='youtube-dl --audio-format best --extract-audio '
 
 if [[ "$uname_string" == 'OpenBSD' || "$uname_string" == 'FreeBSD' ]]; then
     alias ls='ls -G'
