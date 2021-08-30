@@ -1,7 +1,7 @@
 font:
         normal:
-                family: Monospace
-        size: 8.0
+                family: Hack
+        size: 11.0
 mouse:
   url:
     launcher:

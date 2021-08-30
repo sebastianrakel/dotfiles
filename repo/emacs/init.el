@@ -105,9 +105,9 @@ re-downloaded in order to locate PACKAGE."
 	 ("S-<f6>" . lsp-rename)
 	 ("<f12>" . lsp-find-definition)
 	 ("S-<f12>" . lsp-find-references))
-  :hook ((swift-mode . (lambda () (lsp)))
-	 (python-mode . lsp)
-	 (lsp-mode . lsp-enable-which-key-integration)))
+  :hook ((python-mode . lsp)
+	 (lsp-mode . lsp-enable-which-key-integration)
+	 (ruby-mode . lsp)))
 
 
 (use-package which-key
@@ -138,7 +138,11 @@ re-downloaded in order to locate PACKAGE."
   :ensure t)
 
 (use-package projectile
-  :ensure t)
+  :ensure t
+  :init
+  (setq projectile-globally-ignored-directories
+	'(".git"
+	  ".ccls-cache")))
 
 (use-package helm-projectile
   :ensure t
@@ -150,7 +154,10 @@ re-downloaded in order to locate PACKAGE."
   (define-key helm-find-files-map "\t" 'helm-execute-persistent-action))
 
 (use-package rainbow-delimiters
-  :ensure t)
+  :ensure t
+  :init
+  (progn
+    (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)))
 
 (use-package smartparens
   :ensure t
@@ -173,10 +180,6 @@ re-downloaded in order to locate PACKAGE."
   :ensure t)
 
 (use-package ansible
-  :ensure t)
-
-;; Swift
-(use-package swift-mode
   :ensure t)
 
 (use-package lsp-sourcekit
@@ -222,6 +225,13 @@ re-downloaded in order to locate PACKAGE."
   :hook ((go-mode . lsp-deferred)
 	 (before-save . lsp-format-buffer)
          (before-save . lsp-organize-imports)))
+
+;; Terraform
+(use-package terraform-mode
+  :ensure t)
+
+(use-package terraform-doc
+  :ensure t)
 
 ;; Embedded
 

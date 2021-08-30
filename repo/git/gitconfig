@@ -24,6 +24,7 @@
     lg = log --graph --abbrev-commit --color --pretty=log
     lf = lg --name-status
     pfusch = push --force
+    con = checkout -b
 
 [pretty]
     log = %C(yellow)%h%C(reset) %C(normal)%s%C(reset) %C(dim white)%an%C(reset) %C(dim blue)(%ar)%C(reset) %C(auto)%d%C(reset)
@@ -39,3 +40,8 @@
     path = ~/.config/git/conf.d/user
 [init]
 	defaultBranch = main
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
