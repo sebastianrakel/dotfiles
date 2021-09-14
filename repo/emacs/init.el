@@ -56,7 +56,7 @@ re-downloaded in order to locate PACKAGE."
 
 ;; Font Settings
 
-(add-to-list 'default-frame-alist '(font . "Monospace-14"))
+(add-to-list 'default-frame-alist '(font . "Iosevka SS08-14"))
 
 ;; Load Packages
 (use-package magit
@@ -88,6 +88,8 @@ re-downloaded in order to locate PACKAGE."
   :bind (
 	 ("C-SPC" . company-complete))
   :init
+  (setq company-idle-delay 0)
+  (setq company-minimum-prefix-length 1)
   (add-hook 'after-init-hook 'global-company-mode))
 
 (use-package flymake
@@ -222,9 +224,12 @@ re-downloaded in order to locate PACKAGE."
 
 (use-package go-mode
   :ensure t
-  :hook ((go-mode . lsp-deferred)
-	 (before-save . lsp-format-buffer)
-         (before-save . lsp-organize-imports)))
+  :init
+  (defun lsp-go-install-save-hooks ()
+    (add-hook 'before-save-hook #'lsp-format-buffer t t)
+    (add-hook 'before-save-hook #'lsp-organize-imports t t))
+  (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+  (add-hook 'go-mode-hook #'lsp-deferred))
 
 ;; Terraform
 (use-package terraform-mode
