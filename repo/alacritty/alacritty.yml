@@ -1,9 +1,18 @@
 font:
-        normal:
-                family: Hack
-        size: 11.0
-mouse:
-  url:
-    launcher:
-      program: chromium
-      args: []
+  normal:
+    family: monospace
+    style: Regular
+
+  bold:
+    family: monospace
+    style: Bold
+
+  italic:
+    family: monospace
+    style: Italic
+
+  bold_italic:
+    family: monospace
+    style: Bold Italic
+
+  size: 14
