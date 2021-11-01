@@ -38,6 +38,8 @@
 
 [include]
     path = ~/.config/git/conf.d/user
+[include]
+    path = ~/.config/git/conf.d/private
 [init]
 	defaultBranch = main
 [filter "lfs"]
