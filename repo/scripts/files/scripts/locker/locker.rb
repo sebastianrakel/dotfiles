@@ -3,7 +3,9 @@
 wm_name = ENV["XDG_SESSION_DESKTOP"]
 choice = nil
 
-actions = ['l. Lock', 'h. Suspend', 'r. Reboot', 's. Shutdown', "q. Quit #{wm_name}"]
+sleep_action = ENV["SLEEP_ACTION"] || "suspend"
+
+actions = ['l. Lock', "h. #{sleep_action}", 'r. Reboot', 's. Shutdown', "q. Quit #{wm_name}"]
 IO.popen(['rofi', '-p', 'Choose action: ', '-format', 'i', '-dmenu'], 'w+') do |io|
   io.puts(*actions)
   io.close_write
@@ -17,7 +19,7 @@ case index
 when 0
   IO.popen(['xscreensaver-command', '--lock'])
 when 1
-  IO.popen(['systemctl', 'suspend'])
+  IO.popen(['systemctl', sleep_action])
 when 2
   IO.popen(['systemctl', 'reboot'])
 when 3
