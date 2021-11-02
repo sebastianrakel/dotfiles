@@ -3,9 +3,5 @@ source = "./init.el"
 dest   = "~/.emacs.d/init.el"
 
 [[files]]
-source = "./functions"
-dest   = "~/.emacs.d/functions"
-
-[[files]]
 source = "./personal"
 dest   = "~/.emacs.d/personal"

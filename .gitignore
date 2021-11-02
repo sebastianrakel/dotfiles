@@ -59,3 +59,5 @@ graphical/.config/gtk-3.0/bookmarks
 
 
 editor/.emacs.d/init.el
+
+repo/emacs/personal/init.el
