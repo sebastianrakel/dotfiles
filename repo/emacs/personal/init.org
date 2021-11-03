@@ -30,6 +30,7 @@
     (global-display-line-numbers-mode)
     (set-default 'truncate-lines t)
     (defalias 'yes-or-no-p 'y-or-n-p)
+    (column-number-mode 1)
   #+END_SRC
 *** Font
   #+BEGIN_SRC emacs-lisp
@@ -62,6 +63,11 @@
     (global-set-key (kbd "C-c g") 'magit)
     (global-set-key (kbd "C-c p") 'projectile-command-map)
     (global-set-key (kbd "C-c q s") 'open-emacs-config)
+
+    (global-set-key (kbd "C-c c r") 'lsp-find-references)
+    (global-set-key (kbd "C-c c d") 'lsp-find-definition)
+    (global-set-key (kbd "C-c c D") 'lsp-find-declaration)
+    (global-set-key (kbd "C-c c R") 'lsp-rename)
 
     (global-set-key (kbd "C-x C-f") 'counsel-find-file)
   #+END_SRC
@@ -107,7 +113,8 @@
       (use-package company
 	:config
 	(add-hook 'after-init-hook 'global-company-mode)
-	(setq company-minimum-prefix-length 2))
+	(setq company-minimum-prefix-length 2)
+	(setq company-idle-delay 0))
     #+END_SRC
 *** Which Key
     #+begin_src emacs-lisp
@@ -126,19 +133,50 @@
      (use-package magit)
    #+END_SRC
 ** Coding
-*** Common    
+*** Common
+**** Yasnippet
+    #+begin_src emacs-lisp
+      (use-package yasnippet
+	:config
+	(yas-global-mode 1))
+    #+end_src
+**** Smartparens
     #+begin_src emacs-lisp
       (use-package smartparens
 	:config
 	(add-hook 'prog-mode-hook 'smartparens-mode))
     #+end_src
+**** LSP
+    #+begin_src emacs-lisp
+      (use-package lsp-mode
+	:after lsp-ui)
+      (use-package lsp-ui)
+    #+end_src
+**** Data Formats
+     #+begin_src emacs-lisp
+       (use-package yaml-mode)
+     #+end_src
 *** Org-Mode
     #+begin_src emacs-lisp
       (require 'org-tempo)
     #+end_src
 *** HTML, Vue, TypeScript
     #+begin_src emacs-lisp
-      (use-package vue-mode)
-
       (use-package web-mode)
+    #+end_src
+*** Golang
+    #+begin_src emacs-lisp
+      (defun lsp-go-install-save-hooks ()
+	(add-hook 'before-save-hook #'lsp-format-buffer t t)
+	(add-hook 'before-save-hook #'lsp-organize-imports t t))
+
+      (use-package go-mode
+	:config
+	(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+	(add-hook 'go-mode-hook #'lsp-deferred)
+	(add-hook 'go-mode-hook #'yas-minor-mode))
+    #+end_src
+*** Puppet
+    #+begin_src emacs-lisp
+      (use-package puppet-mode)
     #+end_src
