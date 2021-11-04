@@ -120,6 +120,7 @@
     #+begin_src emacs-lisp
       (use-package which-key
 	:config
+	(setq which-key-idle-delay 0.3)
 	(which-key-mode))
     #+end_src
 *** Projectile
@@ -149,7 +150,9 @@
 **** LSP
     #+begin_src emacs-lisp
       (use-package lsp-mode
-	:after lsp-ui)
+	:after lsp-ui
+	:config
+	(setq lsp-keymap-prefix "C-c l"))
       (use-package lsp-ui)
     #+end_src
 **** Data Formats
