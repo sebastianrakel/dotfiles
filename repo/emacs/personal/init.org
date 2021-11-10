@@ -1,4 +1,8 @@
 #+STARTUP: content
+#+TITLE: Sebastians emacs configuration - in org
+#+BEGIN_CENTER
+This is my emacs config, it's written in org-mode
+#+END_CENTER
 * StartUp
 ** Basic Package Setup
    #+BEGIN_SRC emacs-lisp
