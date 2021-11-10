@@ -1,3 +1,4 @@
+#+STARTUP: content
 * StartUp
 ** Basic Package Setup
    #+BEGIN_SRC emacs-lisp
@@ -68,6 +69,9 @@
     (global-set-key (kbd "C-c c d") 'lsp-find-definition)
     (global-set-key (kbd "C-c c D") 'lsp-find-declaration)
     (global-set-key (kbd "C-c c R") 'lsp-rename)
+
+    (global-set-key (kbd "C-c s i") 'yas-insert-snippet)
+    (global-set-key (kbd "C-c s n") 'yas-new-snippet)
 
     (global-set-key (kbd "C-x C-f") 'counsel-find-file)
   #+END_SRC
@@ -160,9 +164,22 @@
        (use-package yaml-mode)
      #+end_src
 *** Org-Mode
+    Some common org-mode settings
+    #+begin_src emacs-lisp
+      (setq org-hide-emphasis-markers t)
+    #+end_src
+    
+    Give org mode beautiful bubbles instead of asteriks
+    #+begin_src emacs-lisp
+      (use-package org-bullets
+	:config
+	(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+    #+end_src
+
+    Add org-tempo for some basic snippets like <s<TAB> for code section
     #+begin_src emacs-lisp
       (require 'org-tempo)
-    #+end_src
+    #+end_src    
 *** HTML, Vue, TypeScript
     #+begin_src emacs-lisp
       (use-package web-mode)
@@ -183,3 +200,8 @@
     #+begin_src emacs-lisp
       (use-package puppet-mode)
     #+end_src
+*** Docker, Nomad, Container, Stuff, Magic
+    #+begin_src emacs-lisp
+      (use-package hcl-mode)
+    #+end_src
+
