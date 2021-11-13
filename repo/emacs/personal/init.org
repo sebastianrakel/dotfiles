@@ -137,6 +137,25 @@ This is my emacs config, it's written in org-mode
 	:config
 	(projectile-mode 1))
     #+end_src
+*** Dashboard
+    #+begin_src emacs-lisp
+      (use-package all-the-icons)
+
+      (use-package dashboard
+	:config
+	(dashboard-setup-startup-hook)
+	(setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+	(setq dashboard-startup-banner "~/.emacs.d/personal/images/avatar.png")
+	(setq dashboard-center-content t)
+	(setq dashboard-show-shortcuts t)
+	(setq dashboard-set-heading-icons t)
+	(setq dashboard-set-file-icons t)
+	(setq dashboard-projects-switch-function 'counsel-projectile-switch-project-by-name)
+	(setq dashboard-items '((recents  . 5)
+				(bookmarks . 5)
+				(projects . 5)
+				(registers . 5))))
+    #+end_src
 ** Magit
    #+BEGIN_SRC emacs-lisp
      (use-package magit)
@@ -149,11 +168,14 @@ This is my emacs config, it's written in org-mode
 	:config
 	(yas-global-mode 1))
     #+end_src
-**** Smartparens
+**** Parens, Delimiters
     #+begin_src emacs-lisp
       (use-package smartparens
 	:config
 	(add-hook 'prog-mode-hook 'smartparens-mode))
+    #+end_src
+    #+begin_src emacs-lisp
+      (use-package rainbow-delimiters)
     #+end_src
 **** LSP
     #+begin_src emacs-lisp
