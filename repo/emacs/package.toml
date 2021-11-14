@@ -1,4 +1,4 @@
-[[files]]
+[[templates]]
 source = "./init.el"
 dest   = "~/.emacs.d/init.el"
 
