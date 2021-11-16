@@ -1,3 +1,7 @@
 [[files]]
 source = "./alacritty.yml"
 dest   = "~/.config/alacritty/alacritty.yml"
+
+[[files]]
+source = "./dracula.yml"
+dest   = "~/.config/alacritty/dracula.yml"

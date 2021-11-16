@@ -43,9 +43,9 @@ This is my emacs config, it's written in org-mode
   #+END_SRC
 *** Theme
   #+BEGIN_SRC emacs-lisp
-    (use-package gruvbox-theme
+    (use-package dracula-theme
       :config
-      (load-theme 'gruvbox-dark-hard t))
+      (load-theme 'dracula t))
   #+END_SRC
 ** Backup
    #+BEGIN_SRC emacs-lisp

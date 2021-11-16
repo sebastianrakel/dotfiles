@@ -1,0 +1,13 @@
+postcmds = ["./install_dracula_icons.sh"]
+
+[[files]]
+source = "./themes/"
+dest = "~/.themes/"
+
+[[files]]
+source = "./gtk2rc"
+dest = "~/.gtkrc-2.0"
+
+[[files]]
+source = "./gtk3_settings.ini"
+dest = "~/.config/gtk-3.0/settings.ini"

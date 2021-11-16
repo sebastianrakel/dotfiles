@@ -189,7 +189,7 @@ herbstclient set tree_style '╾│ ├└╼─┐'
 # or simply:
 hc detect_monitors
 
-feh --bg-fill "${HOME}/Pictures/Wallpaper/c64_polished.jpg"
+feh --bg-fill "${HOME}/Pictures/Wallpaper/arch.png"
 
 if [ -e "${HOME}/.bin/bar_starter.rb" ]; then
     echo "Will start bar"
