@@ -11,7 +11,7 @@
         }
 
 [configurations.base]
-        packages = ['git', 'zsh', 'tmux', 'terminal']
+        packages = ['git', 'zsh', 'tmux', 'terminal', 'fish']
 
 [configurations.computer]
         dependencies = ['base']
