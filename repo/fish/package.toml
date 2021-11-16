@@ -1,0 +1,7 @@
+[[files]]
+source = "./config.fish"
+dest = "~/.config/fish/config.fish"
+
+[[files]]
+source = "./conf.d/"
+dest = "~/.config/fish/conf.d/"
