@@ -114,7 +114,8 @@ This is my emacs config, it's written in org-mode
     #+BEGIN_SRC emacs-lisp
       (use-package powerline
 	:config
-	(powerline-default-theme))
+	(powerline-default-theme)
+	(setq powerline-default-separator 'wave))
     #+END_SRC
 *** Completion
     #+BEGIN_SRC emacs-lisp
@@ -225,6 +226,14 @@ This is my emacs config, it's written in org-mode
 *** Puppet
     #+begin_src emacs-lisp
       (use-package puppet-mode)
+    #+end_src
+*** Rust
+    #+begin_src emacs-lisp
+      (use-package cargo)
+
+      (use-package rustic
+	:config
+	(setq rustic-format-on-save t))
     #+end_src
 *** Docker, Nomad, Container, Stuff, Magic
     #+begin_src emacs-lisp
