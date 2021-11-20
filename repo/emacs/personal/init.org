@@ -79,6 +79,11 @@ This is my emacs config, it's written in org-mode
 
     (global-set-key (kbd "C-x C-f") 'counsel-find-file)
   #+END_SRC
+** elisp mode
+   #+begin_src emacs-lisp
+     (add-hook 'elisp-mode
+	       (lambda () (local-set-key (kbd "C-c m e") #'eval-buffer)))
+   #+end_src
 * Functions
 ** Reload Emacs
   #+BEGIN_SRC emacs-lisp
@@ -173,10 +178,12 @@ This is my emacs config, it's written in org-mode
     #+begin_src emacs-lisp
       (use-package smartparens
 	:config
-	(add-hook 'prog-mode-hook 'smartparens-mode))
+	(add-hook 'prog-mode-hook #'smartparens-mode))
     #+end_src
     #+begin_src emacs-lisp
-      (use-package rainbow-delimiters)
+      (use-package rainbow-delimiters
+	:config
+	(add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
     #+end_src
 **** LSP
     #+begin_src emacs-lisp
