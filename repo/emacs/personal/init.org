@@ -81,7 +81,7 @@ This is my emacs config, it's written in org-mode
   #+END_SRC
 ** elisp mode
    #+begin_src emacs-lisp
-     (add-hook 'elisp-mode
+     (add-hook 'emacs-lisp-mode
 	       (lambda () (local-set-key (kbd "C-c m e") #'eval-buffer)))
    #+end_src
 * Functions
