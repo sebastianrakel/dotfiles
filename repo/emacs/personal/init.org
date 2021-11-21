@@ -69,13 +69,17 @@ This is my emacs config, it's written in org-mode
     (global-set-key (kbd "C-c p") 'projectile-command-map)
     (global-set-key (kbd "C-c q s") 'open-emacs-config)
 
+    (global-set-key (kbd "C-c d") 'zeal-at-point)
+
     (global-set-key (kbd "C-c c r") 'lsp-find-references)
     (global-set-key (kbd "C-c c d") 'lsp-find-definition)
     (global-set-key (kbd "C-c c D") 'lsp-find-declaration)
     (global-set-key (kbd "C-c c R") 'lsp-rename)
 
+    ;Snippets
     (global-set-key (kbd "C-c s i") 'yas-insert-snippet)
     (global-set-key (kbd "C-c s n") 'yas-new-snippet)
+    (global-set-key (kbd "C-c s e") 'yas-visit-snippet-file)
 
     (global-set-key (kbd "C-x C-f") 'counsel-find-file)
   #+END_SRC
@@ -189,6 +193,8 @@ This is my emacs config, it's written in org-mode
     #+begin_src emacs-lisp
       (use-package lsp-mode
 	:after lsp-ui
+	:hook
+	((python-mode . lsp))
 	:config
 	(setq lsp-keymap-prefix "C-c l"))
       (use-package lsp-ui)
@@ -196,6 +202,10 @@ This is my emacs config, it's written in org-mode
 **** Data Formats
      #+begin_src emacs-lisp
        (use-package yaml-mode)
+     #+end_src
+**** Zeal/Docsets/Dash
+     #+begin_src emacs-lisp
+       (use-package zeal-at-point)
      #+end_src
 *** Org-Mode
     Some common org-mode settings
@@ -241,9 +251,19 @@ This is my emacs config, it's written in org-mode
       (use-package rustic
 	:config
 	(setq rustic-format-on-save t))
-    #+end_src
+    #+end_src    
+*** Python
+    #+BEGIN_SRC emacs-lisp
+      (add-hook 'python-mode-hook
+		(lambda () (setq zeal-at-point-docset '("python" "django"))))
+    #+END_SRC
 *** Docker, Nomad, Container, Stuff, Magic
     #+begin_src emacs-lisp
       (use-package hcl-mode)
     #+end_src
+** Misc
+*** Filebin
+    #+BEGIN_SRC emacs-lisp
+      (load-file "/home/sebastian/.emacs.d/personal/functions/filebin.el")
+    #+END_SRC
 
