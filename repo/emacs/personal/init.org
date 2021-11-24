@@ -109,6 +109,9 @@ This is my emacs config, it's written in org-mode
        :config
        (ivy-mode 1)
        (setq ivy-use-virtual-buffers t)
+       (setq enable-recursive-minibuffers t)
+       (setq ivy-display-style 'fancy)
+       (setq ivy-wrap t)
        (setq enable-recursive-minibuffers t))
 
      (use-package counsel
@@ -207,6 +210,10 @@ This is my emacs config, it's written in org-mode
      #+begin_src emacs-lisp
        (use-package zeal-at-point)
      #+end_src
+**** Editorconfig
+     #+BEGIN_SRC emacs-lisp
+       (use-package editorconfig)
+     #+END_SRC
 *** Org-Mode
     Some common org-mode settings
     #+begin_src emacs-lisp
@@ -226,7 +233,15 @@ This is my emacs config, it's written in org-mode
     #+end_src    
 *** HTML, Vue, TypeScript
     #+begin_src emacs-lisp
-      (use-package web-mode)
+      (use-package web-mode
+	:config
+	(setq web-mode-markup-indent-offset 2)
+	(add-hook 'vue-mode-hook #'lsp-deferred))
+
+      (use-package typescript-mode
+	:config
+	(setq typescript-indent-level 2)
+	(add-hook 'typescript-mode-hook #'lsp-deferred))
     #+end_src
 *** Golang
     #+begin_src emacs-lisp
@@ -260,6 +275,10 @@ This is my emacs config, it's written in org-mode
 *** Docker, Nomad, Container, Stuff, Magic
     #+begin_src emacs-lisp
       (use-package hcl-mode)
+
+      (use-package docker)
+
+      (use-package dockerfile-mode)
     #+end_src
 ** Misc
 *** Filebin
