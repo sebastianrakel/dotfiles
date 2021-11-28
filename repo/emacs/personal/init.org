@@ -39,7 +39,7 @@ This is my emacs config, it's written in org-mode
   #+END_SRC
 *** Font
   #+BEGIN_SRC emacs-lisp
-    (add-to-list 'default-frame-alist '(font . "Iosevka SS08-14"))
+    (add-to-list 'default-frame-alist '(font . "Iosevka SS08 Light-14"))
   #+END_SRC
 *** Theme
   #+BEGIN_SRC emacs-lisp
