@@ -285,4 +285,54 @@ This is my emacs config, it's written in org-mode
     #+BEGIN_SRC emacs-lisp
       (load-file "/home/sebastian/.emacs.d/personal/functions/filebin.el")
     #+END_SRC
+*** Notmuch
+    #+begin_src emacs-lisp
+      (use-package notmuch
+	:config
+      	(load-file "/home/sebastian/.emacs.d/personal/secret/notmuch.el")
+	(setq send-mail-function 'sendmail-send-it
+	      sendmail-program "/usr/bin/msmtp"
+	      mail-specify-envelope-from t
+	      message-sendmail-envelope-from 'header
+	      mail-envelope-from 'header
+	      message-kill-buffer-on-exit t
+	      notmuch-search-oldest-first nil
+	      notmuch-crypto-process-mime t) 
+	(setq notmuch-saved-searches '((:name "inbox"
+					      :query "tag:inbox"
+					      :count-query "tag:inbox and tag:unread"
+					      :sort-order newest-first)
+				       (:name "archive"
+					      :query "tag:archive"
+					      :count-query "tag:archive"
+					      :sort-order newest-first)))
+	(define-key notmuch-show-mode-map "S"
+	  (lambda ()
+	    "mark message as spam"
+	    (interactive)
+	    (notmuch-show-tag (list "+spam" "-inbox" "-unread"))))
+	(define-key notmuch-search-mode-map "S"
+	  (lambda ()
+	    "mark message as spam"
+	    (interactive)
+	    (notmuch-search-tag (list "-inbox" "+spam" "-unread"))
+	    (next-line) ))
+	(define-key notmuch-search-mode-map "d"
+	  (lambda ()
+	    "mark message as spam"
+	    (interactive)
+	    (notmuch-search-tag (list "+deleted" "-inbox" "-unread"))
+	    (next-line) ))
+	(define-key notmuch-search-mode-map "u"
+	  (lambda ()
+	    "mark message as spam"
+	    (interactive)
+	    (notmuch-search-tag (list "-deleted"))
+	    (next-line) ))
+	(define-key notmuch-search-mode-map "a"
+	  (lambda ()
+	    (interactive)
+	    (notmuch-search-tag (list "+archive" "-unread" "-inbox"))
+	    (next-line) )))
+    #+end_src
 
