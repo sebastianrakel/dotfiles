@@ -1,23 +1,19 @@
 #!/usr/bin/env bash
 
-# this is a simple config for herbstluftwm
-
 hc() {
     herbstclient "$@"
 }
 
 hc emit_hook reload
-# remove all existing keybindings
 hc keyunbind --all
 
-# keybindings
-# if you have a super key you will be much happier with Mod set to Mod4
 Mod=Mod4    # Use alt as the main modifier
-#Mod=Mod4   # Use the super key as the main modifier
+
 
 hc keybind $Mod-Shift-q close
 hc keybind $Mod-Shift-r reload
-# hc keybind $Mod-Shift-c close
+
+# Launch
 hc keybind $Mod-Return spawn ${TERMINAL:-xterm} # use your $TERMINAL with xterm as fallback
 hc keybind $Mod-d spawn rofi -show combi -combi-modi drun,run -show-icons
 hc keybind $Mod-Shift-e spawn ruby ~/.bin/scripts/locker/locker.rb
@@ -26,7 +22,18 @@ hc keybind $Mod-Shift+p spawn rofi-pass --root .password-store:.password-store-f
 hc keybind $Mod-Shift+o spawn ~/Projects/Fun/splatmoji/splatmoji type
 hc keybind $Mod+w spawn rofi -show window
 hc keybind $Mod-Print spawn flameshot gui
-hc keybind $Mod-Shift-s spawn ~/.bin/local/sink-select.sh
+
+# Display
+hc keybind XF86MonBrightnessUp spawn ${HOME}/.bin/backlight.rb increase
+hc keybind XF86MonBrightnessDown spawn ${HOME}/.bin/backlight.rb decrease
+
+# Multimedia
+hc keybind XF86AudioRaiseVolume spawn ${HOME}/.bin/volume_control.sh increase
+hc keybind XF86AudioLowerVolume spawn ${HOME}/.bin/volume_control.sh decrease
+hc keybind XF86AudioMute spawn ${HOME}/.bin/volume_control.sh mute
+hc keybind XF86Launch5 spawn ${HOME}/.bin/local/mute_toggle.sh
+hc keybind $Mod-Prior spawn ${HOME}/.bin/volume_control.sh increase
+hc keybind $Mod-Next spawn ${HOME}/.bin/volume_control.sh decrease
 
 
 # basic movement
@@ -35,20 +42,12 @@ hc keybind $Mod-Left  focus left
 hc keybind $Mod-Down  focus down
 hc keybind $Mod-Up    focus up
 hc keybind $Mod-Right focus right
-hc keybind $Mod-h     focus left
-hc keybind $Mod-j     focus down
-hc keybind $Mod-k     focus up
-hc keybind $Mod-l     focus right
 
 # moving clients
 hc keybind $Mod-Shift-Left  shift left
 hc keybind $Mod-Shift-Down  shift down
 hc keybind $Mod-Shift-Up    shift up
 hc keybind $Mod-Shift-Right shift right
-hc keybind $Mod-Shift-h     shift left
-hc keybind $Mod-Shift-j     shift down
-hc keybind $Mod-Shift-k     shift up
-hc keybind $Mod-Shift-l     shift right
 
 # splitting frames
 # create an empty frame at the specified direction
@@ -59,25 +58,10 @@ hc keybind $Mod-Control-space split explode
 
 # resizing frames
 resizestep=0.05
-hc keybind $Mod-Control-h       resize left +$resizestep
-hc keybind $Mod-Control-j       resize down +$resizestep
-hc keybind $Mod-Control-k       resize up +$resizestep
-hc keybind $Mod-Control-l       resize right +$resizestep
 hc keybind $Mod-Control-Left    resize left +$resizestep
 hc keybind $Mod-Control-Down    resize down +$resizestep
 hc keybind $Mod-Control-Up      resize up +$resizestep
 hc keybind $Mod-Control-Right   resize right +$resizestep
-
-hc keybind XF86MonBrightnessUp spawn ${HOME}/.bin/backlight.rb increase
-hc keybind XF86MonBrightnessDown spawn ${HOME}/.bin/backlight.rb decrease
-
-hc keybind $Mod-Prior spawn ${HOME}/.bin/volume_control.sh increase
-hc keybind $Mod-Next spawn ${HOME}/.bin/volume_control.sh decrease
-
-hc keybind XF86AudioRaiseVolume spawn ${HOME}/.bin/volume_control.sh increase
-hc keybind XF86AudioLowerVolume spawn ${HOME}/.bin/volume_control.sh decrease
-hc keybind XF86AudioMute spawn ${HOME}/.bin/volume_control.sh mute
-hc keybind XF86Launch5 spawn ${HOME}/.bin/local/mute_toggle.sh
 
 # tags
 tag_names=( {main,www,cad,dev,virt,remote,stuff,games} )
@@ -102,9 +86,7 @@ hc keybind $Mod-r remove
 hc keybind $Mod-s floating toggle
 hc keybind $Mod-f fullscreen toggle
 hc keybind $Mod-Control-p pseudotile toggle
-# The following cycles through the available layouts within a frame, but skips
-# layouts, if the layout change wouldn't affect the actual window positions.
-# I.e. if there are two windows within a frame, the grid layout is skipped.
+
 hc keybind $Mod-space                                                           \
             or , and . compare tags.focus.curframe_wcount = 2                   \
                      . cycle_layout +1 vertical horizontal max vertical grid    \
@@ -121,40 +103,56 @@ hc keybind $Mod-BackSpace   cycle_monitor
 hc keybind $Mod-Tab         cycle_all +1
 hc keybind $Mod-Shift-Tab   cycle_all -1
 hc keybind $Mod-c cycle
-hc keybind $Mod-Shift-c spawn python ~/.bin/local/windowswitcher.py
 hc keybind $Mod-i jumpto urgent
 
-# theme
-hc attr theme.tiling.reset 1
-hc attr theme.floating.reset 1
-hc set frame_border_active_color '#292929'
-hc set frame_border_normal_color '#292929'
-hc set frame_bg_normal_color '#292929'
-hc set frame_bg_active_color '#292929'
+color_background='#282a36'
+color_current_line='#44475a'
+color_foreground='#f8f8f2'
+color_comment='#6272a4'
+color_cyan='#8be9fd'
+color_green='#50fa7b'
+color_orange='#ffb86c'
+color_pink='#ff79c6'
+color_purple='#bd93f9'
+color_red='#ff5555'
+color_yellow='#f1fa8c'
+
+# settings
+hc set frame_border_active_color $color_pink
+hc set frame_border_normal_color $color_pink
+hc set frame_bg_normal_color $color_background
+hc set frame_bg_active_color $color_current_line
 hc set frame_border_width 0
 hc set always_show_frame 0
 hc set frame_bg_transparent 1
 hc set frame_transparent_width 2
-hc set frame_gap 10
+hc set frame_gap 5
 
-hc attr theme.active.color '#a9a9a9'
-hc attr theme.normal.color '#454545'
-hc attr theme.urgent.color orange
-hc attr theme.inner_width 1
-hc attr theme.inner_color black
-hc attr theme.border_width 3
-hc attr theme.floating.border_width 4
-hc attr theme.floating.outer_width 1
-hc attr theme.floating.outer_color black
-hc attr theme.active.inner_color '#a9a9a9'
-hc attr theme.active.outer_color '#a9a9a9'
-hc attr theme.background_color '#141414'
+# theme
+hc attr theme.tiling.reset 1
+hc attr theme.floating.reset 1
+hc attr theme.active.color $color_current_line
+hc attr theme.normal.color $color_background
+hc attr theme.urgent.color $color_orange
 
-hc set window_gap 0
-hc set frame_padding 0
-hc set smart_window_surroundings 0
-hc set smart_frame_surroundings 1
-hc set mouse_recenter_gap 0
+hc set_attr theme.title_color $color_foreground
+hc set_attr theme.active.title_color $color_foreground
+
+hc attr theme.border_width 2
+hc attr theme.floating.border_width 2
+hc attr theme.floating.outer_width 2
+hc attr theme.floating.outer_color $color_background
+
+hc attr theme.active.outer_color $color_foreground
+hc attr theme.title_font 'monospace'
+
+hc attr theme.inner_width 0
+hc attr theme.inner_color $color_background
+
+hc attr theme.active.inner_color $color_foreground
+hc attr theme.background_color $color_background
+hc attr theme.title_height 20
+hc attr theme.padding_top 5
 
 # rules
 hc unrule -F
@@ -163,16 +161,6 @@ hc rule focus=on # normally focus new clients
 #hc rule focus=off # normally do not focus new clients
 # give focus to most common terminals
 #hc rule class~'(.*[Rr]xvt.*|.*[Tt]erm|Konsole)' focus=on
-
-hc rule class~'jetbrains-.*' tag=dev
-hc rule instance='jetbrains-toolbox' tag=dev
-
-
-hc rule instance=VirtualBox tag=virt
-
-# Games
-hc rule title='Kerbal Space Program' pseudotle=on
-
 hc rule windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH)' pseudotile=on
 hc rule windowtype='_NET_WM_WINDOW_TYPE_DIALOG' focus=on
 hc rule windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK|DESKTOP)' manage=off
@@ -182,11 +170,7 @@ hc rule instance=sun-awt-X11-XWindowPeer title~'win.*' manage=off
 hc unlock
 
 herbstclient set tree_style '╾│ ├└╼─┐'
-# hc set wmname LG3D
 
-# do multi monitor setup here, e.g.:
-# hc set_monitors 1280x1024+0+0 1280x1024+1280+0
-# or simply:
 hc detect_monitors
 
 feh --bg-fill "${HOME}/Pictures/Wallpaper/arch.png"
@@ -196,11 +180,11 @@ if [ -e "${HOME}/.bin/bar_starter.rb" ]; then
     "${HOME}/.bin/bar_starter.rb"
 else
     echo "Use herbstluftwm panel"
-  panel="${HOME}/.config/herbstluftwm/panel.sh"
-  [ -x "$panel" ] || panel=/etc/xdg/herbstluftwm/panel.sh
-  
-  for monitor in $(herbstclient list_monitors | cut -d: -f1) ; do 
-	  echo "Start panel for monitor ${monitor}"
-    "${panel}" "${monitor}" &
-  done  
+    panel="${HOME}/.config/herbstluftwm/panel.sh"
+    [ -x "$panel" ] || panel=/etc/xdg/herbstluftwm/panel.sh
+    
+    for monitor in $(herbstclient list_monitors | cut -d: -f1) ; do 
+	echo "Start panel for monitor ${monitor}"
+	"${panel}" "${monitor}" &
+    done
 fi
