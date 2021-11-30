@@ -55,34 +55,39 @@ This is my emacs config, it's written in org-mode
 	   `((".*" ,temporary-file-directory t)))
    #+END_SRC
 * Keybindings
-  Use meta key for move between windows
-  #+begin_src emacs-lisp
-    (windmove-default-keybindings 'meta)
-  #+end_src
-  The long list of my keybindings
-  #+BEGIN_SRC emacs-lisp
-    (global-set-key (kbd "M-x") 'counsel-M-x)
-    (global-set-key (kbd "C-s") 'swiper)
-    (global-set-key (kbd "C-c b") 'ivy-switch-buffer)
-    (global-set-key (kbd "C-c r") 'reload-dotemacs)
-    (global-set-key (kbd "C-c g") 'magit)
-    (global-set-key (kbd "C-c p") 'projectile-command-map)
-    (global-set-key (kbd "C-c q s") 'open-emacs-config)
+** Common
+   Use meta key for move between windows
+   #+begin_src emacs-lisp
+     (windmove-default-keybindings 'meta)
+   #+end_src
+   The long list of my keybindings
+   #+BEGIN_SRC emacs-lisp
+     (global-set-key (kbd "M-x") 'counsel-M-x)
+     (global-set-key (kbd "C-s") 'swiper)
+     (global-set-key (kbd "C-c b") 'ivy-switch-buffer)
+     (global-set-key (kbd "C-c r") 'reload-dotemacs)
+     (global-set-key (kbd "C-c g") 'magit)
+     (global-set-key (kbd "C-c p") 'projectile-command-map)
+     (global-set-key (kbd "C-c q s") 'open-emacs-config)
+     (global-set-key (kbd "C-c q d") 'open-dotfiles)
 
-    (global-set-key (kbd "C-c d") 'zeal-at-point)
+     (global-set-key (kbd "C-c d") 'zeal-at-point)
 
-    (global-set-key (kbd "C-c c r") 'lsp-find-references)
-    (global-set-key (kbd "C-c c d") 'lsp-find-definition)
-    (global-set-key (kbd "C-c c D") 'lsp-find-declaration)
-    (global-set-key (kbd "C-c c R") 'lsp-rename)
+     (global-set-key (kbd "C-c c r") 'lsp-find-references)
+     (global-set-key (kbd "C-c c d") 'lsp-find-definition)
+     (global-set-key (kbd "C-c c D") 'lsp-find-declaration)
+     (global-set-key (kbd "C-c c R") 'lsp-rename)
 
-    ;Snippets
-    (global-set-key (kbd "C-c s i") 'yas-insert-snippet)
-    (global-set-key (kbd "C-c s n") 'yas-new-snippet)
-    (global-set-key (kbd "C-c s e") 'yas-visit-snippet-file)
+     ;Snippets
+     (global-set-key (kbd "C-c s i") 'yas-insert-snippet)
+     (global-set-key (kbd "C-c s n") 'yas-new-snippet)
+     (global-set-key (kbd "C-c s e") 'yas-visit-snippet-file)
 
-    (global-set-key (kbd "C-x C-f") 'counsel-find-file)
-  #+END_SRC
+     (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+
+					     ;Todo
+     (global-set-key (kbd "C-c t t") 'org-agenda)
+   #+END_SRC
 ** elisp mode
    #+begin_src emacs-lisp
      (add-hook 'emacs-lisp-mode
@@ -101,6 +106,12 @@ This is my emacs config, it's written in org-mode
 	  (interactive)
 	  (switch-to-buffer (find-file-noselect "~/.emacs.d/personal/init.org")))
       #+end_src
+** Open Dotfiles
+   #+begin_src emacs-lisp
+     (defun open-dotfiles ()
+       (interactive)
+       (dired "~/.dotfiles"))
+   #+end_src
 * Addons
 ** UI
 *** Ivy,Counsel,Swiper
@@ -334,5 +345,9 @@ This is my emacs config, it's written in org-mode
 	    (interactive)
 	    (notmuch-search-tag (list "+archive" "-unread" "-inbox"))
 	    (next-line) )))
+    #+end_src
+*** Org-Mode Todo
+    #+begin_src emacs-lisp
+      (setq org-agenda-files (list "~/.todos"))
     #+end_src
 
