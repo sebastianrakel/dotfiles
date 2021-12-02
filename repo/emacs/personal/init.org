@@ -284,6 +284,7 @@ This is my emacs config, it's written in org-mode
 		(lambda () (setq zeal-at-point-docset '("python" "django"))))
     #+END_SRC
 *** Docker, Nomad, Container, Stuff, Magic
+**** Docker
     #+begin_src emacs-lisp
       (use-package hcl-mode)
 
@@ -291,6 +292,12 @@ This is my emacs config, it's written in org-mode
 
       (use-package dockerfile-mode)
     #+end_src
+**** Terraform
+     #+begin_src emacs-lisp
+       (use-package terraform-mode)
+       (use-package terraform-doc)
+       (use-package company-terraform)
+     #+end_src
 ** Misc
 *** Filebin
     #+BEGIN_SRC emacs-lisp
@@ -300,7 +307,7 @@ This is my emacs config, it's written in org-mode
     #+begin_src emacs-lisp
       (use-package notmuch
 	:config
-      	(load-file "/home/sebastian/.emacs.d/personal/secret/notmuch.el")
+	(load-file "/home/sebastian/.emacs.d/secret/notmuch.el")
 	(setq send-mail-function 'sendmail-send-it
 	      sendmail-program "/usr/bin/msmtp"
 	      mail-specify-envelope-from t
@@ -351,3 +358,4 @@ This is my emacs config, it's written in org-mode
       (setq org-agenda-files (list "~/.todos"))
     #+end_src
 
+    

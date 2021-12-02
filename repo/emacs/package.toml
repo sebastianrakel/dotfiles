@@ -5,3 +5,7 @@ dest   = "~/.emacs.d/init.el"
 [[files]]
 source = "./personal"
 dest   = "~/.emacs.d/personal"
+
+[[files]]
+source = "./snippets"
+dest   = "~/.emacs.d/snippets"
