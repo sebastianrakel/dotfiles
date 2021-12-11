@@ -11,11 +11,28 @@
         }
 
 [configurations.base]
-        packages = ['git', 'zsh', 'tmux', 'terminal', 'fish']
+        packages = ['git', 'tmux', 'zsh', 'profile']
 
 [configurations.computer]
         dependencies = ['base']
-        packages = ['rofi', 'emacs', 'gpg', 'x11', 'hlwm', 'termite', 'qutebrowser', 'systemd', 'scripts', 'wallpaper', 'polybar', 'compton', 'alacritty', 'font', 'gtk', 'dunst']
+        packages = [
+			'x11',
+			'rofi',
+			'emacs',
+		 	'gpg',
+		 	'hlwm',
+		 	'termite',
+		 	'qutebrowser',
+		 	'systemd',
+		 	'scripts',
+		 	'wallpaper',
+		 	'polybar',
+		 	'compton',
+		 	'alacritty',
+		 	'font',
+		 	'gtk',
+		 	'dunst'
+		]
 
 [configurations.loki]
         dependencies = ['computer']

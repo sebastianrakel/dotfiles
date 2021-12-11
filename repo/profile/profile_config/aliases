@@ -1,0 +1,17 @@
+alias tmux='tmux -2'
+alias g='git'
+alias dd='/usr/bin/dd status=progress'
+alias nossh='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+alias grep='grep --color'
+alias hc='herbstclient'
+alias em='emacsclient -n'
+alias ddd='dd oflag=direct status=progress'
+alias ddf='dd conv=fsynci status=progress'
+alias sudo='sudo '
+alias audiodownload='youtube-dl --audio-format best --extract-audio '
+
+
+alias ls='lsd'
+alias ip='ip -c'
+alias ips='ip -br a'
+alias dmesg='dmesg -T --color'

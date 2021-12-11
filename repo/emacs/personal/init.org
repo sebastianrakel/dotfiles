@@ -298,6 +298,18 @@ This is my emacs config, it's written in org-mode
        (use-package terraform-doc)
        (use-package company-terraform)
      #+end_src
+*** PlatformIO
+    #+begin_src emacs-lisp
+      (use-package platformio-mode)
+    #+end_src
+*** C/C++
+    #+begin_src emacs-lisp
+      (add-hook 'c-mode-hook 'lsp)
+      (add-hook 'c++-mode-hook 'lsp)
+    #+end_src
+*** Fish
+    #+begin_src emacs-lisp
+    #+end_src
 ** Misc
 *** Filebin
     #+BEGIN_SRC emacs-lisp

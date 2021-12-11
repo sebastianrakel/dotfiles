@@ -1,0 +1,7 @@
+profile_dir="${HOME}/.config/profile"
+profile_local="${HOME}/.profile.local"
+
+source "${profile_dir}/aliases"
+source "${profile_dir}/variables"
+
+[ -f "${profile_local}" ] && source "${profile_local}"
