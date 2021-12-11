@@ -9,9 +9,10 @@ alias ddd='dd oflag=direct status=progress'
 alias ddf='dd conv=fsynci status=progress'
 alias sudo='sudo '
 alias audiodownload='youtube-dl --audio-format best --extract-audio '
-
-
-alias ls='lsd'
 alias ip='ip -c'
 alias ips='ip -br a'
 alias dmesg='dmesg -T --color'
+
+if which lsd >/dev/null; then
+   alias ls='lsd'
+fi
