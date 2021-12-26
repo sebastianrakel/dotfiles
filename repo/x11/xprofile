@@ -1,7 +1,18 @@
 #!/bin/sh
-source /home/sebastian/.profile
+userresources=~/.Xresources
+sysresources=/etc/X11/xinit/.Xresources
 
-xprofile_local="/home/sebastian/.xprofile.local"
+if [ -f $sysresources ]; then
+    xrdb -merge $sysresources
+fi
+
+if [ -f $userresources ]; then
+    xrdb -merge $userresources
+fi
+
+source "${HOME}/.profile"
+
+xprofile_local="${HOME}/.xprofile.local"
 [ -f "${xprofile_local}" ] && source "${xprofile_local}"
 
 cd $HOME
