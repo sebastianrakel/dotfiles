@@ -225,6 +225,20 @@ This is my emacs config, it's written in org-mode
      #+BEGIN_SRC emacs-lisp
        (use-package editorconfig)
      #+END_SRC
+**** Cursor
+     I want a centered cursor for better reading
+     #+begin_src emacs-lisp
+       (define-global-minor-mode my-global-centered-cursor-mode centered-cursor-mode
+	 (lambda ()
+	   (when (not (memq major-mode
+			    (list 'Info-mode 'term-mode 'eshell-mode 'shell-mode 'erc-mode)))
+	     (centered-cursor-mode))))
+
+       (use-package centered-cursor-mode
+	 :config
+	 (my-global-centered-cursor-mode 1))
+
+     #+end_src
 *** Org-Mode
     Some common org-mode settings
     #+begin_src emacs-lisp
@@ -282,6 +296,12 @@ This is my emacs config, it's written in org-mode
     #+BEGIN_SRC emacs-lisp
       (add-hook 'python-mode-hook
 		(lambda () (setq zeal-at-point-docset '("python" "django"))))
+
+      (use-package pyvenv
+	:config
+	(setenv "WORKON_HOME" "~/.venvs")
+	      (setq pyvenv-mode-line-indicator '(pyvenv-virtual-env-name ("[venv:" pyvenv-virtual-env-name "] ")))
+	      (pyvenv-mode t))
     #+END_SRC
 *** Docker, Nomad, Container, Stuff, Magic
 **** Docker
