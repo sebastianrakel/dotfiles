@@ -10,7 +10,7 @@ if [ -z $TMUX ]; then
 fi
 
 export GOPATH="$HOME/.go"
-export PATH="$HOME/.bin:$HOME/.bin/local:$PATH"
+export PATH="$HOME/.bin:$HOME/.bin/local:$HOME/.local/bin:$PATH"
 export PATH="${GOPATH}/bin:${PATH}"
 
 if which ruby >/dev/null && which gem >/dev/null; then
