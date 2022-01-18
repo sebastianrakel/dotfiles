@@ -75,7 +75,7 @@ modules-right = mail-sync space battery0 space battery1 space date
 [bar/odin]
 inherit = bar/1
 monitor = ${env:MONITOR:HDMI-1}
-modules-right = muted space mail-sync space space date space 
+modules-right = mail-sync space space date space 
 
 [bar/openbox]
 inherit = bar/0
