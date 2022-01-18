@@ -39,7 +39,7 @@ This is my emacs config, it's written in org-mode
   #+END_SRC
 *** Font
   #+BEGIN_SRC emacs-lisp
-    (add-to-list 'default-frame-alist '(font . "Iosevka SS08 Light-14"))
+    (add-to-list 'default-frame-alist '(font . "monospace-14"))
   #+END_SRC
 *** Theme
   #+BEGIN_SRC emacs-lisp
@@ -333,7 +333,7 @@ This is my emacs config, it's written in org-mode
 ** Misc
 *** Filebin
     #+BEGIN_SRC emacs-lisp
-      (load-file "/home/sebastian/.emacs.d/personal/functions/filebin.el")
+      ;(load-file "/home/sebastian/.emacs.d/personal/functions/filebin.el")
     #+END_SRC
 *** Notmuch
     #+begin_src emacs-lisp
