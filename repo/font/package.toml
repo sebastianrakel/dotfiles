@@ -1,4 +1,4 @@
-postcmds = ["./install_iosevka.sh"]
+postcmds = ["./install_iosevka.sh", "./install_nerdfonts.sh"]
 
 [[files]]
 source = "./fonts.conf"
