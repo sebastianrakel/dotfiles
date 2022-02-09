@@ -1,4 +1,4 @@
-#+STARTUP: content
+w#+STARTUP: content
 #+TITLE: Sebastians emacs configuration - in org
 #+BEGIN_CENTER
 This is my emacs config, it's written in org-mode
@@ -59,35 +59,50 @@ This is my emacs config, it's written in org-mode
    Use meta key for move between windows
    #+begin_src emacs-lisp
      (windmove-default-keybindings 'meta)
-   #+end_src
-   The long list of my keybindings
+   #+end_src   
+   All of my keybindings. Yes I know you can define keybindings directly with use-package. But
+   I want to see all of my keybindings so I gather them at one location   
    #+BEGIN_SRC emacs-lisp
-     (global-set-key (kbd "M-x") 'counsel-M-x)
-     (global-set-key (kbd "C-s") 'swiper)
-     (global-set-key (kbd "C-c b") 'ivy-switch-buffer)
-     (global-set-key (kbd "C-c r") 'reload-dotemacs)
-     (global-set-key (kbd "C-c g") 'magit)
-     (global-set-key (kbd "C-c p") 'projectile-command-map)
-     (global-set-key (kbd "C-c q s") 'open-emacs-config)
-     (global-set-key (kbd "C-c q d") 'open-dotfiles)
+       (global-set-key (kbd "M-x") 'helm-M-x)
+       (global-set-key (kbd "C-s") 'swiper)
+       (global-set-key (kbd "C-c b") 'helm-buffers-list)
+       (global-set-key (kbd "C-c r") 'reload-dotemacs)
+       (global-set-key (kbd "C-c g") 'magit)
+       (global-set-key (kbd "C-c p") 'projectile-command-map)
+       (global-set-key (kbd "C-c q s") 'open-emacs-config)
+       (global-set-key (kbd "C-c q d") 'open-dotfiles)
 
-     (global-set-key (kbd "C-c d") 'zeal-at-point)
-
-     (global-set-key (kbd "C-c c r") 'lsp-find-references)
-     (global-set-key (kbd "C-c c d") 'lsp-find-definition)
-     (global-set-key (kbd "C-c c D") 'lsp-find-declaration)
-     (global-set-key (kbd "C-c c R") 'lsp-rename)
-
-     ;Snippets
-     (global-set-key (kbd "C-c s i") 'yas-insert-snippet)
-     (global-set-key (kbd "C-c s n") 'yas-new-snippet)
-     (global-set-key (kbd "C-c s e") 'yas-visit-snippet-file)
-
-     (global-set-key (kbd "C-x C-f") 'counsel-find-file)
-
-					     ;Todo
-     (global-set-key (kbd "C-c t t") 'org-agenda)
+       (global-set-key (kbd "C-c d") 'zeal-at-point)
    #+END_SRC
+*** LSP Keybindings
+    #+BEGIN_SRC emacs-lisp
+	(global-set-key (kbd "C-c c r") 'lsp-find-references)
+	(global-set-key (kbd "C-c c d") 'lsp-find-definition)
+	(global-set-key (kbd "C-c c D") 'lsp-find-declaration)
+
+	(global-set-key (kbd "C-c c R") 'lsp-rename)
+    #+END_SRC   
+*** YAS Snippet Keybindings   
+    #+BEGIN_SRC emacs-lisp
+	;Snippets
+	(global-set-key (kbd "C-c s i") 'yas-insert-snippet)
+	(global-set-key (kbd "C-c s n") 'yas-new-snippet)
+	(global-set-key (kbd "C-c s e") 'yas-visit-snippet-file)
+    #+END_SRC
+*** Keybindings for resizing emacs windows
+    Because I don't want to use my mouse for resizing my windows
+    #+begin_src emacs-lisp
+      (global-set-key [C-M-up] 'win-resize-enlarge-horiz)
+      (global-set-key [C-M-down] 'win-resize-minimize-horiz)
+      (global-set-key [C-M-left] 'win-resize-enlarge-vert)
+      (global-set-key [C-M-right] 'win-resize-minimize-vert)
+    #+end_src
+    #+BEGIN_SRC emacs-lisp
+	(global-set-key (kbd "C-x C-f") 'helm-find-files)
+
+						;Todo
+	(global-set-key (kbd "C-c t t") 'org-agenda)
+    #+END_SRC
 ** elisp mode
    #+begin_src emacs-lisp
      (add-hook 'emacs-lisp-mode
@@ -95,43 +110,108 @@ This is my emacs config, it's written in org-mode
    #+end_src
 * Functions
 ** Reload Emacs
+  Helper function to reload my emacs config, is used with a keybinding
   #+BEGIN_SRC emacs-lisp
     (defun reload-dotemacs ()
       (interactive)
       (load-file "~/.emacs.d/init.el"))
   #+END_SRC
 ** Open Emacs Config
+   Helper function to open a new buffer or jump to existing buffer with my emacs config
       #+begin_src emacs-lisp
 	(defun open-emacs-config ()
 	  (interactive)
 	  (switch-to-buffer (find-file-noselect "~/.emacs.d/personal/init.org")))
       #+end_src
 ** Open Dotfiles
+   Helper function to jump directly in my dotfiles repo
+*** TODO Use counsel-projectile to jump to project
    #+begin_src emacs-lisp
      (defun open-dotfiles ()
        (interactive)
        (dired "~/.dotfiles"))
    #+end_src
+** Resizing
+   This part is copied from https://www.emacswiki.org/emacs/WindowResize
+   #+begin_src emacs-lisp
+     (defun win-resize-top-or-bot ()
+       "Figure out if the current window is on top, bottom or in the
+     middle"
+       (let* ((win-edges (window-edges))
+	      (this-window-y-min (nth 1 win-edges))
+	      (this-window-y-max (nth 3 win-edges))
+	      (fr-height (frame-height)))
+	 (cond
+	  ((eq 0 this-window-y-min) "top")
+	  ((eq (- fr-height 1) this-window-y-max) "bot")
+	  (t "mid"))))
+
+     (defun win-resize-left-or-right ()
+       "Figure out if the current window is to the left, right or in the
+     middle"
+       (let* ((win-edges (window-edges))
+	      (this-window-x-min (nth 0 win-edges))
+	      (this-window-x-max (nth 2 win-edges))
+	      (fr-width (frame-width)))
+	 (cond
+	  ((eq 0 this-window-x-min) "left")
+	  ((eq (+ fr-width 4) this-window-x-max) "right")
+	  (t "mid"))))
+
+     (defun win-resize-enlarge-horiz ()
+       (interactive)
+       (cond
+	((equal "top" (win-resize-top-or-bot)) (enlarge-window -1))
+	((equal "bot" (win-resize-top-or-bot)) (enlarge-window 1))
+	((equal "mid" (win-resize-top-or-bot)) (enlarge-window -1))
+	(t (message "nil"))))
+
+     (defun win-resize-minimize-horiz ()
+       (interactive)
+       (cond
+	((equal "top" (win-resize-top-or-bot)) (enlarge-window 1))
+	((equal "bot" (win-resize-top-or-bot)) (enlarge-window -1))
+	((equal "mid" (win-resize-top-or-bot)) (enlarge-window 1))
+	(t (message "nil"))))
+
+     (defun win-resize-enlarge-vert ()
+       (interactive)
+       (cond
+	((equal "left" (win-resize-left-or-right)) (enlarge-window-horizontally -1))
+	((equal "right" (win-resize-left-or-right)) (enlarge-window-horizontally 1))
+	((equal "mid" (win-resize-left-or-right)) (enlarge-window-horizontally -1))))
+
+     (defun win-resize-minimize-vert ()
+       (interactive)
+       (cond
+	((equal "left" (win-resize-left-or-right)) (enlarge-window-horizontally 1))
+	((equal "right" (win-resize-left-or-right)) (enlarge-window-horizontally -1))
+	((equal "mid" (win-resize-left-or-right)) (enlarge-window-horizontally 1))))
+
+   #+end_src
 * Addons
 ** UI
+*** Helm
+    After ivy, i want to use helm again
+    #+begin_src emacs-lisp
+      (use-package helm
+	:config
+	(helm-mode 1))
+    #+end_src
 *** Ivy,Counsel,Swiper
    #+BEGIN_SRC emacs-lisp
      (use-package ivy
-       :config
-       (ivy-mode 1)
-       (setq ivy-use-virtual-buffers t)
-       (setq enable-recursive-minibuffers t)
-       (setq ivy-display-style 'fancy)
-       (setq ivy-wrap t)
-       (setq enable-recursive-minibuffers t))
+       :disabled)
 
      (use-package counsel
        :after ivy
-       :config
-       (counsel-mode))
+       :disabled)
 
      (use-package swiper
-       :after ivy)
+       :after ivy
+       :disabled)
+
+     (use-package counsel-projectile)
    #+END_SRC
 *** Powerline
     #+BEGIN_SRC emacs-lisp
