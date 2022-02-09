@@ -1,4 +1,4 @@
-w#+STARTUP: content
+#+STARTUP: content
 #+TITLE: Sebastians emacs configuration - in org
 #+BEGIN_CENTER
 This is my emacs config, it's written in org-mode
