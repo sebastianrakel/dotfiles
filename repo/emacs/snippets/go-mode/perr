@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: panic error
+# key: perr
+# --
+if err != nil {
+   panic(err)
+}

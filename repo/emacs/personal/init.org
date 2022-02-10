@@ -200,18 +200,24 @@ This is my emacs config, it's written in org-mode
     #+end_src
 *** Ivy,Counsel,Swiper
    #+BEGIN_SRC emacs-lisp
-     (use-package ivy
-       :disabled)
+	  (use-package ivy
+	    :config
+	    (ivy-mode 1)
+	    (setq ivy-use-virtual-buffers t)
+	    (setq enable-recursive-minibuffers t)
+	    (setq ivy-display-style 'fancy)
+	    (setq ivy-wrap t)
+	    (setq enable-recursive-minibuffers t))
 
-     (use-package counsel
-       :after ivy
-       :disabled)
+	  (use-package counsel
+	    :after ivy
+	    :config
+	    (counsel-mode))
 
-     (use-package swiper
-       :after ivy
-       :disabled)
+	  (use-package swiper
+	    :after ivy)
 
-     (use-package counsel-projectile)
+          (use-package counsel-projectile)
    #+END_SRC
 *** Powerline
     #+BEGIN_SRC emacs-lisp

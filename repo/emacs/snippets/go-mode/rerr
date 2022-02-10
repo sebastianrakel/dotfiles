@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: request handler error
+# key: rerr
+# --
+if rh.HasError(err) {
+   return
+}
