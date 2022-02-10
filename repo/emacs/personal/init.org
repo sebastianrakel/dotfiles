@@ -103,6 +103,13 @@ This is my emacs config, it's written in org-mode
 						;Todo
 	(global-set-key (kbd "C-c t t") 'org-agenda)
     #+END_SRC
+*** Rescue Keybindings
+    Because i want to manage my keybindings at a central position,
+    it's possible that keybindings are set but the plugin is not installed.
+
+    #+begin_src emacs-lisp
+      (global-set-key (kbd "C-c q x") 'execute-extended-command)
+    #+end_src
 ** elisp mode
    #+begin_src emacs-lisp
      (add-hook 'emacs-lisp-mode
