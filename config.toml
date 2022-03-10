@@ -42,6 +42,14 @@
         dependencies = ['computer']
         packages = ['mpd']
 
+[configurations.sulu]
+        dependencies = ['computer']
+        packages = ['mpd']
+[configurations.sulu.facts]
+	git = {
+	    email = 'sebastian.rakel@service-erp.de'
+	}
+
 [configurations.mimir]
         pattern = '^mimir.*$'
         dependencies = ['base']
