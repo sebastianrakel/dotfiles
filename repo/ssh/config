@@ -1,3 +1,5 @@
+Include ~/.ssh/host.d/*
+
 Host ssh.dev.azure.com
 	ControlMaster false
 	IdentityFile ~/.ssh/id_rsa
@@ -5,4 +7,3 @@ Host ssh.dev.azure.com
 	HostkeyAlgorithms +ssh-rsa
 	PubkeyAcceptedAlgorithms +ssh-rsa
 
-Include ~/.ssh/host.d/*
