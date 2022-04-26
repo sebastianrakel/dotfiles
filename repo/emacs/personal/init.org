@@ -39,7 +39,7 @@ This is my emacs config, it's written in org-mode
   #+END_SRC
 *** Font
   #+BEGIN_SRC emacs-lisp
-    (add-to-list 'default-frame-alist '(font . "monospace-14"))
+    (add-to-list 'default-frame-alist '(font . "monospace-18"))
   #+END_SRC
 *** Theme
   #+BEGIN_SRC emacs-lisp
@@ -63,16 +63,17 @@ This is my emacs config, it's written in org-mode
    All of my keybindings. Yes I know you can define keybindings directly with use-package. But
    I want to see all of my keybindings so I gather them at one location   
    #+BEGIN_SRC emacs-lisp
-       (global-set-key (kbd "M-x") 'helm-M-x)
-       (global-set-key (kbd "C-s") 'swiper)
-       (global-set-key (kbd "C-c b") 'helm-buffers-list)
-       (global-set-key (kbd "C-c r") 'reload-dotemacs)
-       (global-set-key (kbd "C-c g") 'magit)
-       (global-set-key (kbd "C-c p") 'projectile-command-map)
-       (global-set-key (kbd "C-c q s") 'open-emacs-config)
-       (global-set-key (kbd "C-c q d") 'open-dotfiles)
+     (global-set-key (kbd "M-x") 'helm-M-x)
+     (global-set-key (kbd "C-s") 'swiper)
+     (global-set-key (kbd "C-c b") 'helm-buffers-list)
+     (global-set-key (kbd "C-c r") 'reload-dotemacs)
+     (global-set-key (kbd "C-c g") 'magit)
+     (global-set-key (kbd "C-c p") 'projectile-command-map)
+     (global-set-key (kbd "C-c q s") 'open-emacs-config)
+     (global-set-key (kbd "C-c q d") 'open-dotfiles)
 
-       (global-set-key (kbd "C-c d") 'zeal-at-point)
+     (global-set-key (kbd "C-c d") 'zeal-at-point)
+     (global-set-key (kbd "C-<tab>") 'hs-toggle-hiding)
    #+END_SRC
 *** LSP Keybindings
     #+BEGIN_SRC emacs-lisp
@@ -196,6 +197,8 @@ This is my emacs config, it's written in org-mode
 	((equal "mid" (win-resize-left-or-right)) (enlarge-window-horizontally 1))))
 
    #+end_src
+
+
 * Addons
 ** UI
 *** Helm
@@ -299,12 +302,19 @@ This is my emacs config, it's written in org-mode
 **** LSP
     #+begin_src emacs-lisp
       (use-package lsp-mode
-	:after lsp-ui
 	:hook
-	((python-mode . lsp))
+	((python-mode . lsp-deferred))
 	:config
 	(setq lsp-keymap-prefix "C-c l"))
-      (use-package lsp-ui)
+      (use-package lsp-ui
+	:commands lsp-ui-mode
+	:config
+	(setq lsp-ui-doc-enable t)
+	(setq lsp-ui-doc-header t)
+	(setq lsp-ui-doc-include-signature t)
+	(setq lsp-ui-doc-border (face-foreground 'default))
+	(setq lsp-ui-sideline-show-code-actions t)
+	(setq lsp-ui-sideline-delay 0.05))
     #+end_src
 **** Data Formats
      #+begin_src emacs-lisp
@@ -331,6 +341,10 @@ This is my emacs config, it's written in org-mode
 	 :config
 	 (my-global-centered-cursor-mode 1))
 
+     #+end_src
+**** Hide/Show
+     #+begin_src emacs-lisp
+       (add-hook 'prog-mode-hook #'hs-minor-mode)
      #+end_src
 *** Org-Mode
     Some common org-mode settings
@@ -427,57 +441,7 @@ This is my emacs config, it's written in org-mode
 *** Filebin
     #+BEGIN_SRC emacs-lisp
       ;(load-file "/home/sebastian/.emacs.d/personal/functions/filebin.el")
-    #+END_SRC
-*** Notmuch
-    #+begin_src emacs-lisp
-      (use-package notmuch
-	:config
-	(load-file "/home/sebastian/.emacs.d/secret/notmuch.el")
-	(setq send-mail-function 'sendmail-send-it
-	      sendmail-program "/usr/bin/msmtp"
-	      mail-specify-envelope-from t
-	      message-sendmail-envelope-from 'header
-	      mail-envelope-from 'header
-	      message-kill-buffer-on-exit t
-	      notmuch-search-oldest-first nil
-	      notmuch-crypto-process-mime t) 
-	(setq notmuch-saved-searches '((:name "inbox"
-					      :query "tag:inbox"
-					      :count-query "tag:inbox and tag:unread"
-					      :sort-order newest-first)
-				       (:name "archive"
-					      :query "tag:archive"
-					      :count-query "tag:archive"
-					      :sort-order newest-first)))
-	(define-key notmuch-show-mode-map "S"
-	  (lambda ()
-	    "mark message as spam"
-	    (interactive)
-	    (notmuch-show-tag (list "+spam" "-inbox" "-unread"))))
-	(define-key notmuch-search-mode-map "S"
-	  (lambda ()
-	    "mark message as spam"
-	    (interactive)
-	    (notmuch-search-tag (list "-inbox" "+spam" "-unread"))
-	    (next-line) ))
-	(define-key notmuch-search-mode-map "d"
-	  (lambda ()
-	    "mark message as spam"
-	    (interactive)
-	    (notmuch-search-tag (list "+deleted" "-inbox" "-unread"))
-	    (next-line) ))
-	(define-key notmuch-search-mode-map "u"
-	  (lambda ()
-	    "mark message as spam"
-	    (interactive)
-	    (notmuch-search-tag (list "-deleted"))
-	    (next-line) ))
-	(define-key notmuch-search-mode-map "a"
-	  (lambda ()
-	    (interactive)
-	    (notmuch-search-tag (list "+archive" "-unread" "-inbox"))
-	    (next-line) )))
-    #+end_src
+    #+END_SRC    
 *** Org-Mode Todo
     #+begin_src emacs-lisp
       (setq org-agenda-files (list "~/.todos"))
