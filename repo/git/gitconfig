@@ -33,7 +33,7 @@
     old = %C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s
 
 [commit]
-    gpgsign = true    
+    gpgsign = true
 
 [http]
     emptyAuth = true
