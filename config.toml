@@ -11,7 +11,7 @@
         }
 
 [configurations.base]
-        packages = ['git', 'tmux', 'zsh', 'profile']
+        packages = ['git', 'tmux', 'zsh', 'profile', 'ssh']
 
 [configurations.computer]
         dependencies = ['base']

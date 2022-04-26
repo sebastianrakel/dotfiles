@@ -1,0 +1,3 @@
+[[files]]
+source = "./config"
+dest   = "~/.ssh/config"
