@@ -15,6 +15,6 @@ font:
     family: monospace
     style: Bold Italic
 
-  size: 18
+  size: 14
 import:
   - ~/.config/alacritty/dracula.yml
