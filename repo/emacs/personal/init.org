@@ -393,7 +393,7 @@ This is my emacs config, it's written in org-mode
 
       (defun lsp-puppet--puppet-server-command ()
 	(list (
-	       "/home/sebastian/.bin/local/puppet-lsp.sh"
+	       "/home/sebastian/.bin/puppet-lsp.sh"
 	       )))
 
       (with-eval-after-load 'lsp-mode
