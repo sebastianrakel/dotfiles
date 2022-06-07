@@ -80,7 +80,7 @@ modules-right = mail-sync space space date space
 [bar/sulu]
 inherit = bar/1
 monitor = ${env:MONITOR:HDMI-1}
-modules-right = mail-sync space space date space 
+modules-right = space space date space 
 
 [bar/openbox]
 inherit = bar/0
