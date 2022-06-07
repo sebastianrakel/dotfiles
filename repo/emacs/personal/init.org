@@ -367,13 +367,9 @@ This is my emacs config, it's written in org-mode
     #+begin_src emacs-lisp
       (use-package web-mode
 	:config
-	(setq web-mode-markup-indent-offset 2)
-	(add-hook 'vue-mode-hook #'lsp-deferred))
+	(setq web-mode-markup-indent-offset 2))
 
-      (use-package typescript-mode
-	:config
-	(setq typescript-indent-level 2)
-	(add-hook 'typescript-mode-hook #'lsp-deferred))
+      (use-package typescript-mode)
     #+end_src
 *** Golang
     #+begin_src emacs-lisp
