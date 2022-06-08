@@ -23,3 +23,6 @@ if hash fzf 2>/dev/null; then
 	fi
     done
 fi
+
+autoload -U +X bashcompinit && bashcompinit
+source $HOME/.zsh/az.completion
