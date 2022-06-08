@@ -255,7 +255,8 @@ This is my emacs config, it's written in org-mode
     #+begin_src emacs-lisp
       (use-package projectile
 	:config
-	(projectile-mode 1))
+	(projectile-mode 1)
+	(setq projectile-project-search-path '(("~/Projects/Serp" . 4))))
     #+end_src
 *** Dashboard
     #+begin_src emacs-lisp
@@ -350,6 +351,7 @@ This is my emacs config, it's written in org-mode
     Some common org-mode settings
     #+begin_src emacs-lisp
       (setq org-hide-emphasis-markers t)
+      (setq org-support-shift-select t)
     #+end_src
     
     Give org mode beautiful bubbles instead of asteriks
@@ -459,5 +461,4 @@ This is my emacs config, it's written in org-mode
     #+begin_src emacs-lisp
       (setq org-agenda-files (list "~/.todos"))
     #+end_src
-
     
