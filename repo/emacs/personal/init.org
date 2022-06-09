@@ -111,6 +111,15 @@ This is my emacs config, it's written in org-mode
     #+begin_src emacs-lisp
       (global-set-key (kbd "C-c q x") 'execute-extended-command)
     #+end_src
+*** Zooming
+  #+begin_src emacs-lisp
+    (global-set-key [(control ?+)] 'text-scale-increase)
+    (global-set-key [(control ?-)] 'text-scale-decrease)
+    (global-set-key (kbd "C-0") '(lambda () (interactive)
+				   (text-scale-adjust
+				    (- text-scale-mode-amount))
+				   (text-scale-mode -1)))
+   #+end_src
 ** elisp mode
    #+begin_src emacs-lisp
      (add-hook 'emacs-lisp-mode
