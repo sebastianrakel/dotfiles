@@ -39,7 +39,7 @@ This is my emacs config, it's written in org-mode
   #+END_SRC
 *** Font
   #+BEGIN_SRC emacs-lisp
-    (add-to-list 'default-frame-alist '(font . "monospace-14"))
+    (add-to-list 'default-frame-alist '(font . "Comic Mono-16"))
   #+END_SRC
 *** Theme
   #+BEGIN_SRC emacs-lisp
@@ -411,7 +411,7 @@ This is my emacs config, it's written in org-mode
 
       (use-package puppet-mode
 	:config
-	(add-hook 'before-save-hook 'delete-trailing-whsitespace))
+	(add-hook 'before-save-hook #'delete-trailing-whitespace))
     #+end_src
 
     For Puppetfile the best mode is ruby mode, so we will load ruby mode
