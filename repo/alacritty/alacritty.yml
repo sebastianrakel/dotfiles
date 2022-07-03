@@ -17,4 +17,4 @@ font:
 
   size: 14
 import:
-  - ~/.config/alacritty/dracula.yml
+  - ~/.config/alacritty/active_theme.yml

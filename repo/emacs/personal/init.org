@@ -42,11 +42,17 @@ This is my emacs config, it's written in org-mode
     (add-to-list 'default-frame-alist '(font . "Comic Mono-16"))
   #+END_SRC
 *** Theme
+My default theme is dracula for everything, but sometimes i need a light theme and for
+this i will use solarized
   #+BEGIN_SRC emacs-lisp
     (use-package dracula-theme
       :config
       (load-theme 'dracula t))
   #+END_SRC
+
+#+begin_src emacs-lisp
+  (use-package solarized-theme)
+#+end_src
 ** Backup
    #+BEGIN_SRC emacs-lisp
      (setq backup-directory-alist
