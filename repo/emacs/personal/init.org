@@ -390,10 +390,23 @@ this i will use solarized
     #+begin_src emacs-lisp
       (use-package web-mode
 	:config
-	(setq web-mode-markup-indent-offset 2))
+	(setq web-mode-markup-indent-offset 2)
+	(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
 
       (use-package typescript-mode)
     #+end_src
+*** Django
+#+begin_src emacs-lisp
+  (defun projectile-web-mode-django ()
+      (if (projectile-project-p)
+	  (if (file-exists-p (concat (projectile-project-root) "manage.py"))
+	      (web-mode-set-engine "django")
+	      )
+	  )
+      )
+
+  (add-hook 'web-mode-hook 'projectile-web-mode-django)
+#+end_src
 *** Golang
     #+begin_src emacs-lisp
       (defun lsp-go-install-save-hooks ()
