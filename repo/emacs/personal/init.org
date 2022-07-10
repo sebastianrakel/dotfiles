@@ -391,6 +391,8 @@ this i will use solarized
       (use-package web-mode
 	:config
 	(setq web-mode-markup-indent-offset 2)
+	(setq web-mode-tag-auto-close-style 2)
+	(setq web-mode-enable-auto-closing t)
 	(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
 
       (use-package typescript-mode)
