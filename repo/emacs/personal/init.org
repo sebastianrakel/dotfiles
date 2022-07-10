@@ -39,7 +39,7 @@ This is my emacs config, it's written in org-mode
   #+END_SRC
 *** Font
   #+BEGIN_SRC emacs-lisp
-    (add-to-list 'default-frame-alist '(font . "Comic Mono-16"))
+    (add-to-list 'default-frame-alist '(font . "Iosevka SS08-16"))
   #+END_SRC
 *** Theme
 My default theme is dracula for everything, but sometimes i need a light theme and for
@@ -508,6 +508,12 @@ this i will use solarized
 *** Archlinux/Pacman
 #+begin_src emacs-lisp
   (use-package pkgbuild-mode)
+#+end_src
+*** OpenSCAD
+#+begin_src emacs-lisp
+  (use-package scad-mode)
+
+  (use-package scad-preview)
 #+end_src
 ** Misc
 *** Filebin
