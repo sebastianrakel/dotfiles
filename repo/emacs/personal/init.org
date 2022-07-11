@@ -526,3 +526,9 @@ this i will use solarized
     #+begin_src emacs-lisp
       (setq org-agenda-files (list "~/.todos"))
     #+end_src
+*** Autoupdate
+#+BEGIN_SRC emacs-lisp
+  (use-package auto-package-update
+    :config
+    (setq auto-package-update-prompt-before-update t))
+#+END_SRC
