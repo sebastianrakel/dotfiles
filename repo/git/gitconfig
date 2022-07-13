@@ -1,13 +1,13 @@
 [push]
     default = simple
-    
+
 [merge]
     tool = gvimdiff
-    
+
 [core]
     editor = vim
     excludesfile = /home/sebastian/.gitignore
-        
+
 [alias]
     co = checkout
     ci = commit
@@ -27,6 +27,7 @@
     con = checkout -b
     s = status
     a = add
+    fat = fetch --all --tags
 
 [pretty]
     log = %C(yellow)%h%C(reset) %C(normal)%s%C(reset) %C(dim white)%an%C(reset) %C(dim blue)(%ar)%C(reset) %C(auto)%d%C(reset)
