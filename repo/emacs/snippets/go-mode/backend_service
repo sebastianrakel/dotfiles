@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: create handler for backend service
+# key: handler
+# --
+
+func (h *$1) $2(c *gin.Context) {
+	rh := serp.NewRequestHandler(c, h.env.Logger)
+
+	$0
+
+	rh.ReturnOk("ok")
+}
