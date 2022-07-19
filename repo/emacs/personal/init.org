@@ -532,3 +532,10 @@ this i will use solarized
     :config
     (setq auto-package-update-prompt-before-update t))
 #+END_SRC
+*** Mail Stuff
+Mailing sucks! But i want to use notmuch because it's awesome, but every client sucks and i have no time to write my own. So i will use the only working client (emacs!)
+#+begin_src emacs-lisp
+  (let ((mail-settings "~/.emacs.d/mail.el"))
+   (when (file-exists-p mail-settings)
+     (load-file mail-settings)))
+#+end_src
