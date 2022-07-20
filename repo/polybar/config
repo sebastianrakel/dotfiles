@@ -75,12 +75,12 @@ modules-right = battery0 space battery1 space date
 [bar/odin]
 inherit = bar/1
 monitor = ${env:MONITOR:HDMI-1}
-modules-right = mail-sync space space date space 
+modules-right = mail-sync space space date space
 
 [bar/sulu]
 inherit = bar/1
 monitor = ${env:MONITOR:HDMI-1}
-modules-right = space space date space 
+modules-right = space mail-sync space date space
 
 [bar/openbox]
 inherit = bar/0
@@ -213,7 +213,7 @@ exec = echo "Conky"
 tail = true
 format-prefix = " "
 format-background = ${colors.background}
-click-left = ~/.config/polybar/scripts/start_conky.sh 
+click-left = ~/.config/polybar/scripts/start_conky.sh
 
 [module/mpd]
 type = internal/mpd
@@ -221,7 +221,7 @@ type = internal/mpd
 host = /home/sebastian/.mpd/socket
 
 interval = 2
-format-online = <icon-prev> <icon-stop> <toggle> <icon-next> 
+format-online = <icon-prev> <icon-stop> <toggle> <icon-next>
 label-song = %artist% - %title%
 label-time = %elapsed%/%total%
 label-offline = mpd is offline
@@ -258,5 +258,3 @@ type = custom/script
 exec = ~/.bin/local/mute_check.sh
 interval = 1
 click-left = ~/.bin/local/mute_toggle.sh
-
-
