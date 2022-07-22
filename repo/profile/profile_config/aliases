@@ -13,6 +13,7 @@ alias ip='ip -c'
 alias ips='ip -br a'
 alias dmesg='dmesg -T --color'
 alias lol='lolcommits --enable'
+alias sc='cd ~/Projects/Serp/cloud'
 
 if which lsd >/dev/null; then
    alias ls='lsd'
