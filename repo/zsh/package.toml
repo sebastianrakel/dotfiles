@@ -5,3 +5,7 @@ dest   = "~/.zshrc"
 [[files]]
 source = "./zsh"
 dest   = "~/.zsh"
+
+[[files]]
+source = "./p10k.zsh"
+dest   = "~/.p10k.zsh"
