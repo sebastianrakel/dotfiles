@@ -70,7 +70,7 @@ modules-center = xwindow
 [bar/loki]
 inherit = bar/1
 monitor = ${env:MONITOR:HDMI-1}
-modules-right = battery0 space battery1 space date
+modules-right = space mail-sync space battery0 space battery1 space date
 
 [bar/odin]
 inherit = bar/1
