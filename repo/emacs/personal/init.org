@@ -368,6 +368,11 @@ this i will use solarized
      #+begin_src emacs-lisp
        (add-hook 'prog-mode-hook #'hs-minor-mode)
      #+end_src
+**** Restclient
+Sometimes I save restcalls in projectdir within repo
+#+begin_src emacs-lisp
+  (use-package restclient)
+#+end_src
 *** Org-Mode
     Some common org-mode settings
     #+begin_src emacs-lisp
