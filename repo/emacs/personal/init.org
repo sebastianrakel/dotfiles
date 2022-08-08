@@ -522,6 +522,10 @@ Sometimes I save restcalls in projectdir within repo
 
   (use-package scad-preview)
 #+end_src
+*** Powershell
+#+begin_src emacs-lisp
+  (use-package powershell)
+#+end_src
 ** Misc
 *** Filebin
     #+BEGIN_SRC emacs-lisp
