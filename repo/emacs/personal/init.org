@@ -526,6 +526,12 @@ Sometimes I save restcalls in projectdir within repo
 #+begin_src emacs-lisp
   (use-package powershell)
 #+end_src
+*** Markdown
+#+begin_src emacs-lisp
+  (use-package markdown-mode
+    :mode ("README\\.md\\'" . gfm-mode)
+    :init (setq markdown-command "pandoc"))
+#+end_src
 ** Misc
 *** Filebin
     #+BEGIN_SRC emacs-lisp
