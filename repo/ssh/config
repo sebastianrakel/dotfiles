@@ -1,5 +1,8 @@
 Include ~/.ssh/host.d/*
 
+Host *
+	AddKeysToAgent yes
+
 Host ssh.dev.azure.com
 	ControlMaster false
 	IdentityFile ~/.ssh/id_rsa
