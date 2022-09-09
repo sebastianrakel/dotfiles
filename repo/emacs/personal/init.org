@@ -152,7 +152,7 @@ this i will use solarized
    #+begin_src emacs-lisp
      (defun open-dotfiles ()
        (interactive)
-       (dired "~/.dotfiles"))
+       (counsel-projectile-find-file "~/.dotfiles"))
    #+end_src
 ** Resizing
    This part is copied from https://www.emacswiki.org/emacs/WindowResize
