@@ -458,7 +458,7 @@ Sometimes I save restcalls in projectdir within repo
 	  '(puppet-mode . "puppet"))
 
 	(lsp-register-client
-	 (make-lsp-client :new-connection (lsp-stdio-connection "/home/sebastian/.bin/local/puppet-lsp.sh")
+	 (make-lsp-client :new-connection (lsp-stdio-connection "/home/sebastian/.bin/puppet-lsp.sh")
 			  :major-modes '(puppet-mode)
 			  :activation-fn (lsp-activate-on "puppet")
 			  :server-id 'puppet-ls)))
