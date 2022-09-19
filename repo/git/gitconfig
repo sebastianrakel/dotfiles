@@ -52,3 +52,7 @@
 	required = true
 [pull]
 	rebase = true
+    
+[user]
+    name = Sebastian Rakel    
+    email = sebastian@devunit.eu
