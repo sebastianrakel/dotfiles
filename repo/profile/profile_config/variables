@@ -25,3 +25,4 @@ if [ ! -d "${HOME}/.npm-packages" ]; then
    npm config set prefix "${HOME}/.npm-packages"
 fi
 
+export DOTNET_ROOT="${HOME}/.dotnet"
