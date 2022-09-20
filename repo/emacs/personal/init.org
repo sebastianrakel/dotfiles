@@ -373,6 +373,16 @@ Sometimes I save restcalls in projectdir within repo
 #+begin_src emacs-lisp
   (use-package restclient)
 #+end_src
+**** Highlight Indentation
+Visual Studio Code, Visual Studio and others Editors and IDEs have these vertical lines
+to show in which block i'm currently
+#+begin_src emacs-lisp
+  (use-package highlight-indent-guides
+    :config
+    (setq highlight-indent-guides-method 'character)
+    (setq highlight-indent-guides-responsive 'top)
+    (add-hook 'prog-mode-hook 'highlight-indent-guides-mode))
+#+end_src
 *** Org-Mode
     Some common org-mode settings
     #+begin_src emacs-lisp
