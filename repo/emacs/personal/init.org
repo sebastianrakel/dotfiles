@@ -83,11 +83,12 @@ this i will use solarized
    #+END_SRC
 *** LSP Keybindings
     #+BEGIN_SRC emacs-lisp
-	(global-set-key (kbd "C-c c r") 'lsp-find-references)
-	(global-set-key (kbd "C-c c d") 'lsp-find-definition)
-	(global-set-key (kbd "C-c c D") 'lsp-find-declaration)
+      (global-set-key (kbd "C-c c r") 'lsp-find-references)
+      (global-set-key (kbd "C-c c d") 'lsp-find-definition)
+      (global-set-key (kbd "C-c c D") 'lsp-find-declaration)
 
-	(global-set-key (kbd "C-c c R") 'lsp-rename)
+      (global-set-key (kbd "C-c c R") 'lsp-rename)
+      (global-set-key (kbd "C-<return>") 'lsp-ui-sideline-apply-code-actions)
     #+END_SRC
 *** YAS Snippet Keybindings
     #+BEGIN_SRC emacs-lisp
@@ -297,6 +298,16 @@ this i will use solarized
   (use-package flycheck
     :config
     (global-flycheck-mode))
+#+end_src
+*** Tree Sitter
+Some people say tree-sitter is good, so give it a try
+#+begin_src emacs-lisp
+  (use-package tree-sitter
+    :config
+    (global-tree-sitter-mode)
+    (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+  (use-package tree-sitter-langs)
+  (use-package tree-sitter-indent)
 #+end_src
 ** Magit
    #+BEGIN_SRC emacs-lisp
@@ -541,6 +552,13 @@ to show in which block i'm currently
   (use-package markdown-mode
     :mode ("README\\.md\\'" . gfm-mode)
     :init (setq markdown-command "pandoc"))
+#+end_src
+*** C#
+#+begin_src emacs-lisp
+  (use-package csharp-mode
+    :config
+    (add-to-list 'auto-mode-alist '("\\.cs\\'" . csharp-tree-sitter-mode))
+    (add-hook 'csharp-tree-sitter-mode-hook #'lsp-deferred))
 #+end_src
 ** Misc
 *** Filebin
