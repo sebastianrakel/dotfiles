@@ -53,6 +53,11 @@ this i will use solarized
 #+begin_src emacs-lisp
   (use-package solarized-theme)
 #+end_src
+*** Locking
+Lockfiles (something like .#<filename>) are anoying for some lsp servers. so i will disable them
+#+begin_src emacs-lisp
+  (setq create-lockfiles nil)
+#+end_src
 ** Backup
    #+BEGIN_SRC emacs-lisp
      (setq backup-directory-alist
@@ -80,6 +85,7 @@ this i will use solarized
 
      (global-set-key (kbd "C-c d") 'zeal-at-point)
      (global-set-key (kbd "C-<tab>") 'hs-toggle-hiding)
+     (global-set-key (kbd "C-c x") 'open-real-terminal)
    #+END_SRC
 *** LSP Keybindings
     #+BEGIN_SRC emacs-lisp
@@ -213,8 +219,13 @@ this i will use solarized
 	((equal "mid" (win-resize-left-or-right)) (enlarge-window-horizontally 1))))
 
    #+end_src
-
-
+** Open Terminal
+Sometime i need a real terminal no emacs buffer or something like this, so this should open a new terminal
+#+begin_src emacs-lisp
+  (defun open-real-terminal()
+    (interactive)
+    (shell-command (concat "herbstclient spawn alacritty --working-directory " (projectile-project-root))))
+#+end_src
 * Addons
 ** UI
 *** Helm
@@ -271,8 +282,7 @@ this i will use solarized
     #+begin_src emacs-lisp
       (use-package projectile
 	:config
-	(projectile-mode 1)
-	(setq projectile-project-search-path '(("~/Projects/Serp" . 4))))
+	(projectile-mode 1))
     #+end_src
 *** Dashboard
     #+begin_src emacs-lisp
@@ -517,7 +527,9 @@ to show in which block i'm currently
     #+end_src
 **** Terraform
      #+begin_src emacs-lisp
-       (use-package terraform-mode)
+       (use-package terraform-mode
+	 :config
+	 (add-hook 'terraform-mode-hook #'lsp-deferred))
        (use-package terraform-doc)
        (use-package company-terraform)
      #+end_src
