@@ -333,11 +333,6 @@ Some people say tree-sitter is good, so give it a try
     #+end_src
 **** Parens, Delimiters
     #+begin_src emacs-lisp
-      (use-package smartparens
-	:config
-	(add-hook 'prog-mode-hook #'smartparens-mode))
-    #+end_src
-    #+begin_src emacs-lisp
       (use-package rainbow-delimiters
 	:config
 	(add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
