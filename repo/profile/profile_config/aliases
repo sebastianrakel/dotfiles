@@ -14,6 +14,8 @@ alias ips='ip -br a'
 alias dmesg='dmesg -T --color'
 alias lol='lolcommits --enable'
 alias sc='cd ~/Projects/Serp/cloud'
+alias dark-mode='switch-theme.sh dark'
+alias light-mode='switch-theme.sh light'
 
 if which lsd >/dev/null; then
    alias ls='lsd'

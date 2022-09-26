@@ -5,3 +5,11 @@ dest   = "~/.config/herbstluftwm/autostart"
 [[files]]
 source = "./panel.sh"
 dest   = "~/.config/herbstluftwm/panel.sh"
+
+[[files]]
+source = "./themes"
+dest   = "~/.config/herbstluftwm/themes"
+
+[[files]]
+source = "./theme-switch.sh"
+dest   = "~/.bin/hlwm-theme-switch.sh"

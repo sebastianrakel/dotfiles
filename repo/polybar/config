@@ -14,16 +14,8 @@ screenchange-reload = true
 margin-top = 0
 margin-bottom = 0
 
-
 [colors]
-background = #16161d
-background-alt = #073642
-foreground =  #f7f7f7
-foreground-alt = #f7f7f7
-primary = #1D1F28
-secondary = #f7f7f7
-alert = #bd2c40
-
+include-file = "~/.config/polybar/colors"
 
 [bar/0]
 width = 100%

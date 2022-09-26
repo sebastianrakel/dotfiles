@@ -18,3 +18,10 @@ dest   = "~/.config/polybar/herbstluftwm.sh"
 source = "./config"
 dest   = "~/.config/polybar/config"
 
+[[files]]
+source = "./themes"
+dest   = "~/.config/polybar/themes"
+
+[[files]]
+source = "./theme-switch.sh"
+dest   = "~/.bin/polybar-theme-switch"

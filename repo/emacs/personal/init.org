@@ -45,9 +45,21 @@ This is my emacs config, it's written in org-mode
 My default theme is dracula for everything, but sometimes i need a light theme and for
 this i will use solarized
   #+BEGIN_SRC emacs-lisp
-    (use-package dracula-theme
-      :config
-      (load-theme 'dracula t))
+    (use-package dracula-theme)
+    (use-package gruvbox-theme)
+
+    (defvar current-theme 'dracula)
+    (defun load-last-theme()
+      (interactive)
+      (load-theme current-theme t))
+
+    (defun switch-theme(theme)
+      (interactive)
+      (disable-theme current-theme)
+      (setq current-theme theme)
+      (load-last-theme))
+
+    (load-last-theme)
   #+END_SRC
 
 #+begin_src emacs-lisp

@@ -11,5 +11,9 @@ source = "./solarized_light.yml"
 dest   = "~/.config/alacritty/themes/solarized_light.yml"
 
 [[files]]
+source = "./gruvbox-light-medium.yml"
+dest   = "~/.config/alacritty/themes/gruvbox-light-medium.yml"
+
+[[files]]
 source = "./theme-switch.sh"
 dest   = "~/.bin/alacritty-theme-switch"
