@@ -238,6 +238,12 @@ Sometime i need a real terminal no emacs buffer or something like this, so this 
     (interactive)
     (shell-command (concat "herbstclient spawn alacritty --working-directory " (projectile-project-root))))
 #+end_src
+** Reload Projects
+#+begin_src emacs-lisp
+  (defun reload-projects()
+    (interactive)
+    (projectile-discover-projects-in-directory "~/Projects/" 4))
+#+end_src
 * Addons
 ** UI
 *** Helm
