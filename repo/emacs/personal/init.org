@@ -171,7 +171,7 @@ Lockfiles (something like .#<filename>) are anoying for some lsp servers. so i w
    #+begin_src emacs-lisp
      (defun open-dotfiles ()
        (interactive)
-       (counsel-projectile-find-file "~/.dotfiles"))
+       (counsel-projectile-find-file "~/.dotfiles/"))
    #+end_src
 ** Resizing
    This part is copied from https://www.emacswiki.org/emacs/WindowResize
@@ -435,7 +435,7 @@ to show in which block i'm currently
     #+begin_src emacs-lisp
       (require 'org-tempo)
     #+end_src
-*** HTML, Vue, TypeScript
+*** HTML, Vue, TypeScript, JavaScript
     #+begin_src emacs-lisp
       (use-package web-mode
 	:config
@@ -445,6 +445,11 @@ to show in which block i'm currently
 	(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
 
       (use-package typescript-mode)
+
+      (use-package js2-mode
+	:config
+	(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+	(add-hook 'javascript-mode #'lsp-mode))
     #+end_src
 *** Django
 #+begin_src emacs-lisp
