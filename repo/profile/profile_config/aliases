@@ -16,7 +16,4 @@ alias lol='lolcommits --enable'
 alias sc='cd ~/Projects/Serp/cloud'
 alias dark-mode='switch-theme.sh dark'
 alias light-mode='switch-theme.sh light'
-
-if which lsd >/dev/null; then
-   alias ls='lsd'
-fi
+alias ls='ls --color'
