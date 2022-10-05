@@ -90,6 +90,7 @@ Lockfiles (something like .#<filename>) are anoying for some lsp servers. so i w
      (global-set-key (kbd "C-s") 'swiper)
      (global-set-key (kbd "C-c b") 'helm-buffers-list)
      (global-set-key (kbd "C-c r") 'reload-dotemacs)
+     (global-set-key (kbd "C-c f r") 'reload-current-buffer)
      (global-set-key (kbd "C-c g") 'magit)
      (global-set-key (kbd "C-c p") 'projectile-command-map)
      (global-set-key (kbd "C-c q s") 'open-emacs-config)
@@ -232,6 +233,12 @@ Lockfiles (something like .#<filename>) are anoying for some lsp servers. so i w
 
    #+end_src
 ** Open Terminal
+** Reload current Buffer
+#+begin_src emacs-lisp
+  (defun reload-current-buffer
+      (interactive)
+    (revert-buffer :ignore-auto :noconfirm))
+#+end_src
 Sometime i need a real terminal no emacs buffer or something like this, so this should open a new terminal
 #+begin_src emacs-lisp
   (defun open-real-terminal()
@@ -611,6 +618,7 @@ to show in which block i'm currently
 Mailing sucks! But i want to use notmuch because it's awesome, but every client sucks and i have no time to write my own. So i will use the only working client (emacs!)
 #+begin_src emacs-lisp
   (let ((mail-settings "~/.emacs.d/mail.el"))
-   (when (file-exists-p mail-settings)
-     (load-file mail-settings)))
+    (when (file-exists-p mail-settings)
+      (message "Skip mail settings, cause is broken")))
+      ;(load-file mail-settings)))
 #+end_src
