@@ -3,8 +3,8 @@ source = "./alacritty.yml"
 dest   = "~/.config/alacritty/alacritty.yml"
 
 [[files]]
-source = "./themes"
-dest   = "~/.config/alacritty/themes"
+source = "./base16/colors/"
+dest   = "~/.config/alacritty/themes/"
 
 [[files]]
 source = "./theme-switch.sh"

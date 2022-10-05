@@ -28,3 +28,5 @@ if which npm >/dev/null; then
 fi
 
 export DOTNET_ROOT="${HOME}/.dotnet"
+export LIGHT_THEME="base16-github"
+export DARK_THEME="base16-monokai"

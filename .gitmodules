@@ -19,3 +19,6 @@
 [submodule "repo/zsh/zsh/zplug"]
 	path = repo/zsh/zsh/zplug
 	url = https://github.com/zplug/zplug
+[submodule "repo/alacritty/base16"]
+	path = repo/alacritty/base16
+	url = https://github.com/aarowill/base16-alacritty.git
