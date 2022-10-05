@@ -3,16 +3,8 @@ source = "./alacritty.yml"
 dest   = "~/.config/alacritty/alacritty.yml"
 
 [[files]]
-source = "./dracula.yml"
-dest   = "~/.config/alacritty/themes/dracula.yml"
-
-[[files]]
-source = "./solarized_light.yml"
-dest   = "~/.config/alacritty/themes/solarized_light.yml"
-
-[[files]]
-source = "./gruvbox-light-medium.yml"
-dest   = "~/.config/alacritty/themes/gruvbox-light-medium.yml"
+source = "./themes"
+dest   = "~/.config/alacritty/themes"
 
 [[files]]
 source = "./theme-switch.sh"
