@@ -557,6 +557,8 @@ to show in which block i'm currently
     #+end_src
 *** C/C++
     #+begin_src emacs-lisp
+      (use-package meson-mode)
+      (use-package ninja-mode)
       (add-hook 'c-mode-hook 'lsp)
       (add-hook 'c++-mode-hook 'lsp)
     #+end_src
