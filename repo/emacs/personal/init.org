@@ -91,6 +91,7 @@ Lockfiles (something like .#<filename>) are anoying for some lsp servers. so i w
      (global-set-key (kbd "C-s") 'swiper)
      (global-set-key (kbd "C-c b") 'helm-buffers-list)
      (global-set-key (kbd "C-c r") 'reload-dotemacs)
+     (global-set-key (kbd "C-c R") 'reload-projects)
      (global-set-key (kbd "C-c f r") 'reload-current-buffer)
      (global-set-key (kbd "C-c g") 'magit)
      (global-set-key (kbd "C-c p") 'projectile-command-map)
@@ -101,7 +102,7 @@ Lockfiles (something like .#<filename>) are anoying for some lsp servers. so i w
      (global-set-key (kbd "C-<tab>") 'hs-toggle-hiding)
      (global-set-key (kbd "C-c x") 'open-real-terminal)
    #+END_SRC
-*** LSP Keybindings
+** LSP Keybindings
     #+BEGIN_SRC emacs-lisp
       (global-set-key (kbd "C-c c r") 'lsp-find-references)
       (global-set-key (kbd "C-c c d") 'lsp-find-definition)
@@ -110,14 +111,14 @@ Lockfiles (something like .#<filename>) are anoying for some lsp servers. so i w
       (global-set-key (kbd "C-c c R") 'lsp-rename)
       (global-set-key (kbd "C-<return>") 'lsp-ui-sideline-apply-code-actions)
     #+END_SRC
-*** YAS Snippet Keybindings
+** YAS Snippet Keybindings
     #+BEGIN_SRC emacs-lisp
 	;Snippets
 	(global-set-key (kbd "C-c s i") 'yas-insert-snippet)
 	(global-set-key (kbd "C-c s n") 'yas-new-snippet)
 	(global-set-key (kbd "C-c s e") 'yas-visit-snippet-file)
     #+END_SRC
-*** Keybindings for resizing emacs windows
+** Keybindings for resizing emacs windows
     Because I don't want to use my mouse for resizing my windows
     #+begin_src emacs-lisp
       (global-set-key [C-M-up] 'win-resize-enlarge-horiz)
@@ -131,14 +132,14 @@ Lockfiles (something like .#<filename>) are anoying for some lsp servers. so i w
 						;Todo
 	(global-set-key (kbd "C-c t t") 'org-agenda)
     #+END_SRC
-*** Rescue Keybindings
+** Rescue Keybindings
     Because i want to manage my keybindings at a central position,
     it's possible that keybindings are set but the plugin is not installed.
 
     #+begin_src emacs-lisp
       (global-set-key (kbd "C-c q x") 'execute-extended-command)
     #+end_src
-*** Zooming
+** Zooming
   #+begin_src emacs-lisp
     (global-set-key [(control ?+)] 'text-scale-increase)
     (global-set-key [(control ?-)] 'text-scale-decrease)
