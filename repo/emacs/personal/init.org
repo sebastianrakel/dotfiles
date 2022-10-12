@@ -1,4 +1,4 @@
-#+STARTUP: content
+c#+STARTUP: content
 #+TITLE: Sebastians emacs configuration - in org
 #+BEGIN_CENTER
 This is my emacs config, it's written in org-mode
@@ -101,6 +101,7 @@ Lockfiles (something like .#<filename>) are anoying for some lsp servers. so i w
      (global-set-key (kbd "C-c d") 'zeal-at-point)
      (global-set-key (kbd "C-<tab>") 'hs-toggle-hiding)
      (global-set-key (kbd "C-c x") 'open-real-terminal)
+     (global-set-key (kbd "C-c D") 'jump-to-dashboard)
    #+END_SRC
 ** LSP Keybindings
     #+BEGIN_SRC emacs-lisp
@@ -234,24 +235,47 @@ Lockfiles (something like .#<filename>) are anoying for some lsp servers. so i w
 	((equal "mid" (win-resize-left-or-right)) (enlarge-window-horizontally 1))))
 
    #+end_src
-** Open Terminal
 ** Reload current Buffer
 #+begin_src emacs-lisp
   (defun reload-current-buffer
       (interactive)
     (revert-buffer :ignore-auto :noconfirm))
 #+end_src
+** Open Terminal
 Sometime i need a real terminal no emacs buffer or something like this, so this should open a new terminal
 #+begin_src emacs-lisp
+  (defun open-real-terminal--path (path)
+    (let ((command (concat "herbstclient spawn alacritty --working-directory " path)))
+      (message (concat "Open Terminal with command: " command))
+      (shell-command command)))
+
+  (defun open-real-terminal--with-current-directory()
+    (message "Open Terminal with current directory path")
+    (open-real-terminal--path(file-name-directory (buffer-file-name)))
+  )
+
+  (defun open-real-terminal--with-projectile()
+    (message "Open Terminal with projectile path")
+    (open-real-terminal--path(projectile-project-root))
+  )
+
   (defun open-real-terminal()
     (interactive)
-    (shell-command (concat "herbstclient spawn alacritty --working-directory " (projectile-project-root))))
+    (if (projectile-project-root)
+	(open-real-terminal--with-projectile)
+      (open-real-terminal--with-current-directory)))
 #+end_src
 ** Reload Projects
 #+begin_src emacs-lisp
   (defun reload-projects()
     (interactive)
     (projectile-discover-projects-in-directory "~/Projects/" 4))
+#+end_src
+** Jump to Dashboard
+#+begin_src emacs-lisp
+  (defun jump-to-dashboard()
+    (interactive)
+    (switch-to-buffer "*dashboard*"))
 #+end_src
 * Addons
 ** UI
