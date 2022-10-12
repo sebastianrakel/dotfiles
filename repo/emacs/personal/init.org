@@ -624,3 +624,6 @@ Mailing sucks! But i want to use notmuch because it's awesome, but every client 
       (message "Skip mail settings, cause is broken")))
       ;(load-file mail-settings)))
 #+end_src
+*** Development
+#+begin_src emacs-lisp
+#+end_src
