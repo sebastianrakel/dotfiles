@@ -502,11 +502,21 @@ to show in which block i'm currently
 	(add-hook 'before-save-hook #'lsp-format-buffer t t)
 	(add-hook 'before-save-hook #'lsp-organize-imports t t))
 
+      (defun go-build ()
+	(interactive)
+	(shell-command "go build"))
+
+      (defun go-install ()
+	(interactive)
+	(shell-command "go install"))
+
       (use-package go-mode
 	:config
 	(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
 	(add-hook 'go-mode-hook #'lsp-deferred)
-	(add-hook 'go-mode-hook #'yas-minor-mode))
+	(add-hook 'go-mode-hook #'yas-minor-mode)
+	(local-set-key (kbd "C-c l b") 'go-build)
+	(local-set-key (kbd "C-c l i") 'go-install))
     #+end_src
 *** Puppet
     Load puppet module and config some nice to have features like linting and whitespace cleanup
