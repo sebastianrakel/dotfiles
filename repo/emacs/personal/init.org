@@ -49,7 +49,7 @@ this i will use solarized
     (use-package gruvbox-theme)
     (use-package base16-theme)
 
-    (defvar current-theme 'base16-monokai)
+    (defvar current-theme 'base16-dracula)
     (defun load-last-theme()
       (interactive)
       (load-theme current-theme t))
