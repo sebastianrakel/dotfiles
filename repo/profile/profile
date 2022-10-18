@@ -1,7 +1,17 @@
 profile_dir="${HOME}/.config/profile"
 profile_local="${HOME}/.profile.local"
+private_aliases="${profile_dir}/aliases.private"
+private_variables="${profile_dir}/variables.private"
 
 source "${profile_dir}/aliases"
 source "${profile_dir}/variables"
+
+if [ -f "${private_aliases}" ]; then
+    source "${private_aliases}"
+fi
+
+if [ -f "${private_variables}" ]; then
+    source "${private_variables}"
+fi
 
 [ -f "${profile_local}" ] && source "${profile_local}"
