@@ -154,6 +154,10 @@ Lockfiles (something like .#<filename>) are anoying for some lsp servers. so i w
      (add-hook 'emacs-lisp-mode
 	       (lambda () (local-set-key (kbd "C-c m e") #'eval-buffer)))
    #+end_src
+** Azure Stuff
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-c a r s") 'azure-open-repository-browser)
+#+end_src
 * Functions
 ** Reload Emacs
   Helper function to reload my emacs config, is used with a keybinding
@@ -178,7 +182,7 @@ Lockfiles (something like .#<filename>) are anoying for some lsp servers. so i w
        (counsel-projectile-find-file "~/.dotfiles/"))
    #+end_src
 ** Resizing
-   This part is copied from https://www.emacswiki.org/emacs/WindowResize
+This part is copied from https://www.emacswiki.org/emacs/WindowResize
    #+begin_src emacs-lisp
      (defun win-resize-top-or-bot ()
        "Figure out if the current window is on top, bottom or in the
@@ -276,6 +280,13 @@ Sometime i need a real terminal no emacs buffer or something like this, so this 
   (defun jump-to-dashboard()
     (interactive)
     (switch-to-buffer "*dashboard*"))
+#+end_src
+** Azure Stuff
+Here is my azure stuff, my company is working with azure/ azure devops so i need some little helper
+#+begin_src emacs-lisp
+  (defun azure-open-repository-browser()
+    (interactive)
+    (shell-command "azure-helper r s"))
 #+end_src
 * Addons
 ** UI
