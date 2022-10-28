@@ -24,6 +24,7 @@ hc keybind $Mod-Shift+o spawn ~/Projects/Fun/splatmoji/splatmoji type
 hc keybind $Mod+w spawn rofi -show window
 
 hc keybind $Mod-Print spawn flameshot gui
+hc keybind $Mod-Shift-s spawn flameshot gui
 
 # Display
 hc keybind XF86MonBrightnessUp spawn ${HOME}/.bin/backlight.rb increase
