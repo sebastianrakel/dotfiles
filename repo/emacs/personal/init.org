@@ -108,9 +108,12 @@ Lockfiles (something like .#<filename>) are anoying for some lsp servers. so i w
       (global-set-key (kbd "C-c c r") 'lsp-find-references)
       (global-set-key (kbd "C-c c d") 'lsp-find-definition)
       (global-set-key (kbd "C-c c D") 'lsp-find-declaration)
+      (global-set-key (kbd "C-c c f") 'lsp-format-buffer)
+      (global-set-key (kbd "C-c c F") 'lsp-format-region)
 
       (global-set-key (kbd "C-c c R") 'lsp-rename)
       (global-set-key (kbd "C-<return>") 'lsp-ui-sideline-apply-code-actions)
+
     #+END_SRC
 ** YAS Snippet Keybindings
     #+BEGIN_SRC emacs-lisp
