@@ -29,4 +29,5 @@ fi
 
 export DOTNET_ROOT="${HOME}/.dotnet"
 export LIGHT_THEME="base16-github"
-export DARK_THEME="base16-monokai"
+export DARK_THEME="base16-dracula"
+export ANDROID_HOME="${HOME}/Android/Sdk"
