@@ -442,7 +442,8 @@ Some people say tree-sitter is good, so give it a try
 
        (use-package centered-cursor-mode
 	 :config
-	 (my-global-centered-cursor-mode 1))
+	 (my-global-centered-cursor-mode 1)
+	 (setq ccm-recenter-at-end-of-file t))
 
      #+end_src
 **** Hide/Show
