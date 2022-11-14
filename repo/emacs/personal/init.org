@@ -102,6 +102,7 @@ Lockfiles (something like .#<filename>) are anoying for some lsp servers. so i w
      (global-set-key (kbd "C-<tab>") 'hs-toggle-hiding)
      (global-set-key (kbd "C-c x") 'open-real-terminal)
      (global-set-key (kbd "C-c D") 'jump-to-dashboard)
+     (global-set-key (kbd "C-c F") 'toggle-maximize-buffer)
    #+END_SRC
 ** LSP Keybindings
     #+BEGIN_SRC emacs-lisp
@@ -290,6 +291,16 @@ Here is my azure stuff, my company is working with azure/ azure devops so i need
   (defun azure-open-repository-browser()
     (interactive)
     (shell-command "azure-helper r s"))
+#+end_src
+** Fullscreen Window
+#+begin_src emacs-lisp
+  (defun toggle-maximize-buffer () "Maximize buffer"
+    (interactive)
+    (if (= 1 (length (window-list)))
+      (jump-to-register '_)
+      (progn
+	(set-register '_ (list (current-window-configuration)))
+	(delete-other-windows))))
 #+end_src
 * Addons
 ** UI
