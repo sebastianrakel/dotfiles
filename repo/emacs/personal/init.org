@@ -78,6 +78,11 @@ Lockfiles (something like .#<filename>) are anoying for some lsp servers. so i w
      (setq auto-save-file-name-transforms
 	   `((".*" ,temporary-file-directory t)))
    #+END_SRC
+** Warnings
+Some packages have warnings about docstring wider than 80 character. there is nothing i can do about. So, we will ignore warnings
+#+begin_src emacs-lisp
+  (setq warning-minimum-level :emergency)
+#+end_src
 * Keybindings
 ** Common
    Use meta key for move between windows
