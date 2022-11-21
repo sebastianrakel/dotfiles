@@ -373,7 +373,7 @@ Here is my azure stuff, my company is working with azure/ azure devops so i need
 	:config
 	(dashboard-setup-startup-hook)
 	(setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
-	(setq dashboard-startup-banner "~/.emacs.d/personal/images/avatar.png")
+	;(setq dashboard-startup-banner "~/.emacs.d/personal/images/avatar.png")
 	(setq dashboard-center-content t)
 	(setq dashboard-show-shortcuts t)
 	(setq dashboard-set-heading-icons t)
@@ -530,7 +530,7 @@ to show in which block i'm currently
 *** Golang
     #+begin_src emacs-lisp
       (defun lsp-go-install-save-hooks ()
-	(add-hook 'before-save-hook #'lsp-format-buffer t t)
+	(add-hook 'before-save-hook 'gofmt-before-save)
 	(add-hook 'before-save-hook #'lsp-organize-imports t t))
 
       (defun go-build ()
