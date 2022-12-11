@@ -11,18 +11,19 @@ end
 
 packer.startup(function(use)
 	use 'wbthomason/packer.nvim'
-	use { 'Mofiqul/dracula.nvim', 
+	use { 'Mofiqul/dracula.nvim',
 		config = function()
 			vim.o.background = 'dark'
 			vim.o.t_Co = 256
 			vim.cmd [[colorscheme dracula]]
 		end
 	}
-	use { 'nvim-treesitter/nvim-treesitter', 
+	use { 'nvim-treesitter/nvim-treesitter',
 		run = ':TSUpdate',
 		config = function()
 			require'nvim-treesitter.configs'.setup {
 				ensure_installed = {
+					'bash',
 					'c',
 					'cpp',
 					'lua',
@@ -35,7 +36,7 @@ packer.startup(function(use)
 		end
 	}
 
-  	use { 'neovim/nvim-lspconfig', 
+  	use { 'neovim/nvim-lspconfig',
   		config = function()
 			local lspc = require 'lspconfig'
 
@@ -50,9 +51,9 @@ packer.startup(function(use)
 				'gopls',
 			}
 
-			for _, server in ipairs(servers) do 
+			for _, server in ipairs(servers) do
 				lspc[server].setup { capabilites = capabilities }
-			end	
+			end
 
 			lspc.sumneko_lua.setup {
 			 	capabilities = capabilities,
@@ -68,13 +69,12 @@ packer.startup(function(use)
 					}
 			 	}
 			}
-			vim.
 
 			vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
 		end
-	} 
+	}
 
-	use { 'hrsh7th/cmp-nvim-lsp', 
+	use { 'hrsh7th/cmp-nvim-lsp',
 		requires = {
 			{'hrsh7th/cmp-nvim-lsp'},
 			{'hrsh7th/cmp-buffer'},
@@ -82,9 +82,9 @@ packer.startup(function(use)
 			{'hrsh7th/cmp-cmdline'},
 			{'hrsh7th/nvim-cmp'},
 		},
-		config = function() 
+		config = function()
 			local cmp = require'cmp'
-			
+
 			cmp.setup({
 				completion = { completeopt = 'menu,menueone,noinsert' },
 				sources = {
@@ -103,10 +103,10 @@ packer.startup(function(use)
 			})
 		end
 	}
-	
+
 	use { 'nvim-telescope/telescope.nvim',
 		requires = {
-			{'nvim-lua/plenary.nvim'} 
+			{'nvim-lua/plenary.nvim'}
 		},
 		module = 'telescope',
 		cmd = 'Telescope',
@@ -119,10 +119,11 @@ packer.startup(function(use)
 			vim.keymap.set('n', '[Telescope]gs', '<cmd>Telescope grep_string<cr>')
 		end
 	}
-end) 
+end)
 
 vim.opt.number = true
 vim.opt.relativenumber = true
+vim.opt.autoindent = true
 vim.opt.smarttab = true
 vim.opt.smartindent = true
 vim.opt.colorcolumn = '120'

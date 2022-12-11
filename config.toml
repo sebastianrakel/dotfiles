@@ -31,7 +31,9 @@
 		 	'alacritty',
 		 	'font',
 		 	'gtk',
-		 	'dunst'
+		 	'dunst',
+			'nvim',
+			'tools'
 		]
 
 [configurations.loki]
