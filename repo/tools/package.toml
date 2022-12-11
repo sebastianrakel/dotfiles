@@ -1,0 +1,4 @@
+postcmds = [
+	"./scripts/install_lua_lsp.sh",
+]
+

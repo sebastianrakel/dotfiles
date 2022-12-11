@@ -127,3 +127,5 @@ vim.opt.autoindent = true
 vim.opt.smarttab = true
 vim.opt.smartindent = true
 vim.opt.colorcolumn = '120'
+
+vim.opt.autochdir = true
