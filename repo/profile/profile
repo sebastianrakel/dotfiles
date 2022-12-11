@@ -15,3 +15,4 @@ if [ -f "${private_variables}" ]; then
 fi
 
 [ -f "${profile_local}" ] && source "${profile_local}"
+. "$HOME/.cargo/env"
