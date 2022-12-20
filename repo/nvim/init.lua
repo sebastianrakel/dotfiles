@@ -11,6 +11,7 @@ end
 
 packer.startup(function(use)
 	use 'wbthomason/packer.nvim'
+	use 'jghauser/mkdir.nvim'
 	use { 'Mofiqul/dracula.nvim',
 		config = function()
 			vim.o.background = 'dark'
