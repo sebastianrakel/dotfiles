@@ -2,36 +2,87 @@
 # name: go repository
 # key: go_repo
 # --
+package repository
+
+import (
+	"github.com/google/uuid"
+)
 
 type $1 struct {
-     env *core.Environment
+	Db *helper.Database
 }
 
-func New$1(env *core.Environment) *$1 {
-     return &$1{
-     	    env: env,
-     }
+func New$1(db *helper.Database) *$1 {
+	return &$1{db}
 }
 
 func (r *$1) Migrate() error {
+	db, err := r.Db.GetConnection()
+	if err != nil {
+		return err
+	}
+	defer r.Db.CloseConnection(db)
+
+	err = db.AutoMigrate(&model.$1{})
+
+	return err
 }
 
 func (r *$1) FindAll() ([]model.$1, error) {
+	db, err := r.Db.GetConnection()
+	if err != nil {
+		return nil, err
+	}
+	defer r.Db.CloseConnection(db)
 
+	var items []model.$1
+
+	result := db.Find(&items)
+	return items, result.Error
 }
 
-func (r *$1) FindById(id uuid.UUID) (model.$1, error) {
+func (r *$1) FindById(id uuid.UUID) (model.$1, bool, error) {
+	db, err := r.Db.GetConnection()
+	if err != nil {
+		return model.$1{}, false, err
+	}
+	defer r.Db.CloseConnection(db)
 
+	var item model.$1
+
+	result := db.Find(&item, "id = ?", id)
+	return item, result.RowsAffected > 0, result.Error
 }
 
 func (r *$1) Create(item *model.$1) error {
+	db, err := r.Db.GetConnection()
+	if err != nil {
+		return err
+	}
+	defer r.Db.CloseConnection(db)
 
+	result := db.Create(item)
+	return result.Error
 }
 
 func (r *$1) Update(item *model.$1) error {
+	db, err := r.Db.GetConnection()
+	if err != nil {
+		return err
+	}
+	defer r.Db.CloseConnection(db)
 
+	result := db.Updates(item)
+	return result.Error
 }
 
 func (r *$1) Delete(id uuid.UUID) error {
+	db, err := r.Db.GetConnection()
+	if err != nil {
+		return err
+	}
+	defer r.Db.CloseConnection(db)
 
+	result := db.Delete(&model.$1{}, "id = ?", id)
+	return result.Error
 }
