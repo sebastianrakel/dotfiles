@@ -470,6 +470,7 @@ Some people say tree-sitter is good, so give it a try
 Sometimes I save restcalls in projectdir within repo
 #+begin_src emacs-lisp
   (use-package restclient)
+  (use-package restclient-jq)
 #+end_src
 **** Highlight Indentation
 Visual Studio Code, Visual Studio and others Editors and IDEs have these vertical lines
