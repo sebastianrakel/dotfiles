@@ -33,7 +33,7 @@
 		 	'gtk',
 		 	'dunst',
 			'nvim',
-			'tools'
+			'tools',
 		]
 
 [configurations.loki]

@@ -9,10 +9,10 @@ import (
 )
 
 type $1 struct {
-	Db *helper.Database
+	Db *database.Database
 }
 
-func New$1(db *helper.Database) *$1 {
+func New$1(db *database.Database) *$1 {
 	return &$1{db}
 }
 

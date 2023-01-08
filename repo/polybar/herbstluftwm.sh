@@ -11,7 +11,7 @@ print_tags() {
 		state=${tag%$name}
 		case "$state" in
 		'#')
-			printf '%%{R} %s %%{R} ' "${icons[$name]}" 
+			printf '%%{R} %s %%{R} ' "${icons[$name]}"
 			;;
 		'+')
 			printf '%%{F#cccccc}%%{R} %s %%{R}%%{F-}' "${icons[$name]}"
