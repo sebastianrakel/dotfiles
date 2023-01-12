@@ -69,6 +69,12 @@ inherit = bar/1
 monitor = ${env:MONITOR:HDMI-1}
 modules-right = space mail-sync space date space
 
+[bar/ostara]
+inherit = bar/1
+monitor = ${env:MONITOR:HDMI-1}
+modules-right = space battery1 space date space
+
+
 [bar/sulu]
 inherit = bar/1
 monitor = ${env:MONITOR:HDMI-1}

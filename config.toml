@@ -44,6 +44,10 @@
         dependencies = ['computer']
         packages = ['mpd']
 
+[configurations.ostara]
+        dependencies = ['computer']
+        packages = ['mpd']
+
 [configurations.sulu]
         dependencies = ['computer']
         packages = ['mpd']
