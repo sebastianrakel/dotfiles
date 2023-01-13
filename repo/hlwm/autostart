@@ -27,8 +27,8 @@ hc keybind $Mod-Print spawn flameshot gui
 hc keybind $Mod-Shift-s spawn flameshot gui
 
 # Display
-hc keybind XF86MonBrightnessUp spawn ${HOME}/.bin/backlight.rb increase
-hc keybind XF86MonBrightnessDown spawn ${HOME}/.bin/backlight.rb decrease
+hc keybind XF86MonBrightnessUp spawn brightnessctl set +2%
+hc keybind XF86MonBrightnessDown spawn brightnessctl set 2%-
 
 # Multimedia
 hc keybind XF86AudioRaiseVolume spawn ${HOME}/.bin/volume_control.sh increase
@@ -66,8 +66,8 @@ hc keybind $Mod-Control-Up      resize up +$resizestep
 hc keybind $Mod-Control-Right   resize right +$resizestep
 
 # tags
-tag_names=( {main,www,cad,dev,virt,remote,stuff,games} )
-tag_keys=( {1..9} 0 )
+tag_names=( {1..4} )
+tag_keys=( {1..4} 0 )
 
 hc rename default "${tag_names[0]}" || true
 for i in ${!tag_names[@]} ; do

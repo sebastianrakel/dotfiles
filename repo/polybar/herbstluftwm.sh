@@ -3,7 +3,7 @@
 hash herbstclient xrandr
 
 declare -A icons
-icons=( ["main"]="" ["www"]="" ["cad"]="" ["dev"]="" ["virt"]="" ["remote"]="" ["stuff"]="" ["games"]="")
+icons=( ["1"]="1" ["2"]="2" ["3"]="3" ["4"]="4" )
 
 print_tags() {
 	for tag in $(herbstclient tag_status "$1"); do
