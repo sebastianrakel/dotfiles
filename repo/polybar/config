@@ -41,10 +41,7 @@ module-margin-left = 0
 module-margin-right = 0
 
 font-0 = Monospace:style=Regular:size=16;1
-font-1 = Font Awesome 5 Free:pixelsize=16;1
-font-2 = Font Awesome 5 Free Solid:pixelsize=16;1
-font-3 = Font Awesome 5 Brands:pixelsize=16;1
-font-4 = FontAwesome:pixelsize=16;1
+font-1 = Symbols Nerd Font:pixelsize=16;1
 
 tray-position = right
 tray-padding = 2
