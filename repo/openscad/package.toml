@@ -1,0 +1,3 @@
+[[files]]
+source = "./own"
+dest   = "~/.local/share/OpenSCAD/libraries/own"
