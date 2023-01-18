@@ -39,7 +39,7 @@ This is my emacs config, it's written in org-mode
   #+END_SRC
 *** Font
   #+BEGIN_SRC emacs-lisp
-    (add-to-list 'default-frame-alist '(font . "Iosevka SS08-16"))
+    (add-to-list 'default-frame-alist '(font . "monospace-16"))
   #+END_SRC
 *** Theme
 My default theme is dracula for everything, but sometimes i need a light theme and for

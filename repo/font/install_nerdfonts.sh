@@ -1,15 +1,17 @@
 #!/bin/sh
-echo "Check Nerd Fonts"
-base=https://raw.githubusercontent.com/ryanoasis/nerd-fonts/d0bf73a19c3459aab39734a05159e2694911d7d6/src/glyphs/
-nerdfont_1000="${HOME}/.local/share/fonts/Symbols-1000-em_Nerd_Font_Complete.ttf"
-nerdfont_2048="${HOME}/.local/share/fonts/Symbols-2048-em_Nerd_Font_Complete.ttf"
 
-mkdir -p "${HOME}/.local/share/fonts"
+font_path="${HOME}/.local/share/fonts/nerdfont"
+base="https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.0/NerdFontsSymbolsOnly.zip"
 
-if [ ! -e "${nerdfont_1000}" ]; then
-    curl -L "${base}Symbols-1000-em%20Nerd%20Font%20Complete.ttf" -o "${nerdfont_1000}"
+if [ -d "${font_path}" ]; then
+    echo "Fonts: NerdFont: already installed"
+    exit 0
 fi
 
-if [ ! -e "${nerdfont_2048}" ]; then
-    curl -L "${base}Symbols-2048-em%20Nerd%20Font%20Complete.ttf" -o "${nerdfont_2048}"
-fi
+echo "Fonts: NerdFont: Installing"
+mkdir -p "${font_path}"
+
+temp_file=$(mktemp)
+curl -L "${base}" -o "${temp_file}"
+unzip "${temp_file}" -d "${font_path}"
+echo "Fonts: NerdFont: Installed"

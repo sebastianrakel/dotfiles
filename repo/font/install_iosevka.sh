@@ -1,12 +1,17 @@
 #!/bin/sh
 
-echo "Check for Iosevka"
+font_path="${HOME}/.local/share/fonts/iosevka"
+base="https://github.com/be5invis/Iosevka/releases/download/v17.0.4/super-ttc-iosevka-ss08-17.0.4.zip"
 
-if [ -e "${HOME}/.local/share/fonts/iosevka-ss08.ttc" ]; then
+if [ -d "${font_path}" ]; then
+    echo "Fonts: Iosevka: already installed"
     exit 0
 fi
 
-mkdir -p "${HOME}/.local/share/fonts"
+echo "Fonts: Iosevka: Installing"
+mkdir -p "${font_path}"
 
-curl -L "https://github.com/be5invis/Iosevka/releases/download/v10.0.0/super-ttc-iosevka-ss08-10.0.0.zip" -o /tmp/iosevka.zip
-unzip /tmp/iosevka.zip -d "${HOME}/.local/share/fonts/"
+temp_file=$(mktemp)
+curl -L "${base}" -o "${temp_file}"
+unzip "${temp_file}" -d "${font_path}"
+echo "Fonts: Iosevka: Installed"

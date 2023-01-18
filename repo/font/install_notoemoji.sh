@@ -1,10 +1,14 @@
 #!/bin/sh
-echo "Check Noto Fonts"
-base=https://github.com/googlefonts/noto-emoji/raw/main/fonts/NotoColorEmoji.ttf
-noto_color_emoji="${HOME}/.local/share/fonts/NotoColorEmoji.ttf"
+font_path="${HOME}/.local/share/fonts/notofont"
+base="https://github.com/googlefonts/noto-emoji/raw/main/fonts/NotoColorEmoji.ttf"
 
-mkdir -p "${HOME}/.local/share/fonts"
-
-if [ ! -e "${noto_color_emoji}" ]; then
-    curl -L "${base}" -o "${noto_color_emoji}"
+if [ -d "${font_path}" ]; then
+    echo "Fonts: NotoFont: already installed"
+    exit 0
 fi
+
+echo "Fonts: NotoFont: Installing"
+mkdir -p "${font_path}"
+
+curl -L "${base}" -o "${font_path}/NotoColorEmoji.ttf"
+echo "Fonts: NotoFont: Installed"
