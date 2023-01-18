@@ -1,3 +1,5 @@
+postcmds = ["./install_bolts.sh"]
+
 [[files]]
 source = "./own"
 dest   = "~/.local/share/OpenSCAD/libraries/own"
