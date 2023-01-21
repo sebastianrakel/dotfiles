@@ -71,6 +71,11 @@ Lockfiles (something like .#<filename>) are anoying for some lsp servers. so i w
 #+begin_src emacs-lisp
   (setq create-lockfiles nil)
 #+end_src
+*** Scrolling
+  Introduced with emacs 29 is this new scroll mode
+#+begin_src emacs-lisp
+  (pixel-scroll-precision-mode)
+#+end_src
 ** Backup
    #+BEGIN_SRC emacs-lisp
      (setq backup-directory-alist
@@ -520,6 +525,7 @@ to show in which block i'm currently
       (use-package go-mode
 	:config
 	(add-hook 'go-mode-hook #'yas-minor-mode)
+	(add-hook 'go-mode-hook 'eglot-ensure)
 	(local-set-key (kbd "C-c l b") 'go-build)
 	(local-set-key (kbd "C-c l i") 'go-install))
     #+end_src
