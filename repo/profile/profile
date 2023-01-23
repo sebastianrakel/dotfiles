@@ -5,6 +5,7 @@ private_variables="${profile_dir}/variables.private"
 
 source "${profile_dir}/aliases"
 source "${profile_dir}/variables"
+source "${profile_dir}/functions"
 
 if [ -f "${private_aliases}" ]; then
     source "${private_aliases}"
