@@ -75,7 +75,7 @@ modules-right = space battery1 space date space
 [bar/sulu]
 inherit = bar/1
 monitor = ${env:MONITOR:HDMI-1}
-modules-right = space mail-sync space date space
+modules-right = space date space
 
 [bar/openbox]
 inherit = bar/0
