@@ -13,9 +13,14 @@ if [ -f $userresources ]; then
     xrdb -merge $userresources
 fi
 
-source "${HOME}/.profile"
+. "${HOME}/.profile"
+
+
+if hash xscreensaver 2>/dev/null; then
+    xscreensaver --no-splash &
+fi
 
 xprofile_local="${HOME}/.xprofile.local"
-[ -f "${xprofile_local}" ] && source "${xprofile_local}"
+[ -f "${xprofile_local}" ] && . "${xprofile_local}"
 
 cd $HOME
