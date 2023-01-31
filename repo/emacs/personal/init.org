@@ -522,10 +522,14 @@ to show in which block i'm currently
 	(interactive)
 	(shell-command "go install"))
 
+      (defun eglot-format-buffer-on-save ()
+	(add-hook 'before-save-hook #'eglot-format-buffer -10 t))
+
       (use-package go-mode
 	:config
 	(add-hook 'go-mode-hook #'yas-minor-mode)
 	(add-hook 'go-mode-hook 'eglot-ensure)
+	(add-hook 'go-mode-hook #'eglot-format-buffer-on-save)
 	(local-set-key (kbd "C-c l b") 'go-build)
 	(local-set-key (kbd "C-c l i") 'go-install))
     #+end_src
