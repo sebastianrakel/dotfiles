@@ -116,6 +116,11 @@ Some packages have warnings about docstring wider than 80 character. there is no
    #+END_SRC
 ** LSP Keybindings
     #+BEGIN_SRC emacs-lisp
+      (global-set-key (kbd "C-c c r") 'eglot-find-implementation)
+      (global-set-key (kbd "C-c c d") 'eglot-find-declaration)
+      (global-set-key (kbd "C-c c f") 'eglot-format-buffer)
+      (global-set-key (kbd "C-c c R") 'eglot-rename)
+      (global-set-key (kbd "C-<return>") 'eglot-code-actions)
     #+END_SRC
 ** YAS Snippet Keybindings
     #+BEGIN_SRC emacs-lisp
@@ -511,8 +516,12 @@ to show in which block i'm currently
 #+end_src
 *** Golang
     #+begin_src emacs-lisp
+      (defun own/eglot-organize-import ()
+	(call-interactively 'eglot-code-action-organize-imports))
+
       (defun lsp-go-install-save-hooks ()
-	(add-hook 'before-save-hook 'gofmt-before-save))
+	(add-hook 'before-save-hook #'own/eglot-organize-import)
+	(add-hook 'before-save-hook #'eglot-format-buffer -10 t))
 
       (defun go-build ()
 	(interactive)
@@ -522,14 +531,11 @@ to show in which block i'm currently
 	(interactive)
 	(shell-command "go install"))
 
-      (defun eglot-format-buffer-on-save ()
-	(add-hook 'before-save-hook #'eglot-format-buffer -10 t))
-
       (use-package go-mode
 	:config
 	(add-hook 'go-mode-hook #'yas-minor-mode)
 	(add-hook 'go-mode-hook 'eglot-ensure)
-	(add-hook 'go-mode-hook #'eglot-format-buffer-on-save)
+	(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
 	(local-set-key (kbd "C-c l b") 'go-build)
 	(local-set-key (kbd "C-c l i") 'go-install))
     #+end_src
