@@ -421,6 +421,7 @@ Some people say tree-sitter is good, so give it a try
     #+end_src
 **** LSP
     #+begin_src emacs-lisp
+      (setq eglot-confirm-server-initiated-edits nil)
     #+end_src
 **** Data Formats
      #+begin_src emacs-lisp
