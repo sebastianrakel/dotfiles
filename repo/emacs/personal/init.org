@@ -470,6 +470,10 @@ to show in which block i'm currently
     (setq highlight-indent-guides-responsive 'top)
     (add-hook 'prog-mode-hook 'highlight-indent-guides-mode))
 #+end_src
+**** Protobuf
+#+begin_src emacs-lisp
+  (use-package protobuf-mode)
+#+end_src
 *** Org-Mode
     Some common org-mode settings
     #+begin_src emacs-lisp
