@@ -121,6 +121,7 @@ Some packages have warnings about docstring wider than 80 character. there is no
       (global-set-key (kbd "C-c c f") 'eglot-format-buffer)
       (global-set-key (kbd "C-c c R") 'eglot-rename)
       (global-set-key (kbd "C-<return>") 'eglot-code-actions)
+      (global-set-key (kbd "C-l") 'eglot-format-buffer)
     #+END_SRC
 ** YAS Snippet Keybindings
     #+BEGIN_SRC emacs-lisp
