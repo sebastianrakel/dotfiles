@@ -1,4 +1,4 @@
-postcmds = ["./install_hack.sh", "./install_notoemoji.sh"]
+postcmds = ["./install_hack.sh", "./install_notoemoji.sh", "./install_sourcecodepro.sh"]
 
 [[files]]
 source = "./fonts.conf"
