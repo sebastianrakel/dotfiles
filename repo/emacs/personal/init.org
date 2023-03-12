@@ -641,6 +641,10 @@ to show in which block i'm currently
 *** C#
 #+begin_src emacs-lisp
 #+end_src
+*** Yuck
+#+begin_src emacs-lisp
+  (use-package yuck-mode)
+#+end_src
 ** Misc
 *** Filebin
     #+BEGIN_SRC emacs-lisp

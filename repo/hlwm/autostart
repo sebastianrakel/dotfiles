@@ -167,7 +167,7 @@ hc detect_monitors
 change_wallpaper.sh
 
 if hash eww 2>/dev/null; then
-    eww open bar
+    eww open "$(hostnamectl hostname)"
 else
     echo "Use herbstluftwm panel"
     panel="${HOME}/.config/herbstluftwm/panel.sh"

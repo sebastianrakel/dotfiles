@@ -1,7 +1,6 @@
 (deflisten workspace "scripts/hlwm.pl")
-(defpoll battery :interval "1s" "scripts/battery.pl")
+(defpoll battery :interval "1s" "script[s/battery.pl")
 (defpoll time :interval "10s" "date '+%H:%M %b %d, %Y'")
-
 
 (defwidget bat []
   (box :orientation "h"
@@ -12,20 +11,12 @@
 	      :text battery)
        (label :class "bat-capacity"
 	      :halign "end"
-	      :text {EWW_BATTERY["BAT1"].capacity + "%"} )))
+	      :text { EWW_BATTERY["BAT1"].capacity + "%" } )))
 
-(defwidget bar []
+(defwidget clock []
   (box :orientation "h"
-       :class "bar"
-       (workspaces)
-       (sidestuff)))
-
-(defwidget sidestuff []
-  (box :class "sidestuff"
-       :orientation "h"
        :space-evenly false
        :halign "end"
-       (bat)
        time))
 
 (defwidget workspaces []
@@ -39,13 +30,42 @@
 (defwidget hlwm []
     (literal :content workspace))
 
-(defwindow bar
-  :monitor 0
-  :windowtype "dock"
-  :geometry (geometry :x "0%"
-                      :y "-4px"
-                      :width "98%"
-                      :height "40px"
-                      :anchor "bottom center")
-  :reserve (struts :side "bottom" :distance "45px")
-  (bar))
+(defwindow odin
+	   :monitor 0
+	   :windowtype "dock"
+	   :geometry (geometry :x "0%"
+			       :y "-4px"
+			       :width "98%"
+			       :height "40px"
+			       :anchor "bottom center")
+	   :reserve (struts :side "bottom" :distance "45px")
+	   (box :class "bar"
+		(workspaces)
+		(clock)))
+
+(defwindow loki
+	   :monitor 0
+	   :windowtype "dock"
+	   :geometry (geometry :x "0%"
+			       :y "-4px"
+			       :width "98%"
+			       :height "40px"
+			       :anchor "bottom center")
+	   :reserve (struts :side "bottom" :distance "45px")
+	   (box :class "bar"
+		(workspaces)
+		(bat)
+		(clock)))
+
+(defwindow sulu
+	   :monitor 0
+	   :windowtype "dock"
+	   :geometry (geometry :x "0%"
+			       :y "-4px"
+			       :width "98%"
+			       :height "40px"
+			       :anchor "bottom center")
+	   :reserve (struts :side "bottom" :distance "45px")
+	   (box :class "bar"
+		(workspaces)
+		(clock)))
