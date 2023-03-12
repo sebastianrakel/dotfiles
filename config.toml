@@ -35,6 +35,8 @@
 			'nvim',
 			'tools',
 			'openscad',
+			'eww',
+			'picom',
 		]
 
 [configurations.loki]

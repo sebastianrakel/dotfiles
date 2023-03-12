@@ -1,0 +1,47 @@
+@import 'colors.scss';
+
+* {
+    all: unset; //Unsets everything so you can style everything from scratch
+}
+
+//Global Styles
+.bar {
+    background-color: $background-color;
+    color: $foreground-color;
+    border-radius: 10px;
+    padding-right: 20px;
+    padding-left: 20px;
+}
+
+.workspaces {
+    margin: 7px 0px 0px 0px;
+}
+
+.workspaces button:hover {
+    color: $background-color;
+    background-color: $pink-color;
+}
+
+.workspace-button {
+    min-width: 25px;
+    border-radius: 50px;
+    margin-right: 5px;
+}
+
+.color-selected {
+    background-color: $foreground-color;
+    color: $background-color;
+}
+
+.color-vnonfocus {
+    background-color: $comment-color;
+}
+
+.color-vother {
+    background-color: $comment-color;
+}
+
+.color-urgent {
+    background-color: $orange-color;
+    color: $background-color;
+}

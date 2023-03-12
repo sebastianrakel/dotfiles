@@ -1,0 +1,3 @@
+[[files]]
+source = "./picom.conf"
+dest = "~/.config/picom/picom.conf"

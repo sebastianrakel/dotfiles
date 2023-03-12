@@ -1,0 +1,15 @@
+[[files]]
+source = "./eww.yuck"
+dest   = "~/.config/eww/eww.yuck"
+
+[[files]]
+source = "./eww.scss"
+dest   = "~/.config/eww/eww.scss"
+
+[[files]]
+source = "./colors.scss"
+dest   = "~/.config/eww/colors.scss"
+
+[[files]]
+source = "./scripts"
+dest   = "~/.config/eww/scripts"
