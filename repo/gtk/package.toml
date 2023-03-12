@@ -1,4 +1,4 @@
-postcmds = ["./install_dracula_icons.sh", "./install_flatcolor.sh"]
+postcmds = ["./install_dracula_icons.sh"]
 
 [[files]]
 source = "./themes/"
