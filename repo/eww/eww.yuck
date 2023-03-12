@@ -1,4 +1,18 @@
 (deflisten workspace "scripts/hlwm.pl")
+(defpoll battery :interval "1s" "scripts/battery.pl")
+(defpoll time :interval "10s" "date '+%H:%M %b %d, %Y'")
+
+
+(defwidget bat []
+  (box :orientation "h"
+       :class "bat"
+       :space-evenly "false"
+       (label :class "bat-icon"
+	      :halign "end"
+	      :text battery)
+       (label :class "bat-capacity"
+	      :halign "end"
+	      :text {EWW_BATTERY["BAT1"].capacity + "%"} )))
 
 (defwidget bar []
   (box :orientation "h"
@@ -7,8 +21,12 @@
        (sidestuff)))
 
 (defwidget sidestuff []
-  (box :class "sidestuff" :orientation "h" :space-evenly false :halign "end"
-    time))
+  (box :class "sidestuff"
+       :orientation "h"
+       :space-evenly false
+       :halign "end"
+       (bat)
+       time))
 
 (defwidget workspaces []
   (box :class "workspaces"
@@ -20,9 +38,6 @@
 
 (defwidget hlwm []
     (literal :content workspace))
-
-(defpoll time :interval "10s"
-  "date '+%H:%M %b %d, %Y'")
 
 (defwindow bar
   :monitor 0

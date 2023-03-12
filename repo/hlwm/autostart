@@ -109,10 +109,10 @@ hc keybind $Mod-Shift-c cycle -1
 hc keybind $Mod-i jumpto urgent
 
 # settings
-hc set frame_border_active_color $color_background
-hc set frame_border_normal_color $color_background
-hc set frame_bg_normal_color $color_background
-hc set frame_bg_active_color $color_current_line
+hc set frame_border_active_color $color_base05
+hc set frame_border_normal_color $color_base00
+hc set frame_bg_normal_color $color_base00
+hc set frame_bg_active_color $color_base05
 hc set frame_border_width 0
 hc set always_show_frame 0
 hc set frame_bg_transparent 1
@@ -122,26 +122,26 @@ hc set frame_gap 5
 # theme
 hc attr theme.tiling.reset 1
 hc attr theme.floating.reset 1
-hc attr theme.active.color $color_current_line
-hc attr theme.normal.color $color_background
-hc attr theme.urgent.color $color_orange
+hc attr theme.active.color $color_base02
+hc attr theme.normal.color $color_base01
+hc attr theme.urgent.color $color_base0A
 
-hc set_attr theme.title_color $color_foreground
-hc set_attr theme.active.title_color $color_foreground
+hc set_attr theme.title_color $color_base05
+hc set_attr theme.active.title_color $color_base05
 
 hc attr theme.border_width 2
 hc attr theme.floating.border_width 2
 hc attr theme.floating.outer_width 2
-hc attr theme.floating.outer_color $color_background
+hc attr theme.floating.outer_color $color_base00
 
-hc attr theme.active.outer_color $color_foreground
+hc attr theme.active.outer_color $color_base05
 hc attr theme.title_font 'monospace'
 
 hc attr theme.inner_width 0
-hc attr theme.inner_color $color_background
+hc attr theme.inner_color $color_base00
 
-hc attr theme.active.inner_color $color_foreground
-hc attr theme.background_color $color_background
+hc attr theme.active.inner_color $color_base05
+hc attr theme.background_color $color_base00
 hc attr theme.title_height 20
 hc attr theme.padding_top 5
 

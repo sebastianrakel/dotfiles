@@ -1,4 +1,4 @@
-@import 'colors.scss';
+@import 'active_theme.scss';
 
 * {
     all: unset; //Unsets everything so you can style everything from scratch
@@ -6,8 +6,8 @@
 
 //Global Styles
 .bar {
-    background-color: $background-color;
-    color: $foreground-color;
+    background-color: $base00;
+    color: $base05;
     border-radius: 10px;
     padding-right: 20px;
     padding-left: 20px;
@@ -18,8 +18,8 @@
 }
 
 .workspaces button:hover {
-    color: $background-color;
-    background-color: $pink-color;
+    color: $base00;
+    background-color: $base0E;
 }
 
 .workspace-button {
@@ -29,19 +29,27 @@
 }
 
 .color-selected {
-    background-color: $foreground-color;
-    color: $background-color;
+    background-color: $base05;
+    color: $base00;
 }
 
 .color-vnonfocus {
-    background-color: $comment-color;
+    background-color: $base01;
 }
 
 .color-vother {
-    background-color: $comment-color;
+    background-color: $base01;
 }
 
 .color-urgent {
-    background-color: $orange-color;
-    color: $background-color;
+    background-color: $base0A;
+    color: $base07;
+}
+
+.bat {
+    margin-right: 10px;
+}
+
+.bat-icon {
+    margin-right: 5px;
 }

@@ -13,3 +13,11 @@ dest   = "~/.config/eww/colors.scss"
 [[files]]
 source = "./scripts"
 dest   = "~/.config/eww/scripts"
+
+[[files]]
+source = "./themes"
+dest   = "~/.config/eww/themes"
+
+[[files]]
+source = "./theme-switch.sh"
+dest   = "~/.bin/eww-theme-switch"
