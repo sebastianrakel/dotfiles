@@ -7,6 +7,9 @@ hc() {
 source "${HOME}/.config/herbstluftwm/active_theme.sh"
 
 hc emit_hook reload
+
+hsetroot -solid "${color_base06}"
+
 hc keyunbind --all
 
 Mod=Mod4    # Use alt as the main modifier
@@ -165,7 +168,7 @@ herbstclient set tree_style '╾│ ├└╼─┐'
 
 hc detect_monitors
 
-change_wallpaper.sh
+# change_wallpaper.sh
 
 if hash eww 2>/dev/null; then
     eww open "$(hostnamectl hostname)"
