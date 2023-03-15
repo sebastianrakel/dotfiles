@@ -1,34 +1,40 @@
 (deflisten workspace "scripts/hlwm.pl")
-(defpoll battery :interval "1s" "script[s/battery.pl")
+(defpoll battery :interval "5m" "scripts/battery.pl")
 (defpoll time :interval "10s" "date '+%H:%M %b %d, %Y'")
 
+(defwidget right []
+	   (box :orientation "h"
+		:space-evenly "false"
+		:halign "end"
+		(children)))
+
 (defwidget bat []
-  (box :orientation "h"
-       :class "bat"
-       :space-evenly "false"
-       (label :class "bat-icon"
-	      :halign "end"
-	      :text battery)
-       (label :class "bat-capacity"
-	      :halign "end"
-	      :text { EWW_BATTERY["BAT1"].capacity + "%" } )))
+	   (box :orientation "h"
+		:class "bat"
+		:space-evenly "false"
+		(label :class "bat-icon"
+		       :halign "end"
+		       :text battery)
+		(label :class "bat-capacity"
+		       :halign "end"
+		       :text { EWW_BATTERY["BAT1"].capacity + "%" } )))
 
 (defwidget clock []
-  (box :orientation "h"
-       :space-evenly false
-       :halign "end"
-       time))
+	   (box :orientation "h"
+		:space-evenly false
+		:halign "end"
+		time))
 
 (defwidget workspaces []
-  (box :class "workspaces"
-       :orientation "h"
-       :space-evenly true
-       :halign "start"
-       :spacing 10
-       (hlwm)))
+	   (box :class "workspaces"
+		:orientation "h"
+		:space-evenly true
+		:halign "start"
+		:spacing 10
+		(hlwm)))
 
 (defwidget hlwm []
-    (literal :content workspace))
+	   (literal :content workspace))
 
 (defwindow odin
 	   :monitor 0
@@ -43,7 +49,7 @@
 		(workspaces)
 		(clock)))
 
-(defwindow loki
+(defwindow ostara
 	   :monitor 0
 	   :windowtype "dock"
 	   :geometry (geometry :x "0%"
@@ -54,8 +60,9 @@
 	   :reserve (struts :side "bottom" :distance "45px")
 	   (box :class "bar"
 		(workspaces)
-		(bat)
-		(clock)))
+		(right
+		 (bat)
+		 (clock))))
 
 (defwindow sulu
 	   :monitor 0
@@ -68,4 +75,5 @@
 	   :reserve (struts :side "bottom" :distance "45px")
 	   (box :class "bar"
 		(workspaces)
-		(clock)))
+		(right
+		 (clock))))
