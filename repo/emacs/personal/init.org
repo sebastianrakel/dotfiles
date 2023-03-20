@@ -6,23 +6,25 @@ This is my emacs config, it's written in org-mode
 * StartUp
 ** Basic Package Setup
    #+BEGIN_SRC emacs-lisp
-    (require 'package)
+     (require 'package)
 
-    (add-to-list 'package-archives
-		 '("org" . "http://orgmode.org/elpa/") t)
-    (add-to-list 'package-archives
-		 '("melpa" . "http://melpa.org/packages/") t)
-    (add-to-list 'package-archives
-		 '("melpa-stable" . "http://stable.melpa.org/packages/") t)
+     (add-to-list 'package-archives
+		  '("org" . "http://orgmode.org/elpa/") t)
+     (add-to-list 'package-archives
+		  '("melpa" . "http://melpa.org/packages/") t)
+     (add-to-list 'package-archives
+		  '("melpa-stable" . "http://stable.melpa.org/packages/") t)
+     ;(add-to-list 'package-archives
+     ;	     '("gnu-devel" . "https://elpa.gnu.org/devel/"))
 
-    (package-initialize)
+     (package-initialize)
 
-    ;; use-package to simplify the config file
-    (unless (package-installed-p 'use-package)
-      (package-refresh-contents)
-      (package-install 'use-package))
-    (require 'use-package)
-    (setq use-package-always-ensure 't)
+     ;; use-package to simplify the config file
+     (unless (package-installed-p 'use-package)
+       (package-refresh-contents)
+       (package-install 'use-package))
+     (require 'use-package)
+     (setq use-package-always-ensure 't)
   #+END_SRC
 
 ** Look and Feel
@@ -74,7 +76,7 @@ Lockfiles (something like .#<filename>) are anoying for some lsp servers. so i w
 *** Scrolling
   Introduced with emacs 29 is this new scroll mode
 #+begin_src emacs-lisp
-  (pixel-scroll-precision-mode)
+  ;(pixel-scroll-precision-mode)
 #+end_src
 ** Backup
    #+BEGIN_SRC emacs-lisp
@@ -422,7 +424,9 @@ Some people say tree-sitter is good, so give it a try
     #+end_src
 **** LSP
     #+begin_src emacs-lisp
-      (setq eglot-confirm-server-initiated-edits nil)
+      (use-package eglot
+	:config
+	(setq eglot-confirm-server-initiated-edits nil))
     #+end_src
 **** Data Formats
      #+begin_src emacs-lisp
@@ -434,7 +438,9 @@ Some people say tree-sitter is good, so give it a try
      #+end_src
 **** Editorconfig
      #+BEGIN_SRC emacs-lisp
-       (use-package editorconfig)
+       (use-package editorconfig
+	 :config
+	 (editorconfig-mode 1))
      #+END_SRC
 **** Cursor
      I want a centered cursor for better reading
@@ -493,7 +499,7 @@ to show in which block i'm currently
     #+begin_src emacs-lisp
       (require 'org-tempo)
     #+end_src
-*** HTML, Vue, TypeScript, JavaScript
+*** HTML, Vue, TypeScript, JavaScript, Angular
     #+begin_src emacs-lisp
       (use-package web-mode
 	:config
@@ -502,11 +508,25 @@ to show in which block i'm currently
 	(setq web-mode-enable-auto-closing t)
 	(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
 
-      (use-package typescript-mode)
+      (use-package typescript-mode
+	:config
+	(add-hook 'typescript-mode 'eglot-ensure))
 
       (use-package js2-mode
 	:config
 	(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
+    #+end_src
+
+    Use angular typescript server
+    #+begin_src emacs-lisp
+      (add-to-list 'eglot-server-programs
+		   '(web-mode "node"
+			      "/home/sebastian/.npm-packages/lib/node_modules/@angular/language-server"
+			      "--ngProbeLocations"
+			      "/home/sebastian/.npm-packages/lib/node_modules"
+			      "--tsProbeLocations"
+			      "/home/sebastian/.npm-packages/lib/node_modules"
+			      "--stdio"))
     #+end_src
 *** Django
 #+begin_src emacs-lisp
