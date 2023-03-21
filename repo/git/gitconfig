@@ -13,7 +13,10 @@
     ci = commit
     st = status
     sts = status -s
-    br = branch
+    
+    # List every branch, local and remote, in order of most recent to oldest commit, showing the branch's last commit and some last commit meta-data
+    br = for-each-ref --sort=-committerdate refs/heads/ refs/remotes/origin/ --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(contents:subject) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))' -
+    
     ba = branch -a
     type = cat-file -t
     dump = cat-file -p
