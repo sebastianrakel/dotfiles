@@ -3,7 +3,7 @@
 gtk-can-change-accels = 1
 
 gtk-icon-theme-name = "Dracula"
-gtk-theme-name = "Arc"
+gtk-theme-name = "Dracula"
 
 style "user-font"
 {

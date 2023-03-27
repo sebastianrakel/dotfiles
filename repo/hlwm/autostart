@@ -168,7 +168,7 @@ herbstclient set tree_style '╾│ ├└╼─┐'
 
 hc detect_monitors
 
-# change_wallpaper.sh
+change_wallpaper.sh
 
 if hash eww 2>/dev/null; then
     eww open "$(hostnamectl hostname)"

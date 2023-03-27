@@ -51,7 +51,7 @@ this i will use solarized
     (use-package gruvbox-theme)
     (use-package base16-theme)
 
-    (defvar current-theme 'base16-unikitty-light)
+    (defvar current-theme 'base16-monokai)
     (defun load-last-theme()
       (interactive)
       (load-theme current-theme t))
