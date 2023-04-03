@@ -665,6 +665,13 @@ to show in which block i'm currently
 #+begin_src emacs-lisp
   (use-package yuck-mode)
 #+end_src
+*** Graphviz
+#+begin_src emacs-lisp
+  (use-package graphviz-dot-mode
+    :config
+    (setq graphviz-dot-indent-width 4)
+    (add-hook 'graphviz-dot-mode-hook 'company-mode))
+#+end_src
 ** Misc
 *** Filebin
     #+BEGIN_SRC emacs-lisp
