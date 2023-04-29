@@ -1,7 +1,0 @@
-[[files]]
-source = 'profile'
-dest = '~/.profile'
-
-[[files]]
-source = 'profile_config'
-dest = '~/.config/profile'

@@ -1,9 +1,0 @@
-[Unit]
-Description=Sync all mbsync accounts independently
-
-[Service]
-Type=oneshot
-Environment="DISPLAY=:0"
-ExecStart=/home/sebastian/.bin/local/mailsync.sh
-ExecStartPost=/home/sebastian/.bin/local/notmuch_tag.sh
-ExecStartPost=/home/sebastian/.bin/local/mail-state.sh

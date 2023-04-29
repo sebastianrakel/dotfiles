@@ -1,3 +1,0 @@
-[[files]]
-source = "./config.py"
-dest   = "~/.config/qutebrowser/config.py"

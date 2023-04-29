@@ -1,7 +1,0 @@
-[[files]]
-source = "./tmux.conf"
-dest   = "~/.config/tmux/tmux.conf"
-
-[[files]]
-source = "./plugins/tpm"
-dest   = "~/.config/tmux/plugins/tpm"

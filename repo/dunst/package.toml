@@ -1,3 +1,0 @@
-[[files]]
-source = "./dunstrc"
-dest = "~/.config/dunst/dunstrc"

@@ -1,4 +1,0 @@
-[[files]]
-source = "./compton.conf"
-dest   = "~/.config/compton.conf"
-

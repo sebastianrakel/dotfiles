@@ -1,3 +1,0 @@
-[[files]]
-source = "./config"
-dest   = "~/.config/termite/config"
