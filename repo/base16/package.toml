@@ -1,0 +1,11 @@
+[[files]]
+source = "./config/config.yaml"
+dest = "~/.config/base16/config.yaml"
+
+[[files]]
+source = "./builder/base16-builder.py"
+dest = "~/.base-16/base16-builder.py"
+
+[[files]]
+source = "./schemes/monokai"
+dest = "~/.base-16/schemes/monokai"

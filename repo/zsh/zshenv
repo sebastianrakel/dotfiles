@@ -1,0 +1,39 @@
+export ZSH=${HOME}/.zsh
+
+export GOPATH=${HOME}/.go
+
+ruby_path=''
+if which ruby >/dev/null && which gem >/dev/null; then
+    ruby_path="$(ruby -r rubygems -e 'puts Gem.user_dir')"
+fi
+
+if which npm >/dev/null; then
+   npm_packages="${HOME}/.npm-packages"
+
+   if [ ! -d "${HOME}/.npm-packages" ]; then
+      mkdir "${HOME}/.npm-packages"
+      npm config set prefix "${npm_packages}"
+   fi
+fi
+
+typeset -U path PATH
+path=(~/.local/bin "${GOPATH}/bin" $ruby_path "${npm_packages}/bin" $path)
+export PATH
+
+if [[ -d "${XDG_RUNTIME_DIR}/gcr" ]]; then
+    export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/gcr/ssh
+fi
+
+export DOTNET_ROOT=${HOME}/.dotnet
+export ANDROID_HOME=${HOME}/Android/Sdk
+
+export EDITOR='emacsclient -nw'
+export VISUAL='emacsclient -n'
+
+export TERMINAL=alacritty
+export BROWSER=firefox
+
+export QT_AUTO_SCREEN_SCALE_FACTOR=0
+export WINIT_HIDPI_FACTOR=1
+export WINIT_X11_SCALE_FACTOR=1
+export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=lcd'

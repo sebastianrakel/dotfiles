@@ -1,0 +1,18 @@
+---
+template_lists:
+  default: https://raw.githubusercontent.com/sebastianrakel/base16-templates-source/patch-1/list.yaml
+scheme_lists:
+  default: https://raw.githubusercontent.com/chriskempson/base16-schemes-source/master/list.yaml
+scheme_dir: '~/.base-16/schemes'
+template_dir: '~/.base-16/templates'
+output_dir: '~/.base-16/output'
+cache_dir: '~/.base-16/cache'
+schemes:
+  - gruvbox
+templates:
+  - alacritty
+  - emacs
+  - dunst
+  - fzf
+  - polybar
+  - rofi

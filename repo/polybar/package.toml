@@ -1,0 +1,7 @@
+[[files]]
+source = "./config"
+dest = "~/.config/polybar"
+
+[[files]]
+source = "./launch.sh"
+dest = "~/.local/bin/polybar_launch"

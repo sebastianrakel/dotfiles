@@ -1,0 +1,7 @@
+[[files]]
+source = "./config"
+dest = "~/.config/herbstluftwm"
+
+[[files]]
+source = "./theme"
+dest = "~/.base-16/templates/herbstluftwm/templates"

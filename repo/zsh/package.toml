@@ -1,0 +1,15 @@
+[[files]]
+source = "./zshrc"
+dest = "~/.zshrc"
+
+[[files]]
+source = "./zshenv"
+dest = "~/.zshenv"
+
+[[files]]
+source = "./zprofile"
+dest = "~/.zprofile"
+
+[[files]]
+source = "./zsh"
+dest = "~/.zsh"

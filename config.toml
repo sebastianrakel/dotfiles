@@ -4,6 +4,7 @@
         }
 
         facts = {
+	      base16-themepath = "~/.base16",
               git = {
                   email      = "sebastian@devunit.eu",
                   signingkey = "779EBA5EB9D631B8!"
@@ -11,64 +12,19 @@
         }
 
 [configurations.base]
-        packages = ['git', 'tmux', 'zsh', 'profile', 'ssh']
-
-[configurations.computer]
-        dependencies = ['base']
         packages = [
-			'x11',
-			'rofi',
-			'emacs',
-		 	'gpg',
-		 	'hlwm',
-		 	'termite',
-		 	'qutebrowser',
-		 	'systemd',
-		 	'scripts',
-		 	'wallpaper',
-		 	'polybar',
-		 	'compton',
-		 	'alacritty',
-		 	'font',
-		 	'gtk',
-		 	'dunst',
-			'nvim',
-			'tools',
-			'openscad',
-			'eww',
-			'picom',
-		]
+		 'zsh',
+	]
 
-[configurations.loki]
-        dependencies = ['computer']
-        packages = ['mpd']
+[configurations.workstation]
+	dependencies = ['base']
+	packages = [
+		 'herbstluftwm',
+		 'alacritty',
+		 'polybar',
+		 'rofi',
+		 'base16',
+	]
 
 [configurations.odin]
-        dependencies = ['computer']
-        packages = ['mpd']
-
-[configurations.ostara]
-        dependencies = ['computer']
-        packages = ['mpd']
-
-[configurations.sulu]
-        dependencies = ['computer']
-        packages = ['mpd']
-[configurations.sulu.facts]
-	git = {
-	    email = 'sebastian.rakel@service-erp.de'
-	}
-
-[configurations.mimir]
-        pattern = '^mimir.*$'
-        dependencies = ['base']
-
-[configurations.ws-rakel-seb]
-        dependencies = ['computer']
-
-        facts = {
-              git = {
-                  email      = "sebastian.rakel@landwehr.it",
-                  signingkey = "7ED04C7F09524295F10DA30515725C19DFA82902"
-              }
-        }
+	dependencies = ['workstation']
