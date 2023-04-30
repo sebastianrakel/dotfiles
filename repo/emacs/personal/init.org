@@ -105,6 +105,7 @@ Some packages have warnings about docstring wider than 80 character. there is no
      (global-set-key (kbd "C-c r") 'reload-dotemacs)
      (global-set-key (kbd "C-c R") 'reload-projects)
      (global-set-key (kbd "C-c f r") 'reload-current-buffer)
+     (global-set-key (kbd "C-c f x") 'open-real-terminal-current-directory)
      (global-set-key (kbd "C-c g") 'magit)
      (global-set-key (kbd "C-c p") 'projectile-command-map)
      (global-set-key (kbd "C-c q s") 'open-emacs-config)
@@ -275,6 +276,10 @@ Sometime i need a real terminal no emacs buffer or something like this, so this 
     (message "Open Terminal with projectile path")
     (open-real-terminal--path(projectile-project-root))
   )
+
+  (defun open-real-terminal-current-directory()
+    (interactive)
+    (open-real-terminal--with-current-directory))
 
   (defun open-real-terminal()
     (interactive)
