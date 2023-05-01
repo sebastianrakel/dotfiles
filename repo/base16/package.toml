@@ -17,3 +17,7 @@ dest = "~/.base-16/schemes/monokai"
 [[files]]
 source = "./schemes/penumbra"
 dest = "~/.base-16/schemes/penumbra"
+
+[[files]]
+source = "./themes"
+dest = "~/.base16-themes/"

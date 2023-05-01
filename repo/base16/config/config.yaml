@@ -5,7 +5,7 @@ scheme_lists:
   default: https://raw.githubusercontent.com/chriskempson/base16-schemes-source/master/list.yaml
 scheme_dir: '~/.base-16/schemes'
 template_dir: '~/.base-16/templates'
-output_dir: '~/.base-16/output'
+output_dir: '~/.dotfiles/repo/base16/themes'
 cache_dir: '~/.base-16/cache'
 schemes:
   - gruvbox
@@ -18,3 +18,4 @@ templates:
   - fzf
   - polybar
   - rofi
+  - emacs

@@ -3,5 +3,5 @@ if [[ -h "${polybar_theme_path}" ]]; then
     rm "${polybar_theme_path}"
 fi
 
-ln -s "${HOME}/.base-16/output/polybar/${theme_name}.ini" "${polybar_theme_path}"
+ln -s "${HOME}/.base16-themes/polybar/${theme_name}.ini" "${polybar_theme_path}"
 polybar-msg cmd restart
