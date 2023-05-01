@@ -13,3 +13,7 @@ dest = "~/.local/bin/base16-activate.sh"
 [[files]]
 source = "./schemes/monokai"
 dest = "~/.base-16/schemes/monokai"
+
+[[files]]
+source = "./schemes/penumbra"
+dest = "~/.base-16/schemes/penumbra"

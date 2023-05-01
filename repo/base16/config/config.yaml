@@ -9,6 +9,8 @@ output_dir: '~/.base-16/output'
 cache_dir: '~/.base-16/cache'
 schemes:
   - gruvbox
+  - monokai
+  - penumbra
 templates:
   - alacritty
   - emacs
