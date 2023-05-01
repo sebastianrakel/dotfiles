@@ -1,1 +1,1 @@
-/home/sebastian/.base-16/output/herbstluftwm/base16-gruvbox-dark-hard.sh
+/home/sebastian/.base-16/output/herbstluftwm/base16-gruvbox-light-hard.sh

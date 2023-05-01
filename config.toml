@@ -3,17 +3,10 @@
                      main = { path = './repo' }
         }
 
-        facts = {
-	      base16-themepath = "~/.base16",
-              git = {
-                  email      = "sebastian@devunit.eu",
-                  signingkey = "779EBA5EB9D631B8!"
-              }
-        }
-
 [configurations.base]
         packages = [
 		 'zsh',
+		 'git',
 	]
 
 [configurations.workstation]

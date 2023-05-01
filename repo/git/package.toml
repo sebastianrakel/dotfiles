@@ -1,0 +1,7 @@
+[[files]]
+source = "./config/gitconfig"
+dest = "~/.config/git/config"
+
+[[files]]
+source = "./config/gitignore"
+dest = "~/.config/git/gitignore"

@@ -9,3 +9,7 @@ dest   = "~/.emacs.d/personal"
 [[files]]
 source = "./snippets"
 dest   = "~/.emacs.d/snippets"
+
+[[files]]
+source     = "./theme/activate.sh"
+collection = "base16-activations"
