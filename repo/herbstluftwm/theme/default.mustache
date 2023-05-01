@@ -2,19 +2,36 @@
 
 # {{scheme-name}}
 
+hlwm_base00='#{{base00-hex}}'
+hlwm_base01='#{{base01-hex}}'
+hlwm_base02='#{{base02-hex}}'
+hlwm_base03='#{{base03-hex}}'
+hlwm_base04='#{{base04-hex}}'
+hlwm_base05='#{{base05-hex}}'
+hlwm_base06='#{{base06-hex}}'
+hlwm_base07='#{{base07-hex}}'
+hlwm_base08='#{{base08-hex}}'
+hlwm_base09='#{{base09-hex}}'
+hlwm_base0A='#{{base0A-hex}}'
+hlwm_base0B='#{{base0B-hex}}'
+hlwm_base0C='#{{base0C-hex}}'
+hlwm_base0D='#{{base0D-hex}}'
+hlwm_base0E='#{{base0E-hex}}'
+hlwm_base0F='#{{base0F-hex}}'
+
 herbstclient chain , \
-	, attr theme.color                        '#{{base00-hex}}' \
-	, attr theme.background_color             '#{{base02-hex}}' \
-	, attr theme.normal.color                 '#{{base01-hex}}' \
-	, attr theme.active.color                 '#{{base09-hex}}' \
-	, attr theme.active.background_color      '#{{base0A-hex}}' \
-	, attr theme.urgent.color                 '#{{base08-hex}}' \
-	, attr theme.floating.active.color        '#{{base0D-hex}}' \
-	, attr theme.floating.urgent.color        '#{{base0E-hex}}' \
-	, attr theme.floating.background_color    '#{{base0C-hex}}' \
-	, attr settings.frame_bg_normal_color     '#{{base02-hex}}' \
-	, attr settings.frame_bg_active_color     '#{{base0A-hex}}' \
-	, attr settings.frame_border_normal_color '#{{base00-hex}}' \
-	, attr settings.frame_border_active_color '#{{base03-hex}}' \
-	, attr theme.title_color white \
-	, attr theme.active.title_color black
+	, attr theme.color                        "${hlwm_base07}" \
+	, attr theme.background_color             "${hlwm_base00}" \
+	, attr theme.normal.color                 "${hlwm_base01}" \
+	, attr theme.active.color                 "${hlwm_base08}" \
+	, attr theme.active.background_color      "${hlwm_base00}" \
+	, attr theme.urgent.color                 "${hlwm_base0A}" \
+	, attr theme.floating.active.color        "${hlwm_base08}" \
+	, attr theme.floating.urgent.color        "${hlwm_base0A}" \
+	, attr theme.floating.background_color    "${hlwm_base00}" \
+	, attr settings.frame_bg_normal_color     "${hlwm_base00}" \
+	, attr settings.frame_bg_active_color     "${hlwm_base08}" \
+	, attr settings.frame_border_normal_color "${hlwm_base00}" \
+	, attr settings.frame_border_active_color "${hlwm_base08}" \
+	, attr theme.title_color                  "${hlwm_base07}" \
+	, attr theme.active.title_color		  "${hlwm_base07}"
