@@ -5,3 +5,7 @@ dest = "~/.config/polybar"
 [[files]]
 source = "./launch.sh"
 dest = "~/.local/bin/polybar_launch"
+
+[[files]]
+source     = "./theme/activate.sh"
+collection = "base16-activations"

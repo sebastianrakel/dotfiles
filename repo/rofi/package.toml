@@ -1,3 +1,7 @@
 [[files]]
 source = "./config"
 dest = "~/.config/rofi"
+
+[[files]]
+source     = "./theme/activate.sh"
+collection = "base16-activations"

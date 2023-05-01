@@ -26,5 +26,14 @@
 		 'base16',
 	]
 
+[configurations.workstation.collections]
+	'base16-activations' = {
+        	 destination = '~/.base-16/activations.sh',
+              	 perm = "0644",
+      	}
+
 [configurations.odin]
+	dependencies = ['workstation']
+
+[configurations.ostara]
 	dependencies = ['workstation']

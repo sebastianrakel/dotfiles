@@ -1,5 +1,5 @@
 rofi_theme_path="${HOME}/.config/rofi/theme.rasi"
-if [[ -f "${rofi_theme_path}" ]]; then
+if [[ -h "${rofi_theme_path}" ]]; then
     rm "${rofi_theme_path}"
 fi
 

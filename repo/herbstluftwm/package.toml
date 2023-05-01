@@ -5,3 +5,7 @@ dest = "~/.config/herbstluftwm"
 [[files]]
 source = "./theme"
 dest = "~/.base-16/templates/herbstluftwm/templates"
+
+[[files]]
+source     = "./theme/activate.sh"
+collection = "base16-activations"

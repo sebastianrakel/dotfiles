@@ -7,5 +7,9 @@ source = "./builder/base16-builder.py"
 dest = "~/.base-16/base16-builder.py"
 
 [[files]]
+source = "./scripts/base16-activate.sh"
+dest = "~/.local/bin/base16-activate.sh"
+
+[[files]]
 source = "./schemes/monokai"
 dest = "~/.base-16/schemes/monokai"

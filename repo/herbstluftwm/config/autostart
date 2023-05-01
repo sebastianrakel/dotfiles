@@ -182,3 +182,7 @@ for monitor in $(herbstclient list_monitors | cut -d: -f1) ; do
     hc pad $monitor 0 0 50 0
     polybar_launch $monitor
 done
+
+if [[ -h "${HOME}/.config/herbstluftwm/theme.sh" ]]; then
+    source "${HOME}/.config/herbstluftwm/theme.sh"
+fi
