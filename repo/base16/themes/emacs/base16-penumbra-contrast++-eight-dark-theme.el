@@ -1,4 +1,4 @@
-;; base16--theme.el -- A base16 colorscheme
+;; base16-penumbra-contrast++-eight-dark-theme.el -- A base16 colorscheme
 
 ;;; Commentary:
 ;; Base16: (https://github.com/tinted-theming/home)
@@ -11,7 +11,7 @@
 
 (require 'base16-theme)
 
-(defvar base16--theme-colors
+(defvar base16-penumbra-contrast++-eight-dark-theme-colors
   '(:base00 "#181B1F"
     :base01 "#3E4044"
     :base02 "#636363"
@@ -31,14 +31,14 @@
   "All colors for Base16 penumbra contrast++ eight dark are defined here.")
 
 ;; Define the theme
-(deftheme base16-)
+(deftheme base16-penumbra-contrast++-eight-dark)
 
 ;; Add all the faces to the theme
-(base16-theme-define 'base16- base16--theme-colors)
+(base16-theme-define 'base16-penumbra-contrast++-eight-dark base16-penumbra-contrast++-eight-dark-theme-colors)
 
 ;; Mark the theme as provided
-(provide-theme 'base16-)
+(provide-theme 'base16-penumbra-contrast++-eight-dark)
 
-(provide 'base16--theme)
+(provide 'base16-penumbra-contrast++-eight-dark-theme)
 
-;;; base16--theme.el ends here
+;;; base16-penumbra-contrast++-eight-dark-theme.el ends here

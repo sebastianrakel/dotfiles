@@ -6,25 +6,31 @@ This is my emacs config, it's written in org-mode
 * StartUp
 ** Basic Package Setup
    #+BEGIN_SRC emacs-lisp
-     (require 'package)
+      (require 'package)
 
-     (add-to-list 'package-archives
-		  '("org" . "http://orgmode.org/elpa/") t)
-     (add-to-list 'package-archives
-		  '("melpa" . "http://melpa.org/packages/") t)
-     (add-to-list 'package-archives
-		  '("melpa-stable" . "http://stable.melpa.org/packages/") t)
-     ;(add-to-list 'package-archives
-     ;	     '("gnu-devel" . "https://elpa.gnu.org/devel/"))
+      (add-to-list 'package-archives
+		   '("org" . "http://orgmode.org/elpa/") t)
+      (add-to-list 'package-archives
+		   '("melpa" . "http://melpa.org/packages/") t)
+      (add-to-list 'package-archives
+		   '("melpa-stable" . "http://stable.melpa.org/packages/") t)
+      ;(add-to-list 'package-archives
+      ;	     '("gnu-devel" . "https://elpa.gnu.org/devel/"))
 
-     (package-initialize)
+      (package-initialize)
 
-     ;; use-package to simplify the config file
-     (unless (package-installed-p 'use-package)
-       (package-refresh-contents)
-       (package-install 'use-package))
-     (require 'use-package)
-     (setq use-package-always-ensure 't)
+      ;; use-package to simplify the config file
+      (unless (package-installed-p 'use-package)
+	(package-refresh-contents)
+	(package-install 'use-package))
+      (require 'use-package)
+      (setq use-package-always-ensure 't)
+
+     (defun load-directory (dir)
+       (let ((load-it (lambda (f)
+			(load-file (concat (file-name-as-directory dir) f)))
+		      ))
+	 (mapc load-it (directory-files dir nil "\\.el$"))))
   #+END_SRC
 
 ** Look and Feel
@@ -50,6 +56,7 @@ this i will use solarized
     (use-package dracula-theme)
     (use-package gruvbox-theme)
     (use-package base16-theme)
+    (load-directory "~/.base16-themes/emacs/")
 
     (defvar current-theme 'base16-monokai)
     (defun load-last-theme()

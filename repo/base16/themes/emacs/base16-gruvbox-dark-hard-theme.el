@@ -1,4 +1,4 @@
-;; base16--theme.el -- A base16 colorscheme
+;; base16-gruvbox-dark-hard-theme.el -- A base16 colorscheme
 
 ;;; Commentary:
 ;; Base16: (https://github.com/tinted-theming/home)
@@ -11,7 +11,7 @@
 
 (require 'base16-theme)
 
-(defvar base16--theme-colors
+(defvar base16-gruvbox-dark-hard-theme-colors
   '(:base00 "#1d2021"
     :base01 "#3c3836"
     :base02 "#504945"
@@ -31,14 +31,14 @@
   "All colors for Base16 Gruvbox dark, hard are defined here.")
 
 ;; Define the theme
-(deftheme base16-)
+(deftheme base16-gruvbox-dark-hard)
 
 ;; Add all the faces to the theme
-(base16-theme-define 'base16- base16--theme-colors)
+(base16-theme-define 'base16-gruvbox-dark-hard base16-gruvbox-dark-hard-theme-colors)
 
 ;; Mark the theme as provided
-(provide-theme 'base16-)
+(provide-theme 'base16-gruvbox-dark-hard)
 
-(provide 'base16--theme)
+(provide 'base16-gruvbox-dark-hard-theme)
 
-;;; base16--theme.el ends here
+;;; base16-gruvbox-dark-hard-theme.el ends here

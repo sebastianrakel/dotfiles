@@ -279,6 +279,7 @@ def scheme_prepare(scheme_data):
     scheme = {
         'scheme-name': scheme_data['scheme'],
         'scheme-author': scheme_data['author'],
+        'scheme-slug': scheme_data['scheme'].lower().replace(' ', '-').replace(',', ''),
     }
 
     bases = ["base{:02X}".format(x) for x in range(0, 16)]
