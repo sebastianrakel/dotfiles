@@ -12,11 +12,20 @@
 [configurations.workstation]
 	dependencies = ['base']
 	packages = [
+		 'emacs',
+		 'font',
 		 'herbstluftwm',
 		 'alacritty',
 		 'polybar',
 		 'rofi',
 		 'base16',
+		 'wallpaper',
+		 'tools',
+	]
+
+[configurations.3d]
+	packages = [
+		 'openscad',
 	]
 
 [configurations.workstation.collections]
@@ -26,7 +35,16 @@
       	}
 
 [configurations.odin]
-	dependencies = ['workstation']
+	dependencies = [
+		'workstation',
+		'3d',
+	]
 
 [configurations.ostara]
+	dependencies = [
+		     'workstation',
+		     '3d',
+	]
+
+[configurations.sulu]
 	dependencies = ['workstation']

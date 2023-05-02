@@ -55,8 +55,9 @@ this i will use solarized
   #+BEGIN_SRC emacs-lisp
     (use-package dracula-theme)
     (use-package gruvbox-theme)
-    (use-package base16-theme)
-    (load-directory "~/.base16-themes/emacs/")
+    (use-package base16-theme
+      :init
+      (add-to-list 'custom-theme-load-path "~/.base16-themes/emacs/"))
 
     (defvar current-theme 'base16-monokai)
     (defun load-last-theme()
