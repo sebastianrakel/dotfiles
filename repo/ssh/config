@@ -1,0 +1,12 @@
+Include ~/.ssh/host.d/*
+
+Host *
+	AddKeysToAgent yes
+	HashKnownHosts no
+
+Host ssh.dev.azure.com
+	ControlMaster false
+	IdentityFile ~/.ssh/id_rsa
+	CASignatureAlgorithms +ssh-rsa
+	HostkeyAlgorithms +ssh-rsa
+	PubkeyAcceptedAlgorithms +ssh-rsa

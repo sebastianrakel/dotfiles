@@ -1,0 +1,13 @@
+for file in /etc/X11/xinit/xinitrc.d/*.sh; do
+  source "${file}"
+done
+
+if [[ -e "${HOME}/.xprofile" ]]; then
+    source "${HOME}/.xprofile"
+fi
+
+if [[ -e "${HOME}/.xprofile.local" ]]; then
+    source "${HOME}/.xprofile.local"
+fi
+
+exec herbstluftwm

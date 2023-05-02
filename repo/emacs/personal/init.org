@@ -59,7 +59,7 @@ this i will use solarized
       :init
       (add-to-list 'custom-theme-load-path "~/.base16-themes/emacs/"))
 
-    (defvar current-theme 'base16-monokai)
+    (load-file "~/.emacs.d/personal/theme.el")
     (defun load-last-theme()
       (interactive)
       (load-theme current-theme t))

@@ -41,3 +41,13 @@ export QT_AUTO_SCREEN_SCALE_FACTOR=0
 export WINIT_HIDPI_FACTOR=1
 export WINIT_X11_SCALE_FACTOR=1
 export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=lcd'
+
+export VAGRANT_DEFAULT_PROVIDER=libvirt
+
+if [[ -e "${HOME}/.zshenv.private" ]]; then
+   source "${HOME}/.zshenv.private"
+fi
+
+if [[ -e "${HOME}/.zshenv.local" ]]; then
+   source "${HOME}/.zshenv.local"
+fi
