@@ -17,6 +17,7 @@ hc keybind $Mod-Shift-r reload
 hc keybind $Mod-Return spawn "${TERMINAL:-xterm}" # use your $TERMINAL with xterm as fallback
 hc keybind $Mod-d spawn rofi -show combi -combi-modi drun,run -show-icons
 hc keybind $Mod-w spawn rofi -show window -window-command 'herbstclient bring {window}'
+hc keybind $Mod-Shift-e spawn rofi -show pw -modes "pw:${HOME}/.config/rofi/modes/power.sh"
 hc keybind $Mod-p spawn workspace-switcher rofi
 
 # basic movement in tiling and floating mode
