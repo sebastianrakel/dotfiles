@@ -166,7 +166,7 @@ hc unlock
 
 hc detect_monitors
 
-feh --bg-scale "${HOME}/Pictures/Wallpaper/linux_heart.png"
+feh --bg-fill "${HOME}/Pictures/Wallpaper/linux_heart.png"
 
 killall -q polybar
 for monitor in $(herbstclient list_monitors | cut -d: -f1) ; do
