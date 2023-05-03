@@ -1,3 +1,7 @@
 [[files]]
 source = "./xinitrc"
 dest = "~/.xinitrc"
+
+[[files]]
+source = "./xprofile"
+dest = "~/.xprofile"

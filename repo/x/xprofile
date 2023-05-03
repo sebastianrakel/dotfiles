@@ -1,0 +1,3 @@
+if hash xscreensaver 2>/dev/null; then
+    xscreensaver --no-splash &
+fi
