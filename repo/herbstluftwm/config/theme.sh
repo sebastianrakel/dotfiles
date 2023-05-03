@@ -1,1 +1,1 @@
-/home/sebastian/.base16-themes/herbstluftwm/base16-penumbra-balanced-eight-dark.sh
+/home/sebastian/.base16-themes/herbstluftwm/base16-penumbra-balanced-eight-light.sh
