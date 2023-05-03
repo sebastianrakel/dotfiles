@@ -164,6 +164,8 @@ hc unlock
 
 hc detect_monitors
 
+feh --bg-scale "${HOME}/Pictures/Wallpaper/linux_heart.png"
+
 killall -q polybar
 for monitor in $(herbstclient list_monitors | cut -d: -f1) ; do
     echo "Start panel for monitor ${monitor}"
