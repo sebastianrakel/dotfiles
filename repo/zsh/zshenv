@@ -8,7 +8,7 @@ fi
 
 ruby_path=''
 if which ruby >/dev/null && which gem >/dev/null; then
-    ruby_path="$(ruby -r rubygems -e 'puts Gem.user_dir')"
+    ruby_path="$(ruby -r rubygems -e 'puts Gem.user_dir')/bin"
 fi
 
 if which npm >/dev/null; then
