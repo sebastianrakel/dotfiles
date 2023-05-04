@@ -1,3 +1,4 @@
+echo "Theme: Polybar set"
 polybar_theme_path="${HOME}/.config/polybar/theme.ini"
 if [[ -h "${polybar_theme_path}" ]]; then
     rm "${polybar_theme_path}"
