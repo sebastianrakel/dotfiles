@@ -123,6 +123,9 @@ Some packages have warnings about docstring wider than 80 character. there is no
      (global-set-key (kbd "C-c x") 'open-real-terminal)
      (global-set-key (kbd "C-c D") 'jump-to-dashboard)
      (global-set-key (kbd "C-c F") 'toggle-maximize-buffer)
+
+     (global-set-key (kbd "C-c j l") 'goto-line)
+     (global-set-key (kbd "C-c j e") 'flycheck-next-error)
    #+END_SRC
 ** LSP Keybindings
     #+BEGIN_SRC emacs-lisp
@@ -130,6 +133,7 @@ Some packages have warnings about docstring wider than 80 character. there is no
       (global-set-key (kbd "C-c c d") 'eglot-find-declaration)
       (global-set-key (kbd "C-c c f") 'eglot-format-buffer)
       (global-set-key (kbd "C-c c R") 'eglot-rename)
+      (global-set-key (kbd "C-c c e") 'flycheck-error-list)
       (global-set-key (kbd "C-<return>") 'eglot-code-actions)
       (global-set-key (kbd "C-l") 'eglot-format-buffer)
     #+END_SRC

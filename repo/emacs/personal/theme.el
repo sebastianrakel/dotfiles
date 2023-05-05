@@ -11,3 +11,6 @@
 (defvar current-theme 'base16-penumbra-balanced-eight-dark)
 (defvar current-theme 'base16-penumbra-contrast++-eight-dark)
 (defvar current-theme 'base16-penumbra-contrast++-eight-dark)
+(defvar current-theme 'base16-penumbra-contrast++-eight-dark)
+(defvar current-theme 'base16-penumbra-contrast++-eight-dark)
+(defvar current-theme 'base16-penumbra-contrast++-eight-light)
