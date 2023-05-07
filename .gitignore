@@ -64,3 +64,9 @@ repo/emacs/personal/init.el
 .stfolder
 
 *.private
+
+repo/alacritty/config/theme.yml
+repo/emacs/personal/theme.el
+repo/herbstluftwm/config/theme.sh
+repo/polybar/config/theme.ini
+repo/rofi/config/theme.rasi
