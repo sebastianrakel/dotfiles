@@ -8,6 +8,7 @@
 		 'zsh',
 		 'git',
 		 'ssh',
+		 'tmux',
 	]
 
 [configurations.workstation]
