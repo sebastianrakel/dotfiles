@@ -1,5 +1,11 @@
 #!/usr/bin/env sh
 
+if [ x"${@}" = x"lock" ]
+then
+    xscreensaver-command -lock
+    exit 0
+fi
+
 if [ x"${@}" = x"reboot" ]
 then
     systemctl reboot
@@ -23,9 +29,8 @@ then
     herbstclient quit
     exit 0
 fi
+echo "lock"
 echo "reboot"
 echo "suspend"
 echo "shutdown"
 echo "hlwm quit"
-
-   
