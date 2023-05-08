@@ -2,7 +2,7 @@
 
 if [ x"${@}" = x"lock" ]
 then
-    xscreensaver-command -lock
+    xscreensaver-command -lock > /dev/null &
     exit 0
 fi
 
