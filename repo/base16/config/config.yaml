@@ -11,6 +11,7 @@ schemes:
   - gruvbox
   - monokai
   - penumbra
+  - default
 templates:
   - alacritty
   - emacs
