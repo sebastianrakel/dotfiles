@@ -8,4 +8,4 @@ dest = "~/.xprofile"
 
 [[files]]
 source = "./config/redshift"
-dest = "~/.config/redshift/redshift.conf"
+dest = "~/.config/redshift"
