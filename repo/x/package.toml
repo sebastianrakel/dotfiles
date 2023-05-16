@@ -5,3 +5,7 @@ dest = "~/.xinitrc"
 [[files]]
 source = "./xprofile"
 dest = "~/.xprofile"
+
+[[files]]
+source = "./config/redshift"
+dest = "~/.config/redshift/redshift.conf"

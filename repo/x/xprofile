@@ -2,6 +2,6 @@ if hash xscreensaver 2>/dev/null; then
     xscreensaver --no-splash &
 fi
 
-if hash redshift 2>/dev/null; then
-    redshift -l 52.52143:7.31845 &
+if hash redshift-gtk 2>/dev/null; then
+   redshift-gtk &
 fi
