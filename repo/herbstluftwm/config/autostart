@@ -20,6 +20,7 @@ hc keybind $Mod-w spawn rofi -show window -window-command 'herbstclient bring {w
 hc keybind $Mod-Shift-e spawn rofi -show pw -modes "pw:${HOME}/.config/rofi/modes/power.sh"
 hc keybind $Mod-t spawn rofi -show theme -modes "theme:${HOME}/.config/rofi/modes/theme.sh"
 hc keybind $Mod-p spawn workspace-switcher rofi
+hc keybind $Mod-Shift-s spawn flameshot gui
 
 # basic movement in tiling and floating mode
 # focusing clients
