@@ -684,6 +684,11 @@ to show in which block i'm currently
     (setq graphviz-dot-indent-width 4)
     (add-hook 'graphviz-dot-mode-hook 'company-mode))
 #+end_src
+*** Nix
+First of all, we need nix-mode to edit nix files
+#+begin_src emacs-lisp
+  (use-package nix-mode)
+#+end_src
 ** Misc
 *** Filebin
     #+BEGIN_SRC emacs-lisp
