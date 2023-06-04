@@ -495,7 +495,10 @@ to show in which block i'm currently
 #+end_src
 **** Direnv
 #+begin_src emacs-lisp
-  (use-package direnv)
+  (use-package direnv
+    :config
+    (direnv-mode)
+    (direnv-update-environment))
 #+end_src
 *** Org-Mode
     Some common org-mode settings
