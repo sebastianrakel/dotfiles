@@ -51,3 +51,9 @@
 
 [configurations.sulu]
 	dependencies = ['workstation']
+
+[configurations.mimir]
+	packages = [
+		     'zsh',
+		     'tmux',
+	]
