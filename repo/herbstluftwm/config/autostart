@@ -19,7 +19,7 @@ hc keybind $Mod-d spawn rofi -show combi -combi-modi drun,run -show-icons
 hc keybind $Mod-w spawn rofi -show window -window-command 'herbstclient bring {window}'
 hc keybind $Mod-Shift-e spawn rofi -show pw -modes "pw:${HOME}/.config/rofi/modes/power.sh"
 hc keybind $Mod-t spawn rofi -show theme -modes "theme:${HOME}/.config/rofi/modes/theme.sh"
-hc keybind $Mod-p spawn workspace-switcher rofi
+hc keybind $Mod-p spawn rofi -show workspace -modes "workspace:${HOME}/.config/rofi/modes/workspaces.sh"
 hc keybind $Mod-Shift-s spawn flameshot gui
 
 # basic movement in tiling and floating mode
