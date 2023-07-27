@@ -15,3 +15,8 @@ if hash fzf 2>/dev/null; then
 	fi
     done
 fi
+
+if [ -n "${commands[fzf-share]}" ]; then
+  source "$(fzf-share)/key-bindings.zsh"
+  source "$(fzf-share)/completion.zsh"
+fi
