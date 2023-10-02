@@ -19,7 +19,7 @@ hc keybind $Mod-d spawn rofi -show combi -combi-modi drun,run -show-icons
 hc keybind $Mod-w spawn rofi -show window -window-command 'herbstclient bring {window}'
 hc keybind $Mod-Shift-e spawn rofi -show pw -modes "pw:${HOME}/.config/rofi/modes/power.sh"
 hc keybind $Mod-t spawn rofi -show theme -modes "theme:${HOME}/.config/rofi/modes/theme.sh"
-hc keybind $Mod-p spawn rofi -show workspace -modes "workspace:${HOME}/.config/rofi/modes/workspaces.sh"
+hc keybind $Mod-p spawn workspace-switcher rofi
 hc keybind $Mod-Shift-s spawn flameshot gui
 
 # basic movement in tiling and floating mode
@@ -62,8 +62,8 @@ hc keybind $Mod-Control-Up      resize up +$resizestep
 hc keybind $Mod-Control-Right   resize right +$resizestep
 
 # tags
-tag_names=( {1..9} )
-tag_keys=( {1..9} 0 )
+tag_names=( "web" "code" "mail" "remote" )
+tag_keys=( {1..4} 0 )
 
 hc rename default "${tag_names[0]}" || true
 for i in "${!tag_names[@]}" ; do
@@ -107,7 +107,17 @@ hc keybind $Mod-BackSpace   cycle_monitor
 hc keybind $Mod-Tab         cycle_all +1
 hc keybind $Mod-Shift-Tab   cycle_all -1
 hc keybind $Mod-c cycle
-hc keybind $Mod-i jumpto urgent
+hc keybind $Mod-i or \
+    : substitute WINID clients.focus.winid and \
+        . jumpto urgent \
+        . try new_attr string clients.my_oldfocus \
+        . set_attr clients.my_oldfocus WINID \
+    : substitute WINID clients.my_oldfocus and \
+        . jumpto WINID \
+        . remove_attr clients.my_oldfocus \
+        . spawn notify-send -t 1000 -i edit-undo HLWM 'Jump to previously focused window' \
+    : spawn notify-send -t 1000 -i messagebox_warning HLWM 'No urgent or formerly focused window'
+
 
 # theme
 
@@ -121,7 +131,7 @@ hc set frame_gap 4
 
 hc attr theme.title_height 15
 hc attr theme.title_when always
-hc attr theme.title_font 'monospace:pixelsize=12'  # example using Xft
+hc attr theme.title_font 'BigBlueTermPlus Nerd Font Mono:pixelsize=13'  # example using Xft
 # hc attr theme.title_font '-*-fixed-medium-r-*-*-13-*-*-*-*-*-*-*'
 hc attr theme.title_depth 3  # space below the title's baseline
 hc attr theme.inner_width 1
@@ -160,6 +170,9 @@ hc rule windowtype='_NET_WM_WINDOW_TYPE_DIALOG' focus=on
 hc rule windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK|DESKTOP)' manage=off
 hc rule fixedsize floating=on
 
+hc rule class=thunderbird tag=mail
+hc rule class=remmina tag=remote
+
 hc set tree_style '╾│ ├└╼─┐'
 
 # unlock, just to be sure
@@ -167,7 +180,7 @@ hc unlock
 
 hc detect_monitors
 
-feh --bg-fill "${HOME}/Pictures/Wallpaper/linux_heart.png"
+feh --bg-fill "${HOME}/Pictures/Wallpaper/developer_wallpaper.png"
 
 killall -q polybar
 for monitor in $(herbstclient list_monitors | cut -d: -f1) ; do
