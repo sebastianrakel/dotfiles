@@ -16,5 +16,5 @@ if [[ -z "${workspace}" ]]; then
     exit 0
 fi
 
-source "${config_dir}${hostname}_${workspace}.sh"
+"${config_dir}${hostname}_${workspace}.sh"
 exit 0
