@@ -44,6 +44,7 @@ This is my emacs config, it's written in org-mode
     (set-default 'truncate-lines t)
     (defalias 'yes-or-no-p 'y-or-n-p)
     (column-number-mode 1)
+    (scroll-bar-mode -1)
   #+END_SRC
 *** Font
   #+BEGIN_SRC emacs-lisp
@@ -84,7 +85,7 @@ Lockfiles (something like .#<filename>) are anoying for some lsp servers. so i w
 *** Scrolling
   Introduced with emacs 29 is this new scroll mode
 #+begin_src emacs-lisp
-  ;(pixel-scroll-precision-mode)
+  (pixel-scroll-precision-mode)
 #+end_src
 ** Backup
    #+BEGIN_SRC emacs-lisp
@@ -182,6 +183,13 @@ Some packages have warnings about docstring wider than 80 character. there is no
 ** Azure Stuff
 #+begin_src emacs-lisp
   (global-set-key (kbd "C-c a r s") 'azure-open-repository-browser)
+#+end_src
+* Settings
+Some basic Settings
+#+begin_src emacs-lisp
+  (delete-selection-mode t) ;;Overwrite selected text
+  (setq revert-without-query '(".*")) ;;Keeps the file in sync with what is on the disk without a prompt to confirm
+  (setq auth-sources '("~/.authinfo.gpg"))
 #+end_src
 * Functions
 ** Reload Emacs
@@ -365,7 +373,7 @@ Here is my azure stuff, my company is working with azure/ azure devops so i need
       (use-package company
 	:config
 	(add-hook 'after-init-hook 'global-company-mode)
-	(setq company-minimum-prefix-length 2)
+	(setq company-minimum-prefix-length 1)
 	(setq company-idle-delay 0))
     #+END_SRC
 *** Which Key
@@ -383,19 +391,18 @@ Here is my azure stuff, my company is working with azure/ azure devops so i need
     #+end_src
 *** Dashboard
     #+begin_src emacs-lisp
-      (use-package all-the-icons)
-
       (use-package dashboard
 	:config
 	(dashboard-setup-startup-hook)
 	(setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
 	;(setq dashboard-startup-banner "~/.emacs.d/personal/images/avatar.png")
 	(setq dashboard-center-content t)
+	(setq dashboard-startup-banner 'logo)
 	(setq dashboard-show-shortcuts t)
 	(setq dashboard-set-heading-icons t)
 	(setq dashboard-set-file-icons t)
 	(setq dashboard-projects-switch-function 'counsel-projectile-switch-project-by-name)
-	(setq dashboard-items '((recents  . 5)
+	(setq dashboard-items '((recents  . 10)
 				(bookmarks . 5)
 				(projects . 5)
 				(registers . 5))))
@@ -409,16 +416,52 @@ Here is my azure stuff, my company is working with azure/ azure devops so i need
 *** Tree Sitter
 Some people say tree-sitter is good, so give it a try
 #+begin_src emacs-lisp
-  (use-package tree-sitter
+  (use-package treesit
+    :init
+    (setq treesit-language-source-alist
+	  '((bash . ("https://github.com/tree-sitter/tree-sitter-bash"))
+	    (css . ("https://github.com/tree-sitter/tree-sitter-css"))
+	    (go . ("https://github.com/tree-sitter/tree-sitter-go"))
+	    (html . ("https://github.com/tree-sitter/tree-sitter-html"))
+	    (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript"))
+	    (json . ("https://github.com/tree-sitter/tree-sitter-json"))
+	    (python . ("https://github.com/tree-sitter/tree-sitter-python"))
+	    (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))
+	    (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
+	    (svelte . ("https://github.com/Himujjal/tree-sitter-svelte"))
+	    (toml . ("https://github.com/tree-sitter/tree-sitter-toml"))))
     :config
-    (global-tree-sitter-mode)
-    (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
-  (use-package tree-sitter-langs)
-  (use-package tree-sitter-indent)
+    (setq major-mode-remap-alist
+	  '((yaml-mode . yaml-ts-mode)
+	    (bash-mode . bash-ts-mode)
+	    (js-mode . js-ts-mode)
+	    (js-jsx-mode . js-ts-mode)
+	    (typescript-mode . typescript-ts-mode)
+	    (json-mode . json-ts-mode)
+	    (css-mode . css-ts-mode)
+	    (html-mode . html-ts-mode)
+	    (toml-mode . toml-ts-mode)
+	    (python-mode . python-ts-mode)))
+
+    (defun +treesit/treesit-install-all-languages ()
+      "Install all languages specified by `treesit-language-source-alist'."
+      (interactive)
+      (let ((languages (mapcar 'car treesit-language-source-alist)))
+	(dolist (lang languages)
+	  (treesit-install-language-grammar lang)
+	  (message "`%s' parser was installed." lang)
+	  (sit-for 0.75)))))
 #+end_src
 ** Magit
    #+BEGIN_SRC emacs-lisp
-     (use-package magit)
+     (use-package magit
+       :config
+       (remove-hook 'server-switch-hook 'magit-commit-diff)
+       (remove-hook 'with-editor-filter-visit-hook 'magit-commit-diff))
+
+     (use-package forge
+       :after magit)
+     
    #+END_SRC
 ** Coding
 *** Common
@@ -435,10 +478,20 @@ Some people say tree-sitter is good, so give it a try
 	(add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
     #+end_src
 **** LSP
+I'm using eglot since it's embedded in emacs 29, stumbled over a reddit post to improve performance
+https://www.reddit.com/r/emacs/comments/16vixg6/how_to_make_lsp_and_eglot_way_faster_like_neovim/
     #+begin_src emacs-lisp
       (use-package eglot
+	:after (web-mode project)
+	:hook ((prog-mode . eglot-ensure))
 	:config
-	(setq eglot-confirm-server-initiated-edits nil))
+	;;(fset #'jsonrpc--log-event #'ignore)
+	(setq eglot-confirm-server-initiated-edits nil
+	      eglot-events-buffer-size 0
+	      eglot-sync-connect nil
+	      eglot-connect-timeout nil
+	      eglot-autoshutdown t
+	      eglot-events-buffer-size 0))
     #+end_src
 **** Data Formats
      #+begin_src emacs-lisp
@@ -500,6 +553,11 @@ to show in which block i'm currently
     (direnv-mode)
     (direnv-update-environment))
 #+end_src
+**** Rainbow Mode
+This mode ist to display colors written in hex format like #ffffff
+#+begin_src emacs-lisp
+  (use-package rainbow-mode)
+#+end_src
 *** Org-Mode
     Some common org-mode settings
     #+begin_src emacs-lisp
@@ -524,6 +582,7 @@ to show in which block i'm currently
 	:config
 	(setq web-mode-markup-indent-offset 2)
 	(setq web-mode-tag-auto-close-style 2)
+	(setq web-mode-css-indent-offset 2)
 	(setq web-mode-enable-auto-closing t)
 	(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
 
@@ -536,16 +595,27 @@ to show in which block i'm currently
 	(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
     #+end_src
 
-    Use angular typescript server
+    Define Mode for Vue 3 and add to eglot server programs
     #+begin_src emacs-lisp
+      (define-derived-mode vue-mode web-mode "Vue")
+      (add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode))
+
+      (defun vue-eglot-init-options ()
+	`(:typescript (:languageFeatures (:completion
+					  (:defaultTagNameCase "both"
+							       :defaultAttrNameCase "kebabCase"
+							       :getDocumentNameCasesRequest nil
+							       :getDocumentSelectionRequest nil)
+					  :diagnostics
+					  (:getDocumentVersionRequest nil))
+					 :documentFeatures (:documentFormatting
+							    (:defaultPrintWidth 100
+										:getDocumentPrintWidthRequest nil)
+							    :documentSymbol t
+							    :documentColor t))))
+      ;; Volar
       (add-to-list 'eglot-server-programs
-		   '(web-mode "node"
-			      "/home/sebastian/.npm-packages/lib/node_modules/@angular/language-server"
-			      "--ngProbeLocations"
-			      "/home/sebastian/.npm-packages/lib/node_modules"
-			      "--tsProbeLocations"
-			      "/home/sebastian/.npm-packages/lib/node_modules"
-			      "--stdio"))
+      `(vue-mode . ("vue-language-server" "--stdio" :initializationOptions ,(vue-eglot-init-options))))
     #+end_src
 *** Django
 #+begin_src emacs-lisp
