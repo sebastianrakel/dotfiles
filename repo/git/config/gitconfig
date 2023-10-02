@@ -62,3 +62,5 @@
 
 [include]
     path = ~/.config/git/conf.d/private
+[github]
+	user = sebastianrakel
