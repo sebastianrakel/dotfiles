@@ -1,6 +1,4 @@
 postcmds = [
 	"./scripts/install_lua_lsp.sh",
-	"./scripts/install_dotnet.sh",
 	"./scripts/install_go_lsp.sh",
-	"./scripts/install_telegram.sh",
 ]
