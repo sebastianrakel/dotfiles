@@ -1,10 +1,10 @@
-[[templates]]
+[[files]]
 source = "./init.el"
 dest   = "~/.emacs.d/init.el"
 
 [[files]]
-source = "./personal"
-dest   = "~/.emacs.d/personal"
+source = "./early-init.el"
+dest   = "~/.emacs.d/early-init.el"
 
 [[files]]
 source = "./snippets"
