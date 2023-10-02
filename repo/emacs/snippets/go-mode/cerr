@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: Request Handler Custom Error
+# key: cerr
+# --
+if err != nil {
+   rh.ReturnCustomError($1, err)
+   return
+}

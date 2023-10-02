@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: Default error response
+# key: derr
+# --
+if err != nil {
+   return $1err
+}
