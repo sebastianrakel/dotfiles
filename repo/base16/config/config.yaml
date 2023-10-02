@@ -12,6 +12,8 @@ schemes:
   - monokai
   - penumbra
   - default
+  - github
+  - nord
 templates:
   - alacritty
   - emacs
