@@ -45,7 +45,7 @@ sub run {
 		if (/^\+/) { print "%{F$colors{unf_fg}}%{B$colors{unf_bg}}"; last}
 		if (/^#/)  { print "%{F$colors{sel_fg}}%{B$colors{sel_bg}}"; last}
 		if (/^!/)  { print "%{F$colors{urg_fg}%{B$colors{urg_bg}}"; last}
-		print "%{F#ababab}%{B-}"
+		print "%{F$colors{disabled}}%{B-}"
 	    }
 
 	    print "%{A1:herbstclient chain , focus_monitor $monitor , use $name:} $name %{A -u -o F- B-}";
