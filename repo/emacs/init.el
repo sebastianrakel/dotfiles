@@ -97,6 +97,7 @@
 (menu-bar-mode -1) ;; Disable menu bar
 (toggle-scroll-bar -1) ;; Disable scroll bar
 (pixel-scroll-precision-mode)
+(scroll-bar-mode -1)
 
 (set-fringe-mode 10) ;; Width of sidebar with linenumbers
 
@@ -150,10 +151,11 @@
 ;; Completion Framework
 (use-package ivy :ensure t
   :diminish (ivy-mode . "")
+  :bind
+  (("C-c b" . 'ivy-switch-buffer))
   :config
   (ivy-mode 1)
-  ;; add ‘recentf-mode’ and bookmarks to ‘ivy-switch-buffer’.
-  (setq ivy-use-virtual-buffers t)
+  (setq ivy-use-virtual-buffers nil)
   ;; number of result lines to display
   (setq ivy-height 10)
   ;; does not count candidates
@@ -168,8 +170,7 @@
 (use-package counsel
   :after ivy
   :bind
-  (("M-x" . counsel-M-x)
-   ("C-c b" . 'counsel-switch-buffer))
+  (("M-x" . counsel-M-x))
   :config
   (counsel-mode))
 
