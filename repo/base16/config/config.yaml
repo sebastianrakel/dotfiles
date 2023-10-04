@@ -19,6 +19,5 @@ templates:
   - emacs
   - dunst
   - fzf
-  - polybar
   - rofi
   - emacs
