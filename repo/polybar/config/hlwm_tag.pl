@@ -5,6 +5,8 @@ use List::Util qw/tail/;
 
 sub hc {local $" = ' '; $_ = qx(herbstclient @_); chomp; $_}
 
+sub pb {local $" = ' '; $_ = qx(polybar -q base -d color_@_); chomp; $_ }
+
 sub with_hc_idle {
     my $cb = pop;
 
@@ -17,14 +19,14 @@ sub with_hc_idle {
 sub run {
     my $monitor = $ENV{POLYBAR_MONITOR} // 0;
     my %colors = (
-	#nor_fg => hc(qw/get_attr theme.title_color/),
-	nor_fg => '#ababab',
-	nor_bg => hc(qw/get_attr settings.frame_border_normal_color/),
-	sel_fg => '#101010',
-	sel_bg => hc(qw/get_attr theme.active.color/),
-	urg_bg => hc(qw/get_attr theme.urgent.color/),
-	unf_fg => '#141414',
-	unf_bg => hc(qw/get_attr theme.active.background_color/),
+	nor_fg => pb('foreground'),
+	nor_bg => pb('background'),
+	sel_fg => pb('secondary'),
+	sel_bg => pb('primary'),
+	urg_fg => pb('primary'),
+	urg_bg => pb('alert'),
+	unf_fg => pb('primary'),
+	unf_bg => pb('disabled'),
 	);
 
     with_hc_idle qw/tag_/, sub {
@@ -42,7 +44,7 @@ sub run {
 		if (/^:/)  { print "%{F$colors{nor_fg}}"; last}
 		if (/^\+/) { print "%{F$colors{unf_fg}}%{B$colors{unf_bg}}"; last}
 		if (/^#/)  { print "%{F$colors{sel_fg}}%{B$colors{sel_bg}}"; last}
-		if (/^!/)  { print "%{F#141414}%{B$colors{urg_bg}}"; last}
+		if (/^!/)  { print "%{F$colors{urg_fg}%{B$colors{urg_bg}}"; last}
 		print "%{F#ababab}%{B-}"
 	    }
 
