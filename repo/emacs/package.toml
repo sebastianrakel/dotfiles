@@ -11,5 +11,9 @@ source = "./snippets"
 dest   = "~/.emacs.d/snippets"
 
 [[files]]
+source = "./personal"
+dest   = "~/.emacs.d/personal"
+
+[[files]]
 source     = "./theme/activate.sh"
 collection = "base16-activations"

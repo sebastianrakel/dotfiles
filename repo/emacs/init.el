@@ -98,6 +98,8 @@
 (toggle-scroll-bar -1) ;; Disable scroll bar
 (pixel-scroll-precision-mode)
 (scroll-bar-mode -1)
+(setq scroll-preserve-screen-position t) ;; Keep the cursor at position and don't scroll away
+(setq use-dialog-box nil)
 
 (set-fringe-mode 10) ;; Width of sidebar with linenumbers
 
@@ -108,10 +110,19 @@
 
 (defalias 'yes-or-no-p 'y-or-n-p) ;; Use short answer y or n
 
-(use-package powerline
+(setq vc-follow-symlinks t) ;; follow symlinks directly and don't ask
+(setq dired-kill-when-opening-new-dired-buffer t)
+(setq native-comp-async-report-warnings-errors nil)
+(setq gc-cons-threshold (* 50 1000 1000))
+
+
+(use-package doom-modeline
+  :hook
+  (elpaca-after-init . doom-modeline-mode)
   :config
-  (powerline-default-theme)
-  (setq powerline-default-separator 'wave))
+  (setq doom-modeline-height 40
+	doom-modeline-project-detection 'truncate-with-project
+	doom-modeline-icon t))
 
 ;; Theme Stuff
 (use-package base16-theme
@@ -132,6 +143,7 @@
 (delete-selection-mode t) ;;Overwrite selected text
 (set-default 'truncate-lines t) ;; Remove whitespace add line end
 (setq revert-without-query '(".*")) ;;Keeps the file in sync with what is on the disk without a prompt to confirm
+(save-place-mode 1)
 
 ;; Basic Keybinding stuff
 ;; Some keybinds needs a package, so keybinds with package deps are defined
@@ -139,9 +151,10 @@
 (windmove-default-keybindings 'meta)
 
 (global-set-key (kbd "C-c r") 'own/emacs-reload-config)
-(global-set-key (kbd "M-<return>") 'eglot-code-actions)
 (global-set-key (kbd "C-c q s") 'own/emacs-open-config)
 (global-set-key (kbd "C-c x") 'own/open-real-terminal)
+(global-set-key (kbd "M-g") 'goto-line)
+(global-set-key (kbd "C-M-/") 'comment-region)
 
 (use-package which-key
   :config
@@ -188,9 +201,8 @@
   (dashboard-setup-startup-hook)
   :config
   (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
-  ;(setq dashboard-startup-banner "~/.emacs.d/personal/images/avatar.png")
+  (setq dashboard-startup-banner "~/.emacs.d/personal/images/avatar.png")
   (setq dashboard-center-content t)
-  (setq dashboard-startup-banner 'logo)
   (setq dashboard-show-shortcuts t)
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
@@ -205,6 +217,8 @@
   :bind
   (("C-c p" . 'projectile-command-map))
   :config
+  (add-to-list 'projectile-globally-ignored-directories "*node_modules")
+  (setq projectile-indexing-method 'hybrid)
   (projectile-mode 1))
 
 (use-package counsel-projectile
@@ -212,18 +226,28 @@
 
 ;; Auto Complete
 (use-package company
+  :bind
+  (("C-c <tab>" . 'company-complete))
   :config
-  (add-hook 'after-init-hook 'global-company-mode)
   (setq company-minimum-prefix-length 1)
-  (setq company-idle-delay 0))
-(elpaca-wait)
+  (setq company-idle-delay 0)
+  
+  (add-hook 'elpaca-after-init-hook 'global-company-mode))
 
 ;; Flycheck
 (use-package flycheck
+  :hook
+  ((emacs-lisp-mode . own/flycheck-set-load-path))
+  :bind
+  (("C-c e l" . 'flycheck-error-list)
+   ("C-c e n" . 'flycheck-next-error))
   :config
-  (global-flycheck-mode))
+  (defun own/flycheck-set-load-path()
+    (setq flycheck-emacs-lisp-load-path 'inherit))
+  (add-hook 'elpaca-after-init-hook 'global-flycheck-mode))
 
 ;; LSP (Eglot/Treesitter)
+(require 'eglot)
 (setq eglot-confirm-server-initiated-edits nil
       eglot-events-buffer-size 0
       eglot-sync-connect nil
@@ -231,10 +255,38 @@
       eglot-autoshutdown t
       eglot-events-buffer-size 0)
 
-(use-package treesit-auto
-  :config
-  (global-treesit-auto-mode))
-(elpaca-wait)
+(define-key eglot-mode-map (kbd "C-c c r") #'eglot-find-implementation)
+(define-key eglot-mode-map (kbd "C-c c d") #'xref-find-definitions)
+(define-key eglot-mode-map (kbd "C-c c f") #'eglot-format-buffer)
+(define-key eglot-mode-map (kbd "C-c c R") #'eglot-rename)
+(define-key eglot-mode-map (kbd "C-M-l") #'eglot-format-buffer)
+(define-key eglot-mode-map (kbd "M-<return>") #'eglot-code-actions)
+
+(setq treesit-language-source-alist
+      '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+	(cmake "https://github.com/uyha/tree-sitter-cmake")
+	(css "https://github.com/tree-sitter/tree-sitter-css")
+	(elisp "https://github.com/Wilfred/tree-sitter-elisp")
+	(go "https://github.com/tree-sitter/tree-sitter-go")
+	(html "https://github.com/tree-sitter/tree-sitter-html")
+	(javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+	(json "https://github.com/tree-sitter/tree-sitter-json")
+	(make "https://github.com/alemuller/tree-sitter-make")
+	(markdown "https://github.com/ikatyang/tree-sitter-markdown")
+	(python "https://github.com/tree-sitter/tree-sitter-python")
+	(toml "https://github.com/tree-sitter/tree-sitter-toml")
+	(tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+	(typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")))
+
+(setq major-mode-remap-alist
+ '((bash-mode . bash-ts-mode)
+   (js2-mode . js-ts-mode)
+   (typescript-mode . typescript-ts-mode)
+   (json-mode . json-ts-mode)
+   (css-mode . css-ts-mode)
+   (python-mode . python-ts-mode)
+   (go-mode . go-ts-mode)))
+
 
 ;; Git Stuff --- Magit is love
 (use-package magit
@@ -255,29 +307,49 @@
 
 ;; Some packages for a better life
 (use-package rainbow-mode)
-(use-package rainbow-delimiters)
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
+
 (use-package yaml-mode)
+(use-package yaml-pro
+  :after yaml-mode
+  :config
+  (add-hook 'yaml-mode #'yaml-pro-mode))
 
 (use-package yasnippet
+  :after company
   :config
-  (yas-global-mode 1))
+  (add-hook 'elpaca-after-init-hook (yas-global-mode 1))
+  (advice-add 'yas--modes-to-activate :around
+	      (defun yas--get-snippet-tables@tree-sitter (orig-fn &optional mode)
+		(funcall orig-fn
+			 (or (car (rassq (or mode major-mode) major-mode-remap-alist))
+			     mode)))))
 
 (use-package editorconfig
   :config
   (editorconfig-mode 1))
 
+(use-package smartparens
+  :config
+  (add-hook 'elpaca-after-init-hook (smartparens-global-mode t)))
+
+;; vertical lines to show current block
 (use-package highlight-indent-guides
   :hook
   ((prog-mode-hook . highlight-indent-guides-mode))
   :config
   (setq highlight-indent-guides-method 'character
 	highlight-indent-guides-responsive 'top))
-  
+
 
 ;; Programming Language specific stuff
-;; Web/Typescript
+;; Elisp
 
+;; Web/Typescript
 (use-package web-mode
+  :if (and (require 'treesit)
+           (require 'eglot))
   :after eglot
   :config
   (setq web-mode-markup-indent-offset 2
@@ -286,6 +358,7 @@
 	web-mode-enable-auto-closing t)
   (define-derived-mode vue-mode web-mode "Vue")
   (add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode))
+  (add-hook 'vue-mode-hook 'eglot-ensure)
 
   (defun vue-eglot-init-options ()
     (let ((tsdk-path (expand-file-name
@@ -305,7 +378,6 @@
 					      :documentSymbol t
 					      :documentColor t)))))
 
-  ;; Volar
   (add-to-list 'eglot-server-programs
 	       `(vue-mode . ("vue-language-server" "--stdio" :initializationOptions ,(vue-eglot-init-options)))))
 
@@ -313,20 +385,56 @@
 
 ;; Golang
 (use-package go-mode
+  :if (and (require 'treesit)
+           (treesit-available-p))
   :hook
-  ((go-ts-mode . eglot-ensure)
-   (go-ts-mode . go-safe-hooks))
+  ((go-ts-mode . go-save-hooks))
   :config
-  (defun go-safe-hooks()
-    (add-hook 'before-save-hook (lambda () (call-interactively 'eglot-code-action-organize-imports)))
-    (add-hook 'before-save-hook #'eglot-format-buffer -10 t)))
-  
+  (defun go-save-hook()
+    (when (eq major-mode 'go-ts-mode)
+      (lambda() ((interactive) (with-demoted-errors (eglot-code-action-organize-imports))))
+      (eglot-format-buffer)))
+  (defun go-save-hooks()
+    (add-hook 'before-save-hook 'go-save-hook))
+  (setq go-ts-mode-hook go-mode-hook)
+  (add-hook 'go-ts-mode 'eglot-ensure))
+
+;; Puppet
+(use-package puppet-mode
+  :hook
+  ((puppet-mode . puppet-save-hooks))
+  :config
+  (defun puppet-lint-buffer()
+    (let ((command (concat
+		    "puppet-lint --with context "
+		    "--log-format \"%{path}:%{line}: %{kind}: %{message} (%{check})\"")))
+      (puppet-lint command)))
+
+  (defun puppet-save-hooks()
+    (add-hook 'before-save-hook #'delete-trailing-whitespace 'local)
+    (add-hook 'after-save-hook 'puppet-lint-buffer 'local))
+
+  (add-to-list
+   'auto-mode-alist '("\\`Puppetfile\\'" . ruby-mode)))
 
 ;; Dockerfile
 (use-package docker)
 (use-package dockerfile-mode)
 
+;; Cloud Stuff (Terraform, Nomad, etc)
+(use-package hcl-mode)
+
+(use-package terraform-mode
+  :mode ("\\.tf\\'" . terraform-mode)
+  :hook
+  ((terraform-mode . 'eglot-ensure)))
+
 ;; Nix Stuff
 (use-package nix-mode)
+
+;; Org-Mode
+
+(global-set-key (kbd "C-c t t") 'org-agenda)
+(setq org-agenda-files (list "~/.todos"))
 
 ;;; init.el ends here
