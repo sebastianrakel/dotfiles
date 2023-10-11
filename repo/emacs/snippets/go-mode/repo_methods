@@ -1,0 +1,70 @@
+# -*- mode: snippet -*-
+# name: repo basic methods
+# key: repomethods
+# --
+func (r *$1) $2FindAll() ([]model.$2, error) {
+	var items []model.DeviceRegister
+	db, err := r.env.DatabaseManager.GetConnection()
+	if err != nil {
+		return items, err
+	}
+	defer r.env.DatabaseManager.CloseConnection(db)
+
+	result := db.Find(&items)
+	if result.Error != nil {
+		return items, result.Error
+	}
+	return items, result.Error
+}
+
+func (r $1) $2FindById(id uuid.UUID) (model.$2, error) {
+	db, err := r.env.DatabaseManager.GetConnection()
+	if err != nil {
+		return model.$2{}, err
+	}
+	defer r.env.DatabaseManager.CloseConnection(db)
+
+	var item model.$2
+	result := db.Find(&item, "id = ?", id)
+	if result.Error != nil {
+		return model.$2{}, result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return model.$2{}, Err$2NotFound
+	}
+	return item, result.Error
+}
+
+func (r $1) $2Insert(push *model.$2) error {
+	db, err := r.env.DatabaseManager.GetConnection()
+	if err != nil {
+		return err
+	}
+	defer r.env.DatabaseManager.CloseConnection(db)
+
+	result := db.Create(push)
+	return result.Error
+}
+
+func (r $1) $2Update(push *model.$2) error {
+	db, err := r.env.DatabaseManager.GetConnection()
+	if err != nil {
+		return err
+	}
+	defer r.env.DatabaseManager.CloseConnection(db)
+
+	result := db.Updates(push)
+	return result.Error
+}
+
+func (r $1) $2Delete(push *model.$2) error {
+	db, err := r.env.DatabaseManager.GetConnection()
+	if err != nil {
+		return err
+	}
+	defer r.env.DatabaseManager.CloseConnection(db)
+
+	result := db.Delete(push)
+	return result.Error
+}

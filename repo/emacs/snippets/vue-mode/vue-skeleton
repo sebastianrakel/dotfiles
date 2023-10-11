@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+# name: vue component skeleton
+# key: vueinit
+# --
+<script setup lang="ts">
+$1
+</script>
+
+<template>
+</template>
+
+<style scoped>
+
+</style>
