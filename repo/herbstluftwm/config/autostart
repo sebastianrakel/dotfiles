@@ -107,6 +107,7 @@ hc keybind $Mod-BackSpace   cycle_monitor
 hc keybind $Mod-Tab         cycle_all +1
 hc keybind $Mod-Shift-Tab   cycle_all -1
 hc keybind $Mod-c cycle
+hc keybind $Mod-Shift-c cycle -1
 hc keybind $Mod-i or \
     : substitute WINID clients.focus.winid and \
         . jumpto urgent \
@@ -185,6 +186,6 @@ feh --bg-fill "${HOME}/Pictures/Wallpaper/developer_wallpaper.png"
 killall -q polybar
 for monitor in $(herbstclient list_monitors | cut -d: -f1) ; do
     echo "Start panel for monitor ${monitor}"
-    hc pad $monitor 0 0 50 0
     polybar_launch $monitor
+    hc pad $monitor 0 0 100 0
 done

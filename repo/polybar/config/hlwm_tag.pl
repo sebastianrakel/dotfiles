@@ -44,7 +44,7 @@ sub run {
 		if (/^:/)  { print "%{F$colors{nor_fg}}"; last}
 		if (/^\+/) { print "%{F$colors{unf_fg}}%{B$colors{unf_bg}}"; last}
 		if (/^#/)  { print "%{F$colors{sel_fg}}%{B$colors{sel_bg}}"; last}
-		if (/^!/)  { print "%{F$colors{urg_fg}%{B$colors{urg_bg}}"; last}
+		if (/^!/)  { print "%{F$colors{urg_fg}}%{B$colors{urg_bg}}"; last}
 		print "%{F$colors{unf_bg}}%{B-}"
 	    }
 
