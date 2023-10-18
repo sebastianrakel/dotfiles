@@ -1,0 +1,495 @@
+#+STARTUP: overview
+* Package Manager
+After trying elpaca and have major problems, i will now try straight.el
+
+#+begin_src emacs-lisp
+  (setq package-enable-at-startup nil)
+  (defvar bootstrap-version)
+  (let ((bootstrap-file
+	 (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+	(bootstrap-version 5))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+	  (url-retrieve-synchronously
+	   "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+	   'silent 'inhibit-cookies)
+	(goto-char (point-max))
+	(eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage))
+
+  (straight-use-package 'use-package)
+  (setq straight-use-package-by-default t)
+
+  (use-package use-package-ensure-system-package)
+#+end_src
+
+* Startup Performance
+#+BEGIN_SRC emacs-lisp
+  (setq gc-cons-threshol (* 50 1000 1000))
+#+END_SRC
+* Backup and Autosave Files
+I don't want to have backup/autosave files in my project dirs
+#+BEGIN_SRC emacs-lisp
+  (setq backup-directory-alist
+	    `((".*" . ,temporary-file-directory)))
+  (setq auto-save-file-name-transforms
+	`((".*" ,temporary-file-directory t)))
+#+END_SRC
+* UI/UX
+** Basic Emacs Settings
+No warnings, most of them are warnings from plugins and i can't do anything
+#+BEGIN_SRC emacs-lisp
+  (setq native-comp-async-report-warnings-errors nil)
+#+END_SRC
+
+Movement with meta key
+#+BEGIN_SRC emacs-lisp
+  (windmove-default-keybindings 'meta)
+#+END_SRC
+
+If there is an error in my init, switch to debug
+#+BEGIN_SRC emacs-lisp
+  (setq debug-on-error t)
+#+END_SRC
+
+Disable lock files, because some lsp servers have problems with them
+#+BEGIN_SRC emacs-lisp
+  (setq create-lockfiles nil)
+#+END_SRC
+** Bars and Menus
+#+BEGIN_SRC emacs-lisp
+  (tool-bar-mode -1)
+  (menu-bar-mode -1)
+  (toggle-scroll-bar -1)
+  (set-fringe-mode 10) 
+  (scroll-bar-mode -1)
+  (setq use-dialog-box nil)
+#+END_SRC
+** Basic Text Behavior
+#+BEGIN_SRC emacs-lisp
+    (set-default 'truncate-lines t) ;; don't wrap lines
+    (setq completion-cycle-threshold 3)
+    (setq tab-always-indent 'complete)
+#+END_SRC
+
+** Misc Settings
+#+BEGIN_SRC emacs-lisp
+  (global-display-line-numbers-mode) ;; show line numbers everywhere
+  (column-number-mode 1)
+  (defalias 'yes-or-no-p 'y-or-n-p) ;; use y/n instead of yes/no
+  (setopt use-short-answers t)
+  (setq vc-follow-symlinks t)
+#+END_SRC
+
+I need an overview about keybinding (can't recognize them all)
+#+BEGIN_SRC emacs-lisp
+  (use-package which-key
+    :custom
+    (which-key-idle-delay 0.3)
+    :init
+    (which-key-mode))
+#+END_SRC
+** Theme and Fonts
+Default emacs looks bright and awful so here is my theme stuff
+I'm uisng base16 themes, cause i have scripts to change themes in all my programs
+
+#+BEGIN_SRC emacs-lisp
+  (use-package base16-theme
+    :init
+    (defun own/theme-load-last-theme()
+      (interactive)
+      (load-theme current-theme t))
+
+    (defun own/theme-switch-theme(theme)
+      (interactive)
+      (disable-theme current-theme)
+      (setq current-theme theme)
+      (own/theme-load-last-theme))
+
+    (add-to-list 'custom-theme-load-path "~/.base16-themes/emacs/")
+    (load-file "~/.emacs.d/personal/theme.el")
+    (own/theme-load-last-theme))
+#+END_SRC
+
+Now a nice font and we can start. Since fontconfig will be ignored i have to set it by hand
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'default-frame-alist '(font . "Iosevka Nerd Font Mono-16"))
+#+END_SRC
+** Posframe
+I found posframe which opens some buffers in a dialog style frame
+#+BEGIN_SRC emacs-lisp
+  (use-package posframe)
+#+END_SRC
+** Dashboard
+I love my dashboard
+#+BEGIN_SRC emacs-lisp
+  (use-package dashboard
+    :after projectile
+    :init
+    (dashboard-setup-startup-hook)
+    :custom
+    (initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+    (dashboard-startup-banner "~/.emacs.d/personal/images/avatar.png")
+    (dashboard-center-content t)
+    (dashboard-show-shortcuts t)
+    (dashboard-set-heading-icons t)
+    (dashboard-set-file-icons t)
+    (dashboard-display-icons-p t)
+    (dashboard-icon-type 'nerd-icon)
+    (dashboard-projects-switch-function 'counsel-projectile-switch-project-by-name)
+    (dashboard-items '((recents  . 10)
+		       (bookmarks . 5)
+		       (projects . 5))))
+#+END_SRC
+** Doom Modeline
+I love the look of the doom emacs modeline, luckily it's a sepperate package
+#+BEGIN_SRC emacs-lisp
+  (use-package doom-modeline
+    :hook (after-init . doom-modeline-mode)
+    :custom
+    (doom-modeline-height 40)
+    (doom-modeline-project-detection 'truncate-with-project)
+    (doom-modeline-icon t))
+#+END_SRC
+** Olivetti (nicer writer mode)
+#+BEGIN_SRC emacs-lisp
+  (use-package olivetti
+    :custom
+    (olivetti-body-width 180))
+#+END_SRC
+** My little Helper
+*** Open Terminal in Project Dir or current Dir
+#+BEGIN_SRC emacs-lisp
+  (defun own/open-real-terminal--path (path)
+    (let ((command (concat "herbstclient spawn alacritty --working-directory " path)))
+      (message (concat "Open Terminal with command: " command))
+      (shell-command command)))
+
+  (defun own/open-real-terminal--with-current-directory()
+    (message "Open Terminal with current directory path")
+    (own/open-real-terminal--path(file-name-directory (buffer-file-name))))
+
+  (defun own/open-real-terminal--with-projectile()
+    (message "Open Terminal with projectile path")
+    (own/open-real-terminal--path(projectile-project-root)))
+
+  (defun own/open-real-terminal()
+    (interactive)
+    (if (projectile-project-root)
+	(own/open-real-terminal--with-projectile)
+      (own/open-real-terminal--with-current-directory)))
+
+  (global-set-key (kbd "C-c x") 'own/open-real-terminal)
+#+END_SRC
+*** Reload Emacs Config
+#+BEGIN_SRC emacs-lisp
+  (defun own/emacs-reload-config()
+    (interactive)
+    (load-file "~/.emacs.d/init.el"))
+
+  (global-set-key (kbd "C-c r") 'own/emacs-reload-config)
+#+END_SRC
+*** Open Emacs Config
+#+BEGIN_SRC emacs-lisp
+  (defun own/emacs-open-config()
+    (interactive)
+    (switch-to-buffer (find-file-noselect "~/.emacs.d/personal/init.org")))
+
+  (global-set-key (kbd "C-c q s") 'own/emacs-open-config)
+#+END_SRC
+* Completion
+#+BEGIN_SRC emacs-lisp
+  (use-package vertico
+    :init
+    (vertico-mode))
+
+  (use-package vertico-posframe
+    :after vertico
+    :init
+    (vertico-posframe-mode 1))
+
+  (use-package corfu
+    :init
+    (global-corfu-mode 1)
+    (corfu-history-mode 1)
+    (corfu-popupinfo-mode 1)
+    :custom
+    (corfu-cycle t)
+    (corfu-auto t)
+    (corfu-auto-delay 0)
+    (corfu-auto-prefix 1)
+    (corfu-popupinfo-delay 0.5))
+
+  (use-package kind-icon
+    :after corfu
+    :custom
+    (kind-icon-use-icons t)
+    (kind-icon-default-face 'corfu-default) ; Have background color be the same as `corfu' face background
+    (kind-icon-blend-background nil)  ; Use midpoint color between foreground and background colors ("blended")?
+    (kind-icon-blend-frac 0.08) ; Change cache dir
+    :config
+    (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
+
+
+  (use-package marginalia
+    :init
+    (marginalia-mode))
+
+  (use-package consult
+    :bind
+    (("C-s" . consult-line)
+     ("C-c s" . consult-ripgrep)
+     ("C-c b" . consult-buffer)
+     ("C-c t t" . consult-org-agenda))
+    :bind
+    (:map org-mode-map
+	   ("C-c j" . consult-org-heading)))
+
+  (use-package orderless
+    :custom
+    (completion-styles '(orderless basic))
+    (completion-category-overrides '((file (styles basic partial-completion))))
+    :config
+    (setq completion-category-overrides '((eglot (styles orderless)))))
+
+  (use-package cape
+    :custom
+    (completion-at-point-functions (list (cape-capf-debug #'cape-dict)))
+    :config
+    (defun own/eglot-capf ()
+      (setq-local completion-at-point-functions
+		  (list (cape-super-capf
+			 #'eglot-completion-at-point
+			 #'yasnippet-capf
+			 #'cape-file))))
+
+    (add-hook 'eglot-managed-mode-hook #'own/eglot-capf))
+
+  (use-package yasnippet-capf
+    :after cape
+    :config
+    (add-to-list 'completion-at-point-functions #'yasnippet-capf))
+#+END_SRC
+* Project Stuff
+I love projectile it's fast jumping in projects and project files is awesome,
+i don't know if there is something better
+#+BEGIN_SRC emacs-lisp
+  (use-package projectile
+    :bind
+    (("C-c p" . 'projectile-command-map))
+    :custom
+    (projectile-indexing-method 'hybrid)
+    :config
+    (add-to-list 'projectile-globally-ignored-directories "node_modules")
+    (projectile-mode 1))
+#+END_SRC
+* Programming/File Specific
+** Common Stuff (things every programming thing needs)
+*** YASnippet
+#+begin_src emacs-lisp
+  (use-package yasnippet
+    :init
+    (yas-global-mode 1)
+    :config
+    (advice-add 'yas--modes-to-activate :around
+		(defun yas--get-snippet-tables@tree-sitter (orig-fn &optional mode)
+		  (funcall orig-fn
+			   (or (car (rassq (or mode major-mode) major-mode-remap-alist))
+			       mode)))))
+#+end_src
+*** Parentheses
+For coloring parentheses i use rainbow-delimiters, so every pair of parenses have it's own color
+#+BEGIN_SRC emacs-lisp
+  (use-package rainbow-delimiters
+    :hook (prog-mode . rainbow-delimiters-mode))
+
+  (use-package smartparens
+    :config
+    (smartparens-global-mode t))
+#+END_SRC
+I want vertical lines to show which block i'm currently editing
+#+BEGIN_SRC emacs-lisp
+  (use-package highlight-indent-guides
+    :hook
+    ((prog-mode-hook . highlight-indent-guides-mode))
+    :config
+    (setq highlight-indent-guides-method 'character
+	  highlight-indent-guides-responsive 'top))
+#+END_SRC
+*** Git Stuff -- mostly magit cause it's love
+#+BEGIN_SRC emacs-lisp
+  (use-package forge
+    :if (require 'magit)
+    :custom
+    (auth-sources '("~/.authinfo.gpg")))
+
+#+END_SRC
+*** Editorconfig
+#+BEGIN_SRC emacs-lisp
+  (use-package editorconfig
+    :init
+    (editorconfig-mode 1))
+#+END_SRC
+*** Flyspell/Flycheck
+#+BEGIN_SRC emacs-lisp
+    (use-package flycheck
+      :hook
+      ((emacs-lisp-mode . own/flycheck-set-load-path)
+       (after-init . global-flycheck-mode))
+      :bind
+      (("C-c e l" . 'flycheck-error-list)
+       ("C-c e n" . 'flycheck-next-error))
+      :config
+      (defun own/flycheck-set-load-path()
+	(setq flycheck-emacs-lisp-load-path 'inherit)))
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (use-package flyspell
+    :if (executable-find "ispell")
+    :hook ((text-mode . flyspell-mode)
+	   (prog-mode . flyspell-prog-mode)))
+#+END_SRC
+** LSP Stuff
+After eglot is built-in in emacs, we will use eglot
+#+BEGIN_SRC emacs-lisp
+  (require 'eglot)
+  (setq eglot-confirm-server-initiated-edits nil
+	eglot-events-buffer-size 0
+	eglot-sync-connect nil
+	eglot-connect-timeout nil
+	eglot-autoshutdown t
+	eglot-events-buffer-size 0
+	eglot-ignored-server-capabilities '(:documentHighlightProvider))
+
+  (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster)
+  
+  (define-key eglot-mode-map (kbd "C-c c r") #'eglot-find-implementation)
+  (define-key eglot-mode-map (kbd "C-c c d") #'xref-find-definitions)
+  (define-key eglot-mode-map (kbd "C-c c f") #'eglot-format-buffer)
+  (define-key eglot-mode-map (kbd "C-c c R") #'eglot-rename)
+  (define-key eglot-mode-map (kbd "C-M-l") #'eglot-format-buffer)
+  (define-key eglot-mode-map (kbd "M-<return>") #'eglot-code-actions)
+#+END_SRC
+
+Treesit is also now part of emacs and we will use it too
+#+BEGIN_SRC emacs-lisp
+  (defun own/treesit-install-langs()
+    (interactive)
+    (mapc #'treesit-install-language-grammar (mapcar #'car treesit-language-source-alist)))
+
+  (setq treesit-language-source-alist
+	'((bash "https://github.com/tree-sitter/tree-sitter-bash")
+	  (cmake "https://github.com/uyha/tree-sitter-cmake")
+	  (css "https://github.com/tree-sitter/tree-sitter-css")
+	  (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+	  (go "https://github.com/tree-sitter/tree-sitter-go")
+	  (gomod "https://github.com/camdencheek/tree-sitter-go-mod")
+	  (html "https://github.com/tree-sitter/tree-sitter-html")
+	  (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+	  (json "https://github.com/tree-sitter/tree-sitter-json")
+	  (make "https://github.com/alemuller/tree-sitter-make")
+	  (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+	  (python "https://github.com/tree-sitter/tree-sitter-python")
+	  (toml "https://github.com/tree-sitter/tree-sitter-toml")
+	  (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+	  (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")))
+
+  (setq major-mode-remap-alist
+   '((bash-mode . bash-ts-mode)
+     (js2-mode . js-ts-mode)
+     (typescript-mode . typescript-ts-mode)
+     (json-mode . json-ts-mode)
+     (css-mode . css-ts-mode)
+     (python-mode . python-ts-mode)
+     (go-mode . go-ts-mode)))
+
+  (global-set-key (kbd "C-c t i") 'own/treesit-install-langs)
+#+END_SRC
+** Org
+#+begin_src emacs-lisp
+  (use-package org-modern
+    :after org
+    :hook (org-mode . org-modern-mode)
+    :custom
+    (org-modern-block-fringe nil))
+
+  (setq org-agenda-files (list "~/.todos"))
+#+end_src
+** YAML
+#+BEGIN_SRC emacs-lisp
+  (use-package yaml-mode)
+#+END_SRC
+** Golang
+#+BEGIN_SRC emacs-lisp
+  (use-package go-mode
+    :if (and (require 'treesit)
+	     (treesit-available-p))
+    :hook
+    ((go-ts-mode . eglot-ensure)
+     (go-ts-mode . own/eglot-format-buffer-on-save))
+    :custom
+    (go-ts-mode-hook go-mode-hook)
+    :init
+    (defun own/eglot-format-buffer-on-save ()
+      (add-hook 'before-save-hook #'eglot-format-buffer -10 t))
+    (defun own/eglot-organize-imports ()
+      (interactive)
+      (with-demoted-errors (eglot-code-actions nil nil "source.organizeImports" t))))
+#+END_SRC
+** Docker
+#+BEGIN_SRC emacs-lisp
+  (use-package docker)
+  (use-package dockerfile-mode)
+#+END_SRC
+** Nix
+#+BEGIN_SRC emacs-lisp
+  (use-package nix-mode)
+#+END_SRC
+** Hashicorp Stuff (Terraform, Nomad, etc)
+#+BEGIN_SRC emacs-lisp
+  (use-package hcl-mode)
+  (use-package terraform-mode
+    :mode ("\\.tf\\'" . terraform-mode)
+    :hook (terraform-mode . eglot-ensure))
+#+END_SRC
+** Typescript (mainly Vue)
+#+BEGIN_SRC emacs-lisp
+  (use-package typescript-mode)
+  (use-package web-mode
+    :if (and (require 'treesit)
+	     (require 'eglot))
+    :custom
+    (web-mode-markup-indent-offset 2)
+    (web-mode-css-indent-offset 2)
+    (web-mode-auto-close-style 2)
+    (web-mode-enable-auto-closing t)
+    :config
+    (define-derived-mode vue-mode web-mode "Vue")
+    (add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode))
+
+    (defun vue-eglot-init-options ()
+      (let ((tsdk-path (expand-file-name
+			"lib"
+			(shell-command-to-string "npm list --global --parseable typescript | head -n1 | tr -d \"\n\""))))
+	`(:typescript (:tsdk ,tsdk-path
+			     :languageFeatures (:completion
+						(:defaultTagNameCase "both"
+								     :defaultAttrNameCase "kebabCase"
+								     :getDocumentNameCasesRequest nil
+								     :getDocumentSelectionRequest nil)
+						:diagnostics
+						(:getDocumentVersionRequest nil))
+			     :documentFeatures (:documentFormatting
+						(:defaultPrintWidth 100
+								    :getDocumentPrintWidthRequest nil)
+						:documentSymbol t
+						:documentColor t)))))
+
+    (add-to-list 'eglot-server-programs
+		 `(vue-mode . ("vue-language-server" "--stdio" :initializationOptions ,(vue-eglot-init-options))))
+    (add-hook 'vue-mode-hook 'eglot-ensure))
+#+END_SRC
+** Puppet
+#+BEGIN_SRC emacs-lisp
+  (use-package puppet-mode)
+#+END_SRC

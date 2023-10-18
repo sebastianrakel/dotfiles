@@ -3,10 +3,6 @@ source = "./init.el"
 dest   = "~/.emacs.d/init.el"
 
 [[files]]
-source = "./early-init.el"
-dest   = "~/.emacs.d/early-init.el"
-
-[[files]]
 source = "./snippets"
 dest   = "~/.emacs.d/snippets"
 
