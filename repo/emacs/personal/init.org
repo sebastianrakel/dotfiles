@@ -124,19 +124,30 @@ I found posframe which opens some buffers in a dialog style frame
 I love my dashboard
 #+BEGIN_SRC emacs-lisp
   (use-package dashboard
-    :after projectile
+    :after (projectile nerd-icons)
     :init
     (dashboard-setup-startup-hook)
+    :config
+    (add-to-list 'dashboard-items '(agenda) t)
+  
+    (setq dashboard-navigator-buttons
+	  `(;; line1
+	    ((,(nerd-icons-octicon "nf-oct-mark_github" :height 1.1 :v-adjust 0.0)
+	      "Dotifles"
+	       "Browse Dotfiles"
+	       (lambda (&rest _) (browse-url "https://github.com/sebastianrakel/dotfiles.git"))))))
     :custom
-    (initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+    (initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
     (dashboard-startup-banner "~/.emacs.d/personal/images/avatar.png")
+    (dashboard-set-navigator t)
     (dashboard-center-content t)
     (dashboard-show-shortcuts t)
     (dashboard-set-heading-icons t)
     (dashboard-set-file-icons t)
     (dashboard-display-icons-p t)
     (dashboard-icon-type 'nerd-icon)
-    (dashboard-projects-switch-function 'counsel-projectile-switch-project-by-name)
+    (dashboard-set-footer nil)
+    (dashboard-icon-type 'nerd-icons)
     (dashboard-items '((recents  . 10)
 		       (bookmarks . 5)
 		       (projects . 5))))
@@ -211,12 +222,15 @@ I love the look of the doom emacs modeline, luckily it's a sepperate package
     (global-corfu-mode 1)
     (corfu-history-mode 1)
     (corfu-popupinfo-mode 1)
-    :custom
-    (corfu-cycle t)
-    (corfu-auto t)
-    (corfu-auto-delay 0)
-    (corfu-auto-prefix 1)
-    (corfu-popupinfo-delay 0.5))
+    :config
+    (setq corfu-cycle t
+	  corfu-auto t
+	  corfu-auto-delay 0
+	  corfu-auto-prefix 1
+	  corfu-popupinfo-delay 0.5
+	  corfu-quit-no-match 'seperator
+	  corfu-on-exact-match nil)
+    (setq completion-cycle-threshold 3))
 
   (use-package kind-icon
     :after corfu
