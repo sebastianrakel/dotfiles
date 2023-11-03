@@ -263,15 +263,15 @@ I love the look of the doom emacs modeline, luckily it's a sepperate package
     (setq completion-category-overrides '((eglot (styles orderless)))))
 
   (use-package cape
-    :custom
-    (completion-at-point-functions (list (cape-capf-debug #'cape-dict)))
+    :init
+    (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+    (add-to-list 'completion-at-point-functions #'cape-file)
+    (add-to-list 'completion-at-point-functions #'cape-elisp-block)
     :config
     (defun own/eglot-capf ()
       (setq-local completion-at-point-functions
 		  (list (cape-super-capf
-			 #'eglot-completion-at-point
-			 #'yasnippet-capf
-			 #'cape-file))))
+			 #'eglot-completion-at-point))))
 
     (add-hook 'eglot-managed-mode-hook #'own/eglot-capf))
 
