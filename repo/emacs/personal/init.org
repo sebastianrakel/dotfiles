@@ -228,7 +228,6 @@ I love the look of the doom emacs modeline, luckily it's a sepperate package
 	  corfu-auto-delay 0
 	  corfu-auto-prefix 1
 	  corfu-popupinfo-delay 0.5
-	  corfu-quit-no-match 'seperator
 	  corfu-on-exact-match nil)
     (setq completion-cycle-threshold 3))
 
