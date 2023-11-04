@@ -128,8 +128,6 @@ I love my dashboard
     :init
     (dashboard-setup-startup-hook)
     :config
-    (add-to-list 'dashboard-items '(agenda) t)
-  
     (setq dashboard-navigator-buttons
 	  `(;; line1
 	    ((,(nerd-icons-octicon "nf-oct-mark_github" :height 1.1 :v-adjust 0.0)
@@ -222,13 +220,16 @@ I love the look of the doom emacs modeline, luckily it's a sepperate package
     (global-corfu-mode 1)
     (corfu-history-mode 1)
     (corfu-popupinfo-mode 1)
+    :bind
+    (:map corfu-map ("SPC" . corfu-insert-separator))
     :config
     (setq corfu-cycle t
 	  corfu-auto t
 	  corfu-auto-delay 0
 	  corfu-auto-prefix 1
 	  corfu-popupinfo-delay 0.5
-	  corfu-on-exact-match nil)
+	  corfu-on-exact-match nil
+	  corfu-quit-no-match 'seperator)
     (setq completion-cycle-threshold 3))
 
   (use-package kind-icon
@@ -314,7 +315,8 @@ For coloring parentheses i use rainbow-delimiters, so every pair of parenses hav
 
   (use-package smartparens
     :config
-    (smartparens-global-mode t))
+    (smartparens-global-mode t)
+    (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil))
 #+END_SRC
 I want vertical lines to show which block i'm currently editing
 #+BEGIN_SRC emacs-lisp
