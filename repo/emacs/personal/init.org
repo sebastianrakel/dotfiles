@@ -113,7 +113,12 @@ I'm uisng base16 themes, cause i have scripts to change themes in all my program
 
     (add-to-list 'custom-theme-load-path "~/.base16-themes/emacs/")
     (load-file "~/.emacs.d/personal/theme.el")
-    (own/theme-load-last-theme))
+    (own/theme-load-last-theme)
+
+    ;; Overwriting some face attributes, cause i like it
+    (set-face-attribute 'org-block nil :background (face-attribute 'default :background))
+    (set-face-attribute 'org-block-begin-line nil :background (face-attribute 'default :background))
+    (set-face-attribute 'org-block-end-line nil :background (face-attribute 'default :background)))
 
 #+END_SRC
 
