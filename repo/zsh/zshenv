@@ -44,6 +44,8 @@ export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=lcd'
 
 export VAGRANT_DEFAULT_PROVIDER=libvirt
 
+export CAPACITOR_ANDROID_STUDIO_PATH=/run/current-system/sw/bin/android-studio
+
 if [[ -e "${HOME}/.zshenv.private" ]]; then
    source "${HOME}/.zshenv.private"
 fi
