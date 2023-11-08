@@ -27,6 +27,7 @@ After trying elpaca and have major problems, i will now try straight.el
 #+BEGIN_SRC emacs-lisp
   (setq gc-cons-threshol (* 50 1000 1000))
 #+END_SRC
+
 * Backup and Autosave Files
 I don't want to have backup/autosave files in my project dirs
 #+BEGIN_SRC emacs-lisp
@@ -35,6 +36,7 @@ I don't want to have backup/autosave files in my project dirs
   (setq auto-save-file-name-transforms
 	`((".*" ,temporary-file-directory t)))
 #+END_SRC
+
 * UI/UX
 ** Basic Emacs Settings
 No warnings, most of them are warnings from plugins and i can't do anything
@@ -74,7 +76,6 @@ Disable lock files, because some lsp servers have problems with them
 
 ** Misc Settings
 #+BEGIN_SRC emacs-lisp
-  (global-display-line-numbers-mode) ;; show line numbers everywhere
   (column-number-mode 1)
   (defalias 'yes-or-no-p 'y-or-n-p) ;; use y/n instead of yes/no
   (setopt use-short-answers t)
@@ -95,6 +96,7 @@ I'm uisng base16 themes, cause i have scripts to change themes in all my program
 
 #+BEGIN_SRC emacs-lisp
   (use-package base16-theme
+    :demand
     :init
     (defun own/theme-load-last-theme()
       (interactive)
@@ -106,9 +108,13 @@ I'm uisng base16 themes, cause i have scripts to change themes in all my program
       (setq current-theme theme)
       (own/theme-load-last-theme))
 
+    (setq base16-theme-256-color-source "colors"
+	  base16-theme-distinct-fringe-background nil)
+
     (add-to-list 'custom-theme-load-path "~/.base16-themes/emacs/")
     (load-file "~/.emacs.d/personal/theme.el")
     (own/theme-load-last-theme))
+
 #+END_SRC
 
 Now a nice font and we can start. Since fontconfig will be ignored i have to set it by hand
@@ -189,6 +195,7 @@ I love the look of the doom emacs modeline, luckily it's a sepperate package
 
   (global-set-key (kbd "C-c x") 'own/open-real-terminal)
 #+END_SRC
+
 *** Reload Emacs Config
 #+BEGIN_SRC emacs-lisp
   (defun own/emacs-reload-config()
@@ -294,6 +301,11 @@ i don't know if there is something better
 #+END_SRC
 * Programming/File Specific
 ** Common Stuff (things every programming thing needs)
+*** ProgMode/ConfMode
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'prog-mode-hook #'display-line-numbers-mode)
+  (add-hook 'conf-mode-hook #'display-line-numbers-mode)
+#+END_SRC
 *** YASnippet
 #+begin_src emacs-lisp
   (use-package yasnippet
@@ -423,7 +435,8 @@ Treesit is also now part of emacs and we will use it too
     (setq org-hide-emphasis-markers t
 	  org-pretty-entities t
 	  org-auto-align-tags nil
-	  org-tags-column 0)
+	  org-tags-column 0
+	  org-insert-heading-respect-content t)
     (add-hook 'org-mode-hook #'org-modern-mode))
 
   (setq org-agenda-files (list "~/.todos"))
