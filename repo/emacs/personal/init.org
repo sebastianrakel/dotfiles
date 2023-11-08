@@ -228,8 +228,7 @@ I love the look of the doom emacs modeline, luckily it's a sepperate package
 	  corfu-auto-delay 0
 	  corfu-auto-prefix 1
 	  corfu-popupinfo-delay 0.5
-	  corfu-on-exact-match nil
-	  corfu-quit-no-match 'seperator)
+	  corfu-on-exact-match nil)
     (setq completion-cycle-threshold 3))
 
   (use-package kind-icon
@@ -271,7 +270,8 @@ I love the look of the doom emacs modeline, luckily it's a sepperate package
     (defun own/eglot-capf ()
       (setq-local completion-at-point-functions
 		  (list (cape-super-capf
-			 #'eglot-completion-at-point))))
+			 #'eglot-completion-at-point
+			 #'yasnippet-capf))))
 
     (add-hook 'eglot-managed-mode-hook #'own/eglot-capf))
 
