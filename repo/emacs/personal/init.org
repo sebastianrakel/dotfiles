@@ -143,7 +143,6 @@ I love my dashboard
     (dashboard-set-heading-icons t)
     (dashboard-set-file-icons t)
     (dashboard-display-icons-p t)
-    (dashboard-icon-type 'nerd-icon)
     (dashboard-set-footer nil)
     (dashboard-icon-type 'nerd-icons)
     (dashboard-items '((recents  . 10)
@@ -420,9 +419,12 @@ Treesit is also now part of emacs and we will use it too
 #+begin_src emacs-lisp
   (use-package org-modern
     :after org
-    :hook (org-mode . org-modern-mode)
-    :custom
-    (org-modern-block-fringe nil))
+    :config
+    (setq org-hide-emphasis-markers t
+	  org-pretty-entities t
+	  org-auto-align-tags nil
+	  org-tags-column 0)
+    (add-hook 'org-mode-hook #'org-modern-mode))
 
   (setq org-agenda-files (list "~/.todos"))
 #+end_src
