@@ -132,8 +132,7 @@ hc set frame_gap 4
 
 hc attr theme.title_height 15
 hc attr theme.title_when always
-hc attr theme.title_font 'BigBlueTermPlus Nerd Font Mono:pixelsize=13'  # example using Xft
-# hc attr theme.title_font '-*-fixed-medium-r-*-*-13-*-*-*-*-*-*-*'
+hc attr theme.title_font 'Monaspace Radon:size=13'
 hc attr theme.title_depth 3  # space below the title's baseline
 hc attr theme.inner_width 1
 hc attr theme.border_width 3

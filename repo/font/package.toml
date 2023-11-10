@@ -1,4 +1,4 @@
-postcmds = ["./install_nerdfonts.sh"]
+postcmds = ["./install_nerdfonts.sh", "./install_monaspace.sh"]
 
 
 [[files]]
