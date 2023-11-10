@@ -124,7 +124,7 @@ I'm uisng base16 themes, cause i have scripts to change themes in all my program
 
 Now a nice font and we can start. Since fontconfig will be ignored i have to set it by hand
 #+BEGIN_SRC emacs-lisp
-  (add-to-list 'default-frame-alist '(font . "Iosevka Nerd Font Mono-16"))
+  (add-to-list 'default-frame-alist '(font . "MonaspaceRadon-16"))
 #+END_SRC
 ** Posframe
 I found posframe which opens some buffers in a dialog style frame
@@ -271,7 +271,10 @@ I love the look of the doom emacs modeline, luckily it's a sepperate package
     (completion-category-overrides '((file (styles basic partial-completion))))
     :config
     (setq completion-category-overrides '((eglot (styles orderless)))))
-
+#+END_SRC
+** Cape/Capf
+I'm using cape for completion-at-point, i have to define my own function cause eglot is overwriting others.
+#+BEGIN_SRC emacs-lisp
   (use-package cape
     :init
     (add-to-list 'completion-at-point-functions #'cape-dabbrev)
@@ -291,6 +294,7 @@ I love the look of the doom emacs modeline, luckily it's a sepperate package
     :config
     (add-to-list 'completion-at-point-functions #'yasnippet-capf))
 #+END_SRC
+
 * Project Stuff
 I love projectile it's fast jumping in projects and project files is awesome,
 i don't know if there is something better
@@ -524,3 +528,4 @@ Treesit is also now part of emacs and we will use it too
 #+BEGIN_SRC emacs-lisp
   (use-package puppet-mode)
 #+END_SRC
+
