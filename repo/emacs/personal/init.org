@@ -124,7 +124,7 @@ I'm uisng base16 themes, cause i have scripts to change themes in all my program
 
 Now a nice font and we can start. Since fontconfig will be ignored i have to set it by hand
 #+BEGIN_SRC emacs-lisp
-  (add-to-list 'default-frame-alist '(font . "MonaspaceRadon-16"))
+  (add-to-list 'default-frame-alist '(font . "MonaspaceRadonExtraLight-18"))
 #+END_SRC
 ** Posframe
 I found posframe which opens some buffers in a dialog style frame
@@ -239,7 +239,8 @@ I love the look of the doom emacs modeline, luckily it's a sepperate package
 	  corfu-auto-delay 0
 	  corfu-auto-prefix 1
 	  corfu-popupinfo-delay 0.5
-	  corfu-on-exact-match nil)
+	  corfu-on-exact-match nil
+	  corfu-quit-no-match 'seperator)
     (setq completion-cycle-threshold 3))
 
   (use-package kind-icon
@@ -528,4 +529,15 @@ Treesit is also now part of emacs and we will use it too
 #+BEGIN_SRC emacs-lisp
   (use-package puppet-mode)
 #+END_SRC
-
+** Platformio
+#+BEGIN_SRC emacs-lisp
+  (use-package platformio-mode)
+#+END_SRC
+** OpenSCAD
+#+BEGIN_SRC emacs-lisp
+  (use-package scad-mode
+    :config
+    (add-to-list 'eglot-server-programs
+		 '(scad-mode . ("openscad-lsp" "--stdio")))
+    (add-hook 'scad-mode-hook 'eglot-ensure))
+#+END_SRC
