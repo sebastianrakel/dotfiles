@@ -21,7 +21,7 @@ if which npm >/dev/null; then
 fi
 
 typeset -U path PATH
-path=(~/.local/bin "${GOPATH}/bin" $ruby_path "${npm_packages}/bin" $path)
+path=(~/.local/bin "${HOME}/.cargo/bin" "${GOPATH}/bin" $ruby_path "${npm_packages}/bin" $path)
 export PATH
 
 if [[ -d "${XDG_RUNTIME_DIR}/gcr" ]]; then
