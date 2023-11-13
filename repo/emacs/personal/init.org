@@ -98,6 +98,11 @@ I'm uisng base16 themes, cause i have scripts to change themes in all my program
   (use-package base16-theme
     :demand
     :init
+    (defun own/theme-custome-faces()
+      (set-face-attribute 'org-block nil :background (face-attribute 'default :background))
+      (set-face-attribute 'org-block-begin-line nil :background (face-attribute 'default :background))
+      (set-face-attribute 'org-block-end-line nil :background (face-attribute 'default :background)))
+
     (defun own/theme-load-last-theme()
       (interactive)
       (load-theme current-theme t))
@@ -116,9 +121,9 @@ I'm uisng base16 themes, cause i have scripts to change themes in all my program
     (own/theme-load-last-theme)
 
     ;; Overwriting some face attributes, cause i like it
-    (set-face-attribute 'org-block nil :background (face-attribute 'default :background))
-    (set-face-attribute 'org-block-begin-line nil :background (face-attribute 'default :background))
-    (set-face-attribute 'org-block-end-line nil :background (face-attribute 'default :background)))
+    (if (daemonp)
+	(add-hook 'server-after-make-frame-hook #'own/theme-custome-faces)
+      (own/theme-custome-faces)))
 
 #+END_SRC
 
