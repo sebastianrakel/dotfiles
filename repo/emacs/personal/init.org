@@ -129,7 +129,15 @@ I'm uisng base16 themes, cause i have scripts to change themes in all my program
 
 Now a nice font and we can start. Since fontconfig will be ignored i have to set it by hand
 #+BEGIN_SRC emacs-lisp
-  (add-to-list 'default-frame-alist '(font . "MonaspaceRadonExtraLight-18"))
+  (defun own/set-font (fontsize)
+    (message fontsize)
+    (let ((font (concat "MonaspaceRadonExtraLight-" fontsize)))
+      (message (concat "Font: " font))
+      (add-to-list 'default-frame-alist '(font . font))))
+
+  (if (string= (system-name) "odin")
+      (own/set-font "16")
+    (own/set-font "18"))
 #+END_SRC
 ** Posframe
 I found posframe which opens some buffers in a dialog style frame
@@ -234,18 +242,9 @@ I love the look of the doom emacs modeline, luckily it's a sepperate package
   (use-package corfu
     :init
     (global-corfu-mode 1)
-    (corfu-history-mode 1)
-    (corfu-popupinfo-mode 1)
-    :bind
-    (:map corfu-map ("SPC" . corfu-insert-separator))
     :config
-    (setq corfu-cycle t
-	  corfu-auto t
-	  corfu-auto-delay 0
-	  corfu-auto-prefix 1
-	  corfu-popupinfo-delay 0.5
-	  corfu-on-exact-match nil
-	  corfu-quit-no-match 'seperator)
+    (setq corfu-auto t
+	  corfu-quit-no-match 'separator)
     (setq completion-cycle-threshold 3))
 
   (use-package kind-icon
