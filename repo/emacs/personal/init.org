@@ -129,15 +129,9 @@ I'm uisng base16 themes, cause i have scripts to change themes in all my program
 
 Now a nice font and we can start. Since fontconfig will be ignored i have to set it by hand
 #+BEGIN_SRC emacs-lisp
-  (defun own/set-font (fontsize)
-    (message fontsize)
-    (let ((font (concat "MonaspaceRadonExtraLight-" fontsize)))
-      (message (concat "Font: " font))
-      (add-to-list 'default-frame-alist '(font . font))))
-
   (if (string= (system-name) "odin")
-      (own/set-font "16")
-    (own/set-font "18"))
+      (add-to-list 'default-frame-alist '(font . "MonaspaceRadonExtraLight-16"))
+    (add-to-list 'default-frame-alist '(font . "MonaspaceRadonExtraLight-18")))
 #+END_SRC
 ** Posframe
 I found posframe which opens some buffers in a dialog style frame
