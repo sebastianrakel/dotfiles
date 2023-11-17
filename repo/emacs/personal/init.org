@@ -37,7 +37,7 @@ I don't want to have backup/autosave files in my project dirs
 	`((".*" ,temporary-file-directory t)))
 #+END_SRC
 
-* UI/UX
+* UI/IX
 ** Basic Emacs Settings
 No warnings, most of them are warnings from plugins and i can't do anything
 #+BEGIN_SRC emacs-lisp
@@ -223,6 +223,12 @@ I love the look of the doom emacs modeline, luckily it's a sepperate package
     (switch-to-buffer (find-file-noselect "~/.emacs.d/personal/init.org")))
 
   (global-set-key (kbd "C-c q s") 'own/emacs-open-config)
+#+END_SRC
+** Shortcuts without Plugins
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-c j b") 'beginning-of-buffer)
+  (global-set-key (kbd "C-c j e") 'end-of-buffer)
+  (global-set-key (kbd "C-c j l") 'goto-line)
 #+END_SRC
 * Completion
 #+BEGIN_SRC emacs-lisp
