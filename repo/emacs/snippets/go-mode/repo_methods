@@ -2,8 +2,10 @@
 # name: repo basic methods
 # key: repomethods
 # --
+var Err$2NotFound = errors.New("$2 not found")
+
 func (r *$1) $2FindAll() ([]model.$2, error) {
-	var items []model.DeviceRegister
+	var items []model.$2
 	db, err := r.env.DatabaseManager.GetConnection()
 	if err != nil {
 		return items, err
