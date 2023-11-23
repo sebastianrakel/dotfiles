@@ -503,7 +503,10 @@ Treesit is also now part of emacs and we will use it too
 #+END_SRC
 ** Typescript (mainly Vue)
 #+BEGIN_SRC emacs-lisp
-  (use-package typescript-mode)
+  (use-package typescript-mode
+    :config
+    (add-hook 'typescript-ts-mode-hook 'eglot-ensure))
+
   (use-package web-mode
     :if (and (require 'treesit)
 	     (require 'eglot))
