@@ -131,7 +131,7 @@ Now a nice font and we can start. Since fontconfig will be ignored i have to set
 #+BEGIN_SRC emacs-lisp
   (if (string= (system-name) "odin")
       (add-to-list 'default-frame-alist '(font . "MonaspaceRadonExtraLight-16"))
-    (add-to-list 'default-frame-alist '(font . "MonaspaceRadonExtraLight-18")))
+    (add-to-list 'default-frame-alist '(font . "MonaspaceRadonExtraLight-16")))
 #+END_SRC
 ** Posframe
 I found posframe which opens some buffers in a dialog style frame
@@ -223,6 +223,15 @@ I love the look of the doom emacs modeline, luckily it's a sepperate package
     (switch-to-buffer (find-file-noselect "~/.emacs.d/personal/init.org")))
 
   (global-set-key (kbd "C-c q s") 'own/emacs-open-config)
+#+END_SRC
+*** Open Nix Repository
+My develop systems are NixOS systems and so sometime i need to extend my config, here is a quick jump
+#+BEGIN_SRC emacs-lisp
+  (defun own/nixos-open-repo()
+    (interactive)
+    (projectile-find-file-in-directory "~/.nix/"))
+
+  (global-set-key (kbd "C-c q n") 'own/nixos-open-repo)
 #+END_SRC
 ** Shortcuts without Plugins
 #+BEGIN_SRC emacs-lisp
