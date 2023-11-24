@@ -31,6 +31,7 @@
     sl = log --pretty=log --date=iso --decorate=short
     l = log --graph --pretty=log --date=relative --decorate=short
     pu = push
+    put = push --tags
     pl = pull
     fl = log --color --all --date-order --decorate --stat
     lg = log --graph --abbrev-commit --color --pretty=log
@@ -40,6 +41,7 @@
     s = status
     a = add
     fat = fetch --all --tags
+    nb = con
 
 [pretty]
     log = %C(yellow)%h%C(reset) %C(normal)%s%C(reset) %C(dim white)%an%C(reset) %C(dim blue)(%ar)%C(reset) %C(auto)%d%C(reset)
