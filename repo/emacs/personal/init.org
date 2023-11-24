@@ -221,23 +221,23 @@ I love the look of the doom emacs modeline, luckily it's a sepperate package
   (defun own/emacs-open-config()
     (interactive)
     (switch-to-buffer (find-file-noselect "~/.emacs.d/personal/init.org")))
-
-  (global-set-key (kbd "C-c q s") 'own/emacs-open-config)
 #+END_SRC
-*** Open Nix Repository
-My develop systems are NixOS systems and so sometime i need to extend my config, here is a quick jump
+*** Open Project Directory 
+I have some directories which i want to open directly via shortcut, this function helps me
 #+BEGIN_SRC emacs-lisp
-  (defun own/nixos-open-repo()
+  (defun own/open-project-directory(directory)
     (interactive)
-    (projectile-find-file-in-directory "~/.nix/"))
-
-  (global-set-key (kbd "C-c q n") 'own/nixos-open-repo)
+    (projectile-find-file-in-directory directory))
 #+END_SRC
 ** Shortcuts without Plugins
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "C-c j b") 'beginning-of-buffer)
   (global-set-key (kbd "C-c j e") 'end-of-buffer)
   (global-set-key (kbd "C-c j l") 'goto-line)
+  (global-set-key (kbd "C-c q s") 'own/emacs-open-config)
+  (global-set-key (kbd "C-c q n") '("open nix" . (lambda () (interactive) (own/open-project-directory "~/.nix"))))
+  (global-set-key (kbd "C-c q d") '("open dotfiles" . (lambda () (interactive) (own/open-project-directory "~/.dotfiles"))))
+  (global-set-key (kbd "C-c q p") '("open dotfiles" . (lambda () (interactive) (own/open-project-directory "~/.dotfiles-private"))))
 #+END_SRC
 * Completion
 #+BEGIN_SRC emacs-lisp
