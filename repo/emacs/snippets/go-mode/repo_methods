@@ -38,35 +38,35 @@ func (r $1) $2FindById(id uuid.UUID) (model.$2, error) {
 	return item, result.Error
 }
 
-func (r $1) $2Insert(push *model.$2) error {
+func (r $1) $2Insert(item *model.$2) error {
 	db, err := r.env.DatabaseManager.GetConnection()
 	if err != nil {
 		return err
 	}
 	defer r.env.DatabaseManager.CloseConnection(db)
 
-	result := db.Create(push)
+	result := db.Create(item)
 	return result.Error
 }
 
-func (r $1) $2Update(push *model.$2) error {
+func (r $1) $2Update(item *model.$2) error {
 	db, err := r.env.DatabaseManager.GetConnection()
 	if err != nil {
 		return err
 	}
 	defer r.env.DatabaseManager.CloseConnection(db)
 
-	result := db.Updates(push)
+	result := db.Updates(item)
 	return result.Error
 }
 
-func (r $1) $2Delete(push *model.$2) error {
+func (r $1) $2Delete(item *model.$2) error {
 	db, err := r.env.DatabaseManager.GetConnection()
 	if err != nil {
 		return err
 	}
 	defer r.env.DatabaseManager.CloseConnection(db)
 
-	result := db.Delete(push)
+	result := db.Delete(item)
 	return result.Error
 }
