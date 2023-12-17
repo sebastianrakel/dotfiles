@@ -1,7 +1,7 @@
 @import 'active_theme.scss';
 
 * {
-    all: unset; //Unsets everything so you can style everything from scratch
+    all: unset;
     font-family: Monaspace Krypton;
 }
 
@@ -15,7 +15,6 @@ tooltip.background {
 tooltip label {
     margin: 6px;
 }
-
 
 
 //Global Styles
@@ -57,12 +56,18 @@ tooltip label {
     color: $base02;
 }
 
-.bat {
-    margin-right: 10px;
+.bat_bar {
+    border-radius: 10px;
 }
 
-.bat-icon {
-    margin-right: 5px;
+.bat_module {
+    font-size: 2em;
+}
+
+.bat_icon {
+    font-size: 0.7em;
+    color: $base07;
+    padding: 2px 15px 0px 9px;   
 }
 
 .mem_bar {
