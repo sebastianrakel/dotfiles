@@ -182,9 +182,10 @@ hc detect_monitors
 
 feh --bg-fill "${HOME}/Pictures/Wallpaper/developer_wallpaper.png"
 
-killall -q polybar
+eww kill
 for monitor in $(herbstclient list_monitors | cut -d: -f1) ; do
     echo "Start panel for monitor ${monitor}"
-    polybar_launch $monitor
+    #polybar_launch $monitor
+    eww open "$(hostnamectl hostname)"
     hc pad $monitor 0 0 100 0
 done

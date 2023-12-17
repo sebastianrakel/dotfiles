@@ -1,0 +1,7 @@
+[[files]]
+source = "./config"
+dest   = "~/.config/eww"
+
+[[files]]
+source     = "./theme/activate.sh"
+collection = "base16-activations"

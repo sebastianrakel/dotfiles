@@ -1,0 +1,84 @@
+@import 'active_theme.scss';
+
+* {
+    all: unset; //Unsets everything so you can style everything from scratch
+    font-family: Monaspace Krypton;
+}
+
+tooltip.background {
+    background-color: $base06;
+    font-size: 18px;
+    border-radius: 10px;
+    color: $base00;
+}
+
+tooltip label {
+    margin: 6px;
+}
+
+
+
+//Global Styles
+.bar {
+    background-color: $base00;
+    color: $base05;
+    border-radius: 5px;
+    margin: 0px 0px 0px 0px;
+    font-size: 1.2em;
+}
+
+.workspaces {
+    margin: 4px 0px 0px 0px;
+}
+
+.workspace-button {
+    min-width: 20px;
+    padding: 4px;
+    font-size: 1.3em;
+}
+
+.color-selected {
+    color: $base07;
+}
+
+.color-vnonfocus {
+    color: $base07;
+}
+
+.color-vother {
+    color: $base07;
+}
+
+.color-urgent {
+    color: $base08;
+}
+
+.color-empty {
+    color: $base02;
+}
+
+.bat {
+    margin-right: 10px;
+}
+
+.bat-icon {
+    margin-right: 5px;
+}
+
+.mem_bar {
+    border-radius: 10px;
+}
+
+.mem_module {
+    font-size: 2em;
+}
+
+.mem_icon {
+    font-size: 0.7em;
+    color: $base07;
+    padding: 2px 15px 0px 9px;   
+}
+
+.right_bar {
+    margin-right: 10px;
+}

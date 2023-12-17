@@ -562,3 +562,7 @@ Treesit is also now part of emacs and we will use it too
 #+BEGIN_SRC emacs-lisp
   (use-package powershell)
 #+END_SRC
+** YUCK
+#+BEGIN_SRC emacs-lisp
+  (use-package yuck-mode)
+#+END_SRC
