@@ -3,28 +3,26 @@
 (defpoll time :interval "10s" "date '+%H:%M %b %d, %Y'")
 (defpoll memory :interval "15s" "scripts/memory.sh")
 
-(defwidget mem []
+(defwidget circle-value [value icon ?tooltip]
 	   (box :class "mem_module"
 		:orientation "h"
 		:space-evenly false
 		:halign "end"
 		(circular-progress :class "mem_bar"
-				   :value { EWW_RAM["used_mem_perc"] }
+				   :value value
 				   :thickness 5
-				   :tooltip "used memory ${EWW_RAM['used_mem'] } / ${EWW_RAM['total_mem']}"
+				   :tooltip tooltip
 				   :start-at 25
-				   (button :class "mem_icon" "󰍛"))))
+				   (button :class "mem_icon" icon))))
+
+(defwidget mem []
+	   (circle-value :value { EWW_RAM["used_mem_perc"] }
+			 :icon "󰍛"
+			 :tooltip "used memory ${EWW_RAM['used_mem'] } / ${EWW_RAM['total_mem']}"))
 
 (defwidget bat []
-	   (box :class "bat_module"
-		:orientation "h"
-		:space-evenly false
-		:halign "end"
-		(circular-progress :class "bat_bar"
-				   :value { EWW_BATTERY["BAT1"].capacity }
-				   :thickness 5
-				   :start-at 25
-				   (button :class "bat_icon" ""))))
+	   (circle-value :value { EWW_BATTERY["BAT1"].capacity }
+			 :icon ""))
 
 (defwidget clock []
   (box :orientation "h"
