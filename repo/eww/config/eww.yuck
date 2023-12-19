@@ -25,10 +25,12 @@
 			 :icon ""))
 
 (defwidget clock []
-  (box :orientation "h"
+  (box :orientation "v"
        :space-evenly false
        :halign "end"
-       {formattime(EWW_TIME, "%d.%m.%Y %H:%M")}))
+       :class "clock"
+       {formattime(EWW_TIME, "%H")}
+       {formattime(EWW_TIME, "%M")}))
 
 (defwidget workspaces []
   (box :class "workspaces"
