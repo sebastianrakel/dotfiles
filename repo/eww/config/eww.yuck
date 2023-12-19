@@ -1,5 +1,5 @@
 (deflisten workspace "scripts/hlwm.pl")
-(defpoll battery :interval "1s" "script[s/battery.pl")
+(defpoll battery :interval "5s" "scripts/battery.pl")
 (defpoll time :interval "10s" "date '+%H:%M %b %d, %Y'")
 (defpoll memory :interval "15s" "scripts/memory.sh")
 
@@ -15,22 +15,28 @@
 				   :start-at 25
 				   (button :class "mem_icon" icon))))
 
-(defwidget mem []
-	   (circle-value :value { EWW_RAM["used_mem_perc"] }
-			 :icon "󰍛"
-			 :tooltip "used memory ${EWW_RAM['used_mem'] } / ${EWW_RAM['total_mem']}"))
-
 (defwidget bat []
-	   (circle-value :value { EWW_BATTERY["BAT1"].capacity }
-			 :icon ""))
+	   (button :class "bat_icon"
+		   :tooltip "${ EWW_BATTERY['BAT1'].capacity }% remaining"
+		   battery))
 
 (defwidget clock []
   (box :orientation "v"
        :space-evenly false
        :halign "end"
        :class "clock"
-       {formattime(EWW_TIME, "%H")}
-       {formattime(EWW_TIME, "%M")}))
+       (button {formattime(EWW_TIME, "%H")})
+       (button {formattime(EWW_TIME, "%M")})))
+
+(defwidget right []
+	   (box :orientation "h"
+		:space-evenly false
+		:halign "end"
+		:spacing 15
+		:class "right"
+		(box :class "info"
+		     (children))
+		(clock)))
 
 (defwidget workspaces []
   (box :class "workspaces"
@@ -47,11 +53,11 @@
 	   :monitor 0
 	   :windowtype "dock"
 	   :geometry (geometry :x "0%"
-			       :y "-4px"
+			       :y "-7px"
 			       :width "98%"
-			       :height "40px"
+			       :height "45px"
 			       :anchor "bottom center")
-	   :reserve (struts :side "bottom" :distance "45px")
+	   :reserve (struts :side "bottom" :distance "60px")
 	   (box :class "bar"
 		(workspaces)
 		(box :orientation "h"
@@ -59,34 +65,27 @@
 		     :halign "end"
 		     :spacing 15
 		     :class "right_bar"
-		     (mem)
 		     (clock))))
 
 (defwindow ostara
 	   :monitor 0
 	   :windowtype "dock"
 	   :geometry (geometry :x "0%"
-			       :y "-4px"
+			       :y "-7px"
 			       :width "98%"
-			       :height "40px"
+			       :height "45px"
 			       :anchor "bottom center")
-	   :reserve (struts :side "bottom" :distance "45px")
+	   :reserve (struts :side "bottom" :distance "60px")
 	   (box :class "bar"
 		(workspaces)
-		(box :orientation "h"
-		     :space-evenly false
-		     :halign "end"
-		     :spacing 15
-		     :class "right_bar"
-		     (bat)
-		     (mem)
-		     (clock))))
+		(right (bat))))
 
 (defwindow sulu
 	   :monitor 0
 	   :windowtype "dock"
 	   :geometry (geometry :x "0%"
-			       :y "-4px"
+			       :y
+			       "-4px"
 			       :width "98%"
 			       :height "40px"
 			       :anchor "bottom center")

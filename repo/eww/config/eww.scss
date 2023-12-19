@@ -32,8 +32,8 @@ tooltip label {
 
 .workspace-button {
     min-width: 20px;
-    padding: 4px;
-    font-size: 1.3em;
+    padding: 8px;
+    font-size: 1.5em;
 }
 
 .color-selected {
@@ -65,32 +65,29 @@ tooltip label {
 }
 
 .bat_icon {
-    font-size: 0.7em;
+    font-size: 1.7em;
     color: $base07;
-    padding: 2px 15px 0px 9px;   
+    padding: 0px 4px;
 }
 
-.mem_bar {
-    border-radius: 10px;
-}
-
-.mem_module {
-    font-size: 2em;
-}
-
-.mem_icon {
-    font-size: 0.7em;
-    color: $base07;
-    padding: 2px 15px 0px 9px;   
-}
-
-.right_bar {
+.right {
     margin-right: 10px;
 }
 
 .clock {
-    padding-top: 4px;
     font-family: Monaspace Xenon;
     font-style: normal;
     font-weight: bold;
+    font-size: 1em;
+    margin: 5px 0px;
+    padding: 6px 8px 0px 8px;
+    background-color: $base02;
+    border-radius: 4px;
+}
+
+.info {
+    margin: 5px 0px;
+    padding: 2px 8px 0px 8px;
+    background-color: $base02;
+    border-radius: 4px;
 }
