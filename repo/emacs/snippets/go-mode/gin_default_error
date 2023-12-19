@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: Gin Default Error
+# key: gderr
+# --
+if err != nil {
+	c.AbortWithError(http.$1, err)
+	return
+}
