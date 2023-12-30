@@ -4,17 +4,15 @@ use strict;
 use warnings;
 
 sub notify_send {local $" = ' '; $_ = qx(notify-send @_); chomp; $_}
+sub hibernate {local $" = ' '; $_ = qx(systemctl hibernate); chomp; $_}
 
-sub get_status {
+sub is_charging {
     my $battery_path = shift;
 
     open my $fh, '<', qq($battery_path/status) or die "Can't open file $!";
     chomp(my $file_content = do { local $/; <$fh> });
 
-    if ($file_content eq "Charging") {
-	print "󰂄\n";
-	exit 0;
-    }
+    return $file_content eq "Charging";
 }
 
 sub get_capacity {
@@ -41,6 +39,10 @@ sub get_capacity {
     elsif ($cap > 0) {
 	notify_send("-u", "critical", qq("Battery empty ($cap%)"), qq("Connect charger or turn off"));
         $icon = "󰁺";
+
+	if (!is_charging) {
+	    hibernate;
+	}
     }
 
     print "$icon\n";
@@ -48,9 +50,9 @@ sub get_capacity {
 }
 
 sub run {
-    my $battery_path = qq(/sys/class/power_supply/BAT1);
+    my $battery = $ARGV[0];
+    my $battery_path = qq(/sys/class/power_supply/$battery);
 
-    get_status $battery_path;
     get_capacity $battery_path;
 }
 

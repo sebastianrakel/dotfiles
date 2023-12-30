@@ -1,32 +1,19 @@
 (deflisten workspace "scripts/hlwm.pl")
-(defpoll battery :interval "5s" "scripts/battery.pl")
+(defpoll battery :interval "1m" "scripts/battery.pl BAT1")
 (defpoll time :interval "10s" "date '+%H:%M %b %d, %Y'")
 (defpoll memory :interval "15s" "scripts/memory.sh")
 
-(defwidget circle-value [value icon ?tooltip]
-	   (box :class "mem_module"
-		:orientation "h"
-		:space-evenly false
-		:halign "end"
-		(circular-progress :class "mem_bar"
-				   :value value
-				   :thickness 5
-				   :tooltip tooltip
-				   :start-at 25
-				   (button :class "mem_icon" icon))))
-
 (defwidget bat []
-	   (button :class "bat_icon"
+	   (button :class "bat"
 		   :tooltip "${ EWW_BATTERY['BAT1'].capacity }% remaining"
 		   battery))
 
 (defwidget clock []
-  (box :orientation "v"
+  (box :orientation "h"
        :space-evenly false
        :halign "end"
        :class "clock"
-       (button {formattime(EWW_TIME, "%H")})
-       (button {formattime(EWW_TIME, "%M")})))
+       (button {formattime(EWW_TIME, "%H:%M")})))
 
 (defwidget right []
 	   (box :orientation "h"
@@ -60,22 +47,17 @@
 	   :reserve (struts :side "bottom" :distance "60px")
 	   (box :class "bar"
 		(workspaces)
-		(box :orientation "h"
-		     :space-evenly false
-		     :halign "end"
-		     :spacing 15
-		     :class "right_bar"
-		     (clock))))
+		(right)))
 
 (defwindow ostara
 	   :monitor 0
 	   :windowtype "dock"
 	   :geometry (geometry :x "0%"
-			       :y "-7px"
+			       :y "-4px"
 			       :width "98%"
-			       :height "45px"
+			       :height "32px"
 			       :anchor "bottom center")
-	   :reserve (struts :side "bottom" :distance "60px")
+	   :reserve (struts :side "bottom" :distance "40px")
 	   (box :class "bar"
 		(workspaces)
 		(right (bat))))
