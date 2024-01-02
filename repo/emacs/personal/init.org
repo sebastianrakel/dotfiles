@@ -395,6 +395,12 @@ I want vertical lines to show which block i'm currently editing
     :hook ((text-mode . flyspell-mode)
 	   (prog-mode . flyspell-prog-mode)))
 #+END_SRC
+*** Direnv
+#+BEGIN_SRC emacs-lisp
+  (use-package direnv
+    :config
+    (direnv-mode))
+#+END_SRC
 ** LSP Stuff
 I've got problems with eglot and so i'm trying lsp-mode again
 #+BEGIN_SRC emacs-lisp
