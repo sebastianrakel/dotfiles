@@ -396,25 +396,26 @@ I want vertical lines to show which block i'm currently editing
 	   (prog-mode . flyspell-prog-mode)))
 #+END_SRC
 ** LSP Stuff
-After eglot is built-in in emacs, we will use eglot
+I've got problems with eglot and so i'm trying lsp-mode again
 #+BEGIN_SRC emacs-lisp
-  (require 'eglot)
-  (setq eglot-confirm-server-initiated-edits nil
-	eglot-events-buffer-size 0
-	eglot-sync-connect nil
-	eglot-connect-timeout nil
-	eglot-autoshutdown t
-	eglot-events-buffer-size 0
-	eglot-ignored-server-capabilities '(:documentHighlightProvider))
+  (use-package lsp-mode
+    :init
+    (setq lsp-keymap-prefix "C-c l")
+    (global-set-key (kbd "M-<return>") #'lsp-code-actions-at-point)
+    (global-set-key (kbd "C-M-l") #'lsp-format-buffer)
+    :hook
+    (lsp-mode . lsp-enable-which-key-integration))
 
-  (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster)
-  
-  (define-key eglot-mode-map (kbd "C-c c r") #'eglot-find-implementation)
-  (define-key eglot-mode-map (kbd "C-c c d") #'xref-find-definitions)
-  (define-key eglot-mode-map (kbd "C-c c f") #'eglot-format-buffer)
-  (define-key eglot-mode-map (kbd "C-c c R") #'eglot-rename)
-  (define-key eglot-mode-map (kbd "C-M-l") #'eglot-format-buffer)
-  (define-key eglot-mode-map (kbd "M-<return>") #'eglot-code-actions)
+  (use-package lsp-ui)
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; (define-key eglot-mode-map (kbd "C-c c r") #'eglot-find-implementation) ;;
+  ;; (define-key eglot-mode-map (kbd "C-c c d") #'xref-find-definitions)	   ;;
+  ;; (define-key eglot-mode-map (kbd "C-c c f") #'eglot-format-buffer)	   ;;
+  ;; (define-key eglot-mode-map (kbd "C-c c R") #'eglot-rename)		   ;;
+  ;; (define-key eglot-mode-map (kbd "C-M-l") #'eglot-format-buffer)	   ;;
+  ;; (define-key eglot-mode-map (kbd "M-<return>") #'eglot-code-actions)	   ;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 #+END_SRC
 
 Treesit is also now part of emacs and we will use it too
@@ -451,6 +452,10 @@ Treesit is also now part of emacs and we will use it too
 
   (global-set-key (kbd "C-c t i") 'own/treesit-install-langs)
 #+END_SRC
+** Debugging
+#+BEGIN_SRC emacs-lisp
+  (use-package dap-mode)
+#+END_SRC
 ** Org
 #+begin_src emacs-lisp
   (use-package org-modern
@@ -475,8 +480,7 @@ Treesit is also now part of emacs and we will use it too
     :if (and (require 'treesit)
 	     (treesit-available-p))
     :hook
-    ((go-ts-mode . eglot-ensure)
-     (go-ts-mode . own/eglot-format-buffer-on-save))
+    ((go-ts-mode . lsp-deferred))
     :custom
     (go-ts-mode-hook go-mode-hook)
     :init
