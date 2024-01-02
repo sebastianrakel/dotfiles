@@ -24,7 +24,9 @@ sub get_capacity {
     my $cap = int($file_content);
     my $icon = "x";
 
-    if ($cap > 90) { $icon = "󰁹"; }
+    
+    if (is_charging $battery_path) { $icon = "󰂄"; }
+    elsif ($cap > 90) { $icon = "󰁹"; }
     elsif ($cap > 80) { $icon = "󰂂"; }
     elsif ($cap > 70) { $icon = "󰂁"; }
     elsif ($cap > 60) { $icon = "󰂀"; }
@@ -40,7 +42,7 @@ sub get_capacity {
 	notify_send("-u", "critical", qq("Battery empty ($cap%)"), qq("Connect charger or turn off"));
         $icon = "󰁺";
 
-	if (!is_charging) {
+	if (!is_charging $battery_path) {
 	    hibernate;
 	}
     }
