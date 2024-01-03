@@ -29,6 +29,7 @@ sub get_status {
 	if (/^#/) { return "selected"; }
 	if (/^!/) { return "urgent"; }
 	if (/^\./) { return "empty"; }
+	if (/^\:/) { return "nempty"; }
 	if (/^-/) { return "vother"; }
 	if (/^\+/) { return "vnonfocus"; }
     }

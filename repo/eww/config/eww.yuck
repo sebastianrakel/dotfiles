@@ -48,11 +48,9 @@
 	   :monitor 0
 	   :windowtype "dock"
 	   :geometry (geometry :x "0%"
-			       :y "-7px"
-			       :width "98%"
-			       :height "45px"
+			       :width "90%"
 			       :anchor "bottom center")
-	   :reserve (struts :side "bottom" :distance "60px")
+	   :reserve (struts :side "bottom" :distance "40px")
 	   (box :class "bar"
 		(workspaces)
 		(right)))
@@ -61,9 +59,7 @@
 	   :monitor 0
 	   :windowtype "dock"
 	   :geometry (geometry :x "0%"
-			       :y "-4px"
-			       :width "98%"
-			       :height "32px"
+			       :width "90%"
 			       :anchor "bottom center")
 	   :reserve (struts :side "bottom" :distance "40px")
 	   (box :class "bar"
@@ -74,18 +70,16 @@
 	   :monitor 0
 	   :windowtype "dock"
 	   :geometry (geometry :x "0%"
-			       :y "-4px"
-			       :width "98%"
-			       :height "40px"
+			       :width "90%"
 			       :anchor "bottom center")
-	   :reserve (struts :side "bottom" :distance "45px")
+	   :reserve (struts :side "bottom" :distance "40px")
 	   (box :class "bar"
 		(workspaces)
 		(right)))
 
 (defwindow network
 	   :geometry (geometry :x "45%" 
-			       :y "-60px"
+			       :y "-45px"
 			       :anchor "bottom center"
 			       :width "270px")
 	   (box :class "popup" (net)))

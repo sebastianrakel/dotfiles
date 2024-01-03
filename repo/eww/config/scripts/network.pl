@@ -19,12 +19,16 @@ sub run {
 	   next;
        }
 
-       my $tooltip = $dev->{'addr_info'}[0]->{'local'};
+       my @addresses = @{$dev->{'addr_info'}};
+       
+       if (!@addresses) {
+	   next;
+       }
 
        print qq((label :class "network-label" :text "$interface"));
 
 
-       for my $addr (@{$dev->{'addr_info'}}) {
+       for my $addr (@addresses) {
 	   my $ip = $addr->{'local'};
 	   print qq((button :class "network-button" :onclick "scripts/clipboard.sh $ip" "$ip"));
        }
