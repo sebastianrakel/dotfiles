@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use Env;
 
 sub hc {local $" = ' '; $_ = qx(herbstclient @_); chomp; $_}
 
@@ -43,8 +44,10 @@ sub with_hc_idle {
 }
 
 sub run {
+    my $screen = $ARGV[0];
+
     with_hc_idle qw/tag_/, sub {
-	chomp(my $hlwm_tag_status_output = qx(herbstclient tag_status));
+	chomp(my $hlwm_tag_status_output = qx(herbstclient tag_status $screen));
 
 	my @tags = do {local @_ = split /\t/, $hlwm_tag_status_output; @_[1..$#_]};
 	my @buttons = ();

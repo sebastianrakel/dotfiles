@@ -1,10 +1,11 @@
-(deflisten workspace "scripts/hlwm.pl")
+(deflisten workspace_0 "scripts/hlwm.pl 0")
 (defpoll battery :interval "1m" "scripts/battery.pl BAT1")
 (defpoll time :interval "10s" "date '+%H:%M %b %d, %Y'")
 (defpoll memory :interval "15s" "scripts/memory.sh")
+(defpoll network :interval "5s" "scripts/network.pl")
 
 (defwidget bat []
-	   (button :class "bat"
+	   (button :class "info-button"
 		   :tooltip "${ EWW_BATTERY['BAT1'].capacity }% remaining"
 		   battery))
 
@@ -22,6 +23,7 @@
 		:spacing 15
 		:class "right"
 		(box :class "info"
+		     (net_button)
 		     (children))
 		(clock)))
 
@@ -34,7 +36,13 @@
        (hlwm)))
 
 (defwidget hlwm []
-	   (literal :content workspace))
+	   (literal :content workspace_0))
+
+(defwidget net_button []
+	   (button :class "info-button" :onclick "scripts/popup.sh network" "󰈀"))
+
+(defwidget net []
+	   (literal :content network))
 
 (defwindow odin
 	   :monitor 0
@@ -66,12 +74,18 @@
 	   :monitor 0
 	   :windowtype "dock"
 	   :geometry (geometry :x "0%"
-			       :y
-			       "-4px"
+			       :y "-4px"
 			       :width "98%"
 			       :height "40px"
 			       :anchor "bottom center")
 	   :reserve (struts :side "bottom" :distance "45px")
 	   (box :class "bar"
 		(workspaces)
-		(clock)))
+		(right)))
+
+(defwindow network
+	   :geometry (geometry :x "45%" 
+			       :y "-60px"
+			       :anchor "bottom center"
+			       :width "270px")
+	   (box :class "popup" (net)))
