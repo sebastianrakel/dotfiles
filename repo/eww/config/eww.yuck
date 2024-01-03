@@ -14,7 +14,29 @@
        :space-evenly false
        :halign "end"
        :class "clock"
-       (button {formattime(EWW_TIME, "%H:%M")})))
+       (eventbox :onhover "eww update show_date_full=true"   
+  		 :onhoverlost "eww update show_date_full=false"
+		 (box
+		  :spacing "0px"
+		  :orientation "h"
+		  :space-evenly false
+		  :halign "end"
+		  (revealer :transition "slideleft" 
+			    :reveal show_date_full   
+			    :duration "550ms"
+			    (label :text {formattime(EWW_TIME, "%Y-%m-%d ")}))
+		  (label :text {formattime(EWW_TIME, "%H:%M")})))))
+(defvar show_date_full false)
+
+(defwidget left []
+	   (box :orientation "h"
+		:space-evenly false
+		:halign "start"
+		:spacing 15
+		:class "left"
+		(box :class "info"
+		     (net_button)
+		     (children))))
 
 (defwidget right []
 	   (box :orientation "h"
@@ -22,9 +44,6 @@
 		:halign "end"
 		:spacing 15
 		:class "right"
-		(box :class "info"
-		     (net_button)
-		     (children))
 		(clock)))
 
 (defwidget workspaces []
@@ -48,38 +67,43 @@
 	   :monitor 0
 	   :windowtype "dock"
 	   :geometry (geometry :x "0%"
-			       :width "90%"
-			       :anchor "bottom center")
-	   :reserve (struts :side "bottom" :distance "40px")
-	   (box :class "bar"
-		(workspaces)
-		(right)))
+			       :width "100%"
+			       :anchor "top center")
+	   :reserve (struts :side "top" :distance "40px")
+	   (centerbox :class "bar"
+		      :orientation "h"
+		      (left)
+		      (workspaces)
+		      (right)))
 
 (defwindow ostara
 	   :monitor 0
 	   :windowtype "dock"
 	   :geometry (geometry :x "0%"
-			       :width "90%"
-			       :anchor "bottom center")
-	   :reserve (struts :side "bottom" :distance "40px")
-	   (box :class "bar"
-		(workspaces)
-		(right (bat))))
+			       :width "100%"
+			       :anchor "top center")
+	   :reserve (struts :side "top" :distance "40px")
+	   (centerbox :class "bar"
+		      :orientation "h"
+		      (left (bat))
+		      (workspaces)
+		      (right)))
 
 (defwindow sulu
 	   :monitor 0
 	   :windowtype "dock"
 	   :geometry (geometry :x "0%"
-			       :width "90%"
-			       :anchor "bottom center")
-	   :reserve (struts :side "bottom" :distance "40px")
-	   (box :class "bar"
-		(workspaces)
-		(right)))
+			       :width "100%"
+			       :anchor "top center")
+	   :reserve (struts :side "top" :distance "40px")
+	   (centerbox :class "bar"
+		      :orientation "h"
+		      (left)
+		      (workspaces)
+		      (right)))
 
 (defwindow network
-	   :geometry (geometry :x "45%" 
-			       :y "-45px"
-			       :anchor "bottom center"
-			       :width "270px")
+	   :geometry (geometry :x "5px" 
+			       :y "45px"
+			       :anchor "top left")
 	   (box :class "popup" (net)))

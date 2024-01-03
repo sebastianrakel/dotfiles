@@ -22,8 +22,7 @@ tooltip label {
     background-color: $base00;
     color: $base05;
     font-size: 20px;
-    box-shadow: inset 0 3px $base01;
-    border-radius: 10px;
+    box-shadow: inset 0 -2px $base01;
 }
 
 .popup {
@@ -64,9 +63,14 @@ tooltip label {
     padding: 0px 8px 0px 0px;
 }
 
+// Left
+.left {
+    padding: 0px 0px 0px 8px;
+}
+
+
 // Clock
 .clock {
-
 }
 
 // Info Area
