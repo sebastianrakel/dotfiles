@@ -1,4 +1,4 @@
-(deflisten workspace_0 "scripts/hlwm.pl 0")
+(deflisten workspace_0 "scripts/hlwm.pl")
 (defpoll battery :interval "1m" "scripts/battery.pl BAT1")
 (defpoll time :interval "10s" "date '+%H:%M %b %d, %Y'")
 (defpoll memory :interval "15s" "scripts/memory.sh")

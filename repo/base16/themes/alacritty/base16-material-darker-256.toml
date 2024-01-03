@@ -1,0 +1,58 @@
+# Base16 Material Darker 256 - alacritty color config
+# Nate Peterson
+
+# Default colors
+[colors.primary]
+background = '0x212121'
+foreground = '0xEEFFFF'
+
+# Colors the cursor will use if `custom_cursor_colors` is true
+[colors.cursor]
+text = '0x212121'
+cursor = '0xEEFFFF'
+
+# Normal colors
+[colors.normal]
+black = '0x212121'
+red = '0xF07178'
+green = '0xC3E88D'
+yellow = '0xFFCB6B'
+blue = '0x82AAFF'
+magenta = '0xC792EA'
+cyan = '0x89DDFF'
+white = '0xEEFFFF'
+
+# Bright colors
+[colors.bright]
+black = '0x4A4A4A'
+red = '0xF07178'
+green = '0xC3E88D'
+yellow = '0xFFCB6B'
+blue = '0x82AAFF'
+magenta = '0xC792EA'
+cyan = '0x89DDFF'
+white = '0xFFFFFF'
+
+[[colors.indexed_colors]]
+index = 16
+color = "0xF78C6C"
+
+[[colors.indexed_colors]]
+index = 17
+color = "0xFF5370"
+
+[[colors.indexed_colors]]
+index = 18
+color = "0x303030"
+
+[[colors.indexed_colors]]
+index = 19
+color = "0x353535"
+
+[[colors.indexed_colors]]
+index = 20
+color = "0xB2CCD6"
+
+[[colors.indexed_colors]]
+index = 21
+color = "0xEEFFFF"

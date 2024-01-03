@@ -23,15 +23,15 @@ herbstclient chain , \
 	, attr theme.color                        "${hlwm_base07}" \
 	, attr theme.background_color             "${hlwm_base00}" \
 	, attr theme.normal.color                 "${hlwm_base01}" \
-	, attr theme.active.color                 "${hlwm_base08}" \
+	, attr theme.active.color                 "${hlwm_base03}" \
 	, attr theme.active.background_color      "${hlwm_base00}" \
-	, attr theme.urgent.color                 "${hlwm_base0A}" \
-	, attr theme.floating.active.color        "${hlwm_base08}" \
-	, attr theme.floating.urgent.color        "${hlwm_base0A}" \
+	, attr theme.urgent.color                 "${hlwm_base08}" \
+	, attr theme.floating.active.color        "${hlwm_base03}" \
+	, attr theme.floating.urgent.color        "${hlwm_base08}" \
 	, attr theme.floating.background_color    "${hlwm_base00}" \
 	, attr settings.frame_bg_normal_color     "${hlwm_base00}" \
-	, attr settings.frame_bg_active_color     "${hlwm_base08}" \
+	, attr settings.frame_bg_active_color     "${hlwm_base03}" \
 	, attr settings.frame_border_normal_color "${hlwm_base00}" \
-	, attr settings.frame_border_active_color "${hlwm_base08}" \
+	, attr settings.frame_border_active_color "${hlwm_base03}" \
 	, attr theme.title_color                  "${hlwm_base07}" \
-	, attr theme.active.title_color		  "${hlwm_base07}"
+	, attr theme.active.title_color		  "${hlwm_base05}"

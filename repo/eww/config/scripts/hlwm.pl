@@ -44,10 +44,8 @@ sub with_hc_idle {
 }
 
 sub run {
-    my $screen = $ARGV[0];
-
     with_hc_idle qw/tag_/, sub {
-	chomp(my $hlwm_tag_status_output = qx(herbstclient tag_status $screen));
+	chomp(my $hlwm_tag_status_output = qx(herbstclient tag_status));
 
 	my @tags = do {local @_ = split /\t/, $hlwm_tag_status_output; @_[1..$#_]};
 	my @buttons = ();
