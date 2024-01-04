@@ -407,8 +407,9 @@ I've got problems with eglot and so i'm trying lsp-mode again
   (use-package lsp-mode
     :init
     (setq lsp-keymap-prefix "C-c l")
-    (global-set-key (kbd "M-<return>") #'lsp-code-actions-at-point)
-    (global-set-key (kbd "C-M-l") #'lsp-format-buffer)
+    :config
+    (define-key lsp-mode-map (kbd "M-<return>") #'lsp-code-action)
+    (define-key lsp-mode-map (kbd "C-M-l") #'lsp-format-buffer)
     :hook
     (lsp-mode . lsp-enable-which-key-integration))
 
@@ -546,11 +547,7 @@ Treesit is also now part of emacs and we will use it too
 						(:defaultPrintWidth 100
 								    :getDocumentPrintWidthRequest nil)
 						:documentSymbol t
-						:documentColor t)))))
-
-    (add-to-list 'eglot-server-programs
-		 `(vue-mode . ("vue-language-server" "--stdio" :initializationOptions ,(vue-eglot-init-options))))
-    (add-hook 'vue-mode-hook 'eglot-ensure))
+						:documentColor t))))))
 #+END_SRC
 ** Puppet
 #+BEGIN_SRC emacs-lisp
