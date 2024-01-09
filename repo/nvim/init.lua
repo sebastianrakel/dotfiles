@@ -119,6 +119,11 @@ require("lazy").setup({
 				vim.keymap.set('n', '[Lsp]dd', vim.lsp.buf.definition, opts)
 				vim.keymap.set('n', '[Lsp]a', vim.lsp.buf.code_action, opts)
 
+				if client.resolved_capabilities.document_formatting then
+    				buf_set_keymap("n", "[Lsp]f", vim.lsp.buf.formatting(), opts)
+  				elseif client.resolved_capabilities.document_range_formatting then
+    				buf_set_keymap("n", "[Lsp]f", vim.lsp.buf.range_formatting(), opts)
+  				end
 			end
 
 			local function get_typescript_server_path()
@@ -130,25 +135,35 @@ require("lazy").setup({
 			lspconfig.lua_ls.setup {
 				on_attach = on_attach,
 				capabilities = capabilities,
-					settings = {
-						Lua = {
-							runtime = {
-								version = 'LuaJIT',
-								path = vim.split(package.path, ';')
-							},
-							diagnostics = { globals = { 'vim' } },
-							workspace = {
-								library = vim.api.nvim_get_runtime_file("", true),
-								checkThirdParty = false,
-							},
-							telemetry = { enable = false }
-						}
+				settings = {
+					Lua = {
+						runtime = {
+							version = 'LuaJIT',
+							path = vim.split(package.path, ';')
+						},
+						diagnostics = { globals = { 'vim' } },
+						workspace = {
+							library = vim.api.nvim_get_runtime_file("", true),
+							checkThirdParty = false,
+						},
+						telemetry = { enable = false }
 					}
+				}
 			}
 
 			lspconfig.gopls.setup {
 				on_attach = on_attach,
 				capabilities = capabilities,
+				settings = {
+	      			gopls = {
+				        experimentalPostfixCompletions = true,
+				        analyses = {
+		        		    unusedparams = true,
+				            shadow = true,
+				        },
+			    	    staticcheck = true,
+					},
+		        },
 			}
 
 			lspconfig.volar.setup({
