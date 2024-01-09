@@ -15,6 +15,7 @@ alias dmesg='dmesg -T --color'
 alias ls='ls --color'
 alias mkvenv='python -m venv venv'
 alias usevenv='source venv/bin/activate'
+alias n='nvim '
 
 if which lsd >/dev/null; then
     alias ls='lsd '

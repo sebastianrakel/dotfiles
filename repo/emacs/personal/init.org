@@ -408,7 +408,7 @@ I've got problems with eglot and so i'm trying lsp-mode again
     :init
     (setq lsp-keymap-prefix "C-c l")
     :config
-    (define-key lsp-mode-map (kbd "M-<return>") #'lsp-code-action)
+    (define-key lsp-mode-map (kbd "M-<return>") #'lsp-code-actions-at-point)
     (define-key lsp-mode-map (kbd "C-M-l") #'lsp-format-buffer)
     :hook
     (lsp-mode . lsp-enable-which-key-integration))

@@ -25,6 +25,7 @@
 		 'wallpaper',
 		 'tools',
 		 'eww',
+		 'nvim',
 	]
 
 [configurations.3d]

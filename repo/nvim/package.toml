@@ -1,0 +1,3 @@
+[[files]]
+source = "./init.lua"
+dest = "~/.config/nvim/init.lua"
