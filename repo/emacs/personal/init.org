@@ -1,7 +1,6 @@
 #+STARTUP: overview
-* Package Manager
-After trying elpaca and have major problems, i will now try straight.el
 
+* Package Manager
 #+begin_src emacs-lisp
   (setq package-enable-at-startup nil)
   (defvar bootstrap-version)
@@ -23,22 +22,16 @@ After trying elpaca and have major problems, i will now try straight.el
   (use-package use-package-ensure-system-package)
 #+end_src
 
-* Startup Performance
-#+BEGIN_SRC emacs-lisp
-  (setq gc-cons-threshol (* 50 1000 1000))
-#+END_SRC
-
 * Backup and Autosave Files
 I don't want to have backup/autosave files in my project dirs
 #+BEGIN_SRC emacs-lisp
   (setq backup-directory-alist
-	    `((".*" . ,temporary-file-directory)))
+	`((".*" . ,temporary-file-directory)))
   (setq auto-save-file-name-transforms
 	`((".*" ,temporary-file-directory t)))
 #+END_SRC
 
-* UI/IX
-** Basic Emacs Settings
+* Really Basic Stuff
 No warnings, most of them are warnings from plugins and i can't do anything
 #+BEGIN_SRC emacs-lisp
   (setq native-comp-async-report-warnings-errors nil)
@@ -49,15 +42,67 @@ Movement with meta key
   (windmove-default-keybindings 'meta)
 #+END_SRC
 
-If there is an error in my init, switch to debug
-#+BEGIN_SRC emacs-lisp
-  ;(setq debug-on-error t)
-#+END_SRC
-
 Disable lock files, because some lsp servers have problems with them
 #+BEGIN_SRC emacs-lisp
   (setq create-lockfiles nil)
 #+END_SRC
+
+** My little Helper
+*** Open Terminal in Project Dir or current Dir
+#+BEGIN_SRC emacs-lisp
+  (defun own/open-real-terminal--path (path)
+    (let ((command (concat "herbstclient spawn alacritty --working-directory " path)))
+      (message (concat "Open Terminal with command: " command))
+      (shell-command command)))
+
+  (defun own/open-real-terminal--with-current-directory()
+    (message "Open Terminal with current directory path")
+    (own/open-real-terminal--path(file-name-directory (buffer-file-name))))
+
+  (defun own/open-real-terminal--with-projectile()
+    (message "Open Terminal with projectile path")
+    (own/open-real-terminal--path(projectile-project-root)))
+
+  (defun own/open-real-terminal()
+    (interactive)
+    (if (projectile-project-root)
+	(own/open-real-terminal--with-projectile)
+      (own/open-real-terminal--with-current-directory)))
+#+END_SRC
+*** Reload Emacs Config
+#+BEGIN_SRC emacs-lisp
+  (defun own/emacs-reload-config()
+    (interactive)
+    (load-file "~/.emacs.d/init.el"))
+#+END_SRC
+*** Open Emacs Config
+#+BEGIN_SRC emacs-lisp
+  (defun own/emacs-open-config()
+    (interactive)
+    (switch-to-buffer (find-file-noselect "~/.emacs.d/personal/init.org")))
+#+END_SRC
+*** Open Project Directory 
+I have some directories which i want to open directly via shortcut, this function helps me
+#+BEGIN_SRC emacs-lisp
+  (defun own/open-project-directory(directory)
+    (interactive)
+    (projectile-find-file-in-directory directory))
+#+END_SRC
+
+** Shortcuts without Plugins
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-c r") 'own/emacs-reload-config)
+  (global-set-key (kbd "C-c x") 'own/open-real-terminal)
+  (global-set-key (kbd "C-c j b") 'beginning-of-buffer)
+  (global-set-key (kbd "C-c j e") 'end-of-buffer)
+  (global-set-key (kbd "C-c j l") 'goto-line)
+  (global-set-key (kbd "C-c q s") 'own/emacs-open-config)
+  (global-set-key (kbd "C-c q n") '("open nix" . (lambda () (interactive) (own/open-project-directory "~/.nix"))))
+  (global-set-key (kbd "C-c q d") '("open dotfiles" . (lambda () (interactive) (own/open-project-directory "~/.dotfiles"))))
+  (global-set-key (kbd "C-c q p") '("open dotfiles" . (lambda () (interactive) (own/open-project-directory "~/.dotfiles-private"))))
+#+END_SRC
+
+* Style
 ** Bars and Menus
 #+BEGIN_SRC emacs-lisp
   (tool-bar-mode -1)
@@ -73,7 +118,6 @@ Disable lock files, because some lsp servers have problems with them
     (setq completion-cycle-threshold 3)
     (setq tab-always-indent 'complete)
 #+END_SRC
-
 ** Misc Settings
 #+BEGIN_SRC emacs-lisp
   (column-number-mode 1)
@@ -81,7 +125,6 @@ Disable lock files, because some lsp servers have problems with them
   (setopt use-short-answers t)
   (setq vc-follow-symlinks t)
 #+END_SRC
-
 I need an overview about keybinding (can't recognize them all)
 #+BEGIN_SRC emacs-lisp
   (use-package which-key
@@ -121,22 +164,17 @@ I'm uisng base16 themes, cause i have scripts to change themes in all my program
     (own/theme-load-last-theme)
 
     ;; Overwriting some face attributes, cause i like it
-    (if (daemonp)
-	(add-hook 'server-after-make-frame-hook #'own/theme-custome-faces)
-      (own/theme-custome-faces)))
-
+    (with-eval-after-load 'org-faces
+      (if (daemonp)
+	    (add-hook 'server-after-make-frame-hook #'own/theme-custome-faces)
+	  (own/theme-custome-faces))))
 #+END_SRC
 
 Now a nice font and we can start. Since fontconfig will be ignored i have to set it by hand
 #+BEGIN_SRC emacs-lisp
   (if (string= (system-name) "odin")
-      (add-to-list 'default-frame-alist '(font . "MonaspaceNeonExtraLight-16"))
-    (add-to-list 'default-frame-alist '(font . "MonaspaceNeonExtraLight-16")))
-#+END_SRC
-** Posframe
-I found posframe which opens some buffers in a dialog style frame
-#+BEGIN_SRC emacs-lisp
-  (use-package posframe)
+      (add-to-list 'default-frame-alist '(font . "MonaspaceNeonExtraLight-12"))
+    (add-to-list 'default-frame-alist '(font . "MonaspaceNeonExtraLight-12")))
 #+END_SRC
 ** Dashboard
 I love my dashboard
@@ -173,101 +211,31 @@ I love the look of the doom emacs modeline, luckily it's a sepperate package
   (use-package doom-modeline
     :hook (after-init . doom-modeline-mode)
     :custom
-    (doom-modeline-height 40)
+    (doom-modeline-height 20)
     (doom-modeline-project-detection 'truncate-with-project)
     (doom-modeline-icon t))
 #+END_SRC
-** Olivetti (nicer writer mode)
+* Project Management
 #+BEGIN_SRC emacs-lisp
-  (use-package olivetti
+  (use-package projectile
+    :bind
+    (("C-c p" . 'projectile-command-map))
     :custom
-    (olivetti-body-width 180))
-#+END_SRC
-** My little Helper
-*** Open Terminal in Project Dir or current Dir
-#+BEGIN_SRC emacs-lisp
-  (defun own/open-real-terminal--path (path)
-    (let ((command (concat "herbstclient spawn alacritty --working-directory " path)))
-      (message (concat "Open Terminal with command: " command))
-      (shell-command command)))
-
-  (defun own/open-real-terminal--with-current-directory()
-    (message "Open Terminal with current directory path")
-    (own/open-real-terminal--path(file-name-directory (buffer-file-name))))
-
-  (defun own/open-real-terminal--with-projectile()
-    (message "Open Terminal with projectile path")
-    (own/open-real-terminal--path(projectile-project-root)))
-
-  (defun own/open-real-terminal()
-    (interactive)
-    (if (projectile-project-root)
-	(own/open-real-terminal--with-projectile)
-      (own/open-real-terminal--with-current-directory)))
-
-  (global-set-key (kbd "C-c x") 'own/open-real-terminal)
+    (projectile-indexing-method 'hybrid)
+    :config
+    (add-to-list 'projectile-globally-ignored-directories "node_modules")
+    (projectile-mode +1))
 #+END_SRC
 
-*** Reload Emacs Config
-#+BEGIN_SRC emacs-lisp
-  (defun own/emacs-reload-config()
-    (interactive)
-    (load-file "~/.emacs.d/init.el"))
-
-  (global-set-key (kbd "C-c r") 'own/emacs-reload-config)
-#+END_SRC
-*** Open Emacs Config
-#+BEGIN_SRC emacs-lisp
-  (defun own/emacs-open-config()
-    (interactive)
-    (switch-to-buffer (find-file-noselect "~/.emacs.d/personal/init.org")))
-#+END_SRC
-*** Open Project Directory 
-I have some directories which i want to open directly via shortcut, this function helps me
-#+BEGIN_SRC emacs-lisp
-  (defun own/open-project-directory(directory)
-    (interactive)
-    (projectile-find-file-in-directory directory))
-#+END_SRC
-** Shortcuts without Plugins
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-c j b") 'beginning-of-buffer)
-  (global-set-key (kbd "C-c j e") 'end-of-buffer)
-  (global-set-key (kbd "C-c j l") 'goto-line)
-  (global-set-key (kbd "C-c q s") 'own/emacs-open-config)
-  (global-set-key (kbd "C-c q n") '("open nix" . (lambda () (interactive) (own/open-project-directory "~/.nix"))))
-  (global-set-key (kbd "C-c q d") '("open dotfiles" . (lambda () (interactive) (own/open-project-directory "~/.dotfiles"))))
-  (global-set-key (kbd "C-c q p") '("open dotfiles" . (lambda () (interactive) (own/open-project-directory "~/.dotfiles-private"))))
-#+END_SRC
 * Completion
 #+BEGIN_SRC emacs-lisp
+  (use-package company
+    :config
+    (global-company-mode))
+
   (use-package vertico
-    :init
-    (vertico-mode))
-
-  (use-package vertico-posframe
-    :after vertico)
-
-  (use-package corfu
-    :init
-    (global-corfu-mode 1)
-    :config
-    (setq corfu-auto t
-	  corfu-quit-no-match 'separator)
-    (setq completion-cycle-threshold 3))
-
-  (use-package kind-icon
-    :after corfu
-    :custom
-    (kind-icon-use-icons t)
-    (kind-icon-default-face 'corfu-default) ; Have background color be the same as `corfu' face background
-    (kind-icon-blend-background nil)  ; Use midpoint color between foreground and background colors ("blended")?
-    (kind-icon-blend-frac 0.08) ; Change cache dir
-    :config
-    (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
-
-
-  (use-package marginalia)
+      :init
+      (vertico-mode))
 
   (use-package consult
     :bind
@@ -277,53 +245,10 @@ I have some directories which i want to open directly via shortcut, this functio
      ("C-c t t" . consult-org-agenda))
     :bind
     (:map org-mode-map
-	   ("C-c j" . consult-org-heading)))
-
-  (use-package orderless
-    :custom
-    (completion-styles '(orderless basic))
-    (completion-category-overrides '((file (styles basic partial-completion))))
-    :config
-    (setq completion-category-overrides '((eglot (styles orderless)))))
-#+END_SRC
-** Cape/Capf
-I'm using cape for completion-at-point, i have to define my own function cause eglot is overwriting others.
-#+BEGIN_SRC emacs-lisp
-  (use-package cape
-    :init
-    (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-    (add-to-list 'completion-at-point-functions #'cape-file)
-    (add-to-list 'completion-at-point-functions #'cape-elisp-block)
-    :config
-    (defun own/eglot-capf ()
-      (setq-local completion-at-point-functions
-		  (list (cape-super-capf
-			 #'eglot-completion-at-point
-			 #'yasnippet-capf))))
-
-    (add-hook 'eglot-managed-mode-hook #'own/eglot-capf))
-
-  (use-package yasnippet-capf
-    :after cape
-    :config
-    (add-to-list 'completion-at-point-functions #'yasnippet-capf))
+	  ("C-c j" . consult-org-heading)))
 #+END_SRC
 
-* Project Stuff
-I love projectile it's fast jumping in projects and project files is awesome,
-i don't know if there is something better
-#+BEGIN_SRC emacs-lisp
-  (use-package projectile
-    :bind
-    (("C-c p" . 'projectile-command-map))
-    :custom
-    (projectile-indexing-method 'hybrid)
-    :config
-    (add-to-list 'projectile-globally-ignored-directories "node_modules")
-    (projectile-mode +1)
-    (global-set-key (kbd "C-c R") '("reload projects" . (lambda () (interactive) (projectile-discover-projects-in-directory "~/projects/" 4)))))
-#+END_SRC
-* Programming/File Specific
+* Coding
 ** Common Stuff (things every programming thing needs)
 *** ProgMode/ConfMode
 #+BEGIN_SRC emacs-lisp
@@ -334,13 +259,7 @@ i don't know if there is something better
 #+begin_src emacs-lisp
   (use-package yasnippet
     :init
-    (yas-global-mode 1)
-    :config
-    (advice-add 'yas--modes-to-activate :around
-		(defun yas--get-snippet-tables@tree-sitter (orig-fn &optional mode)
-		  (funcall orig-fn
-			   (or (car (rassq (or mode major-mode) major-mode-remap-alist))
-			       mode)))))
+    (yas-global-mode 1))
 #+end_src
 *** Parentheses
 For coloring parentheses i use rainbow-delimiters, so every pair of parenses have it's own color
@@ -401,67 +320,43 @@ I want vertical lines to show which block i'm currently editing
     :config
     (direnv-mode))
 #+END_SRC
-** LSP Stuff
-I've got problems with eglot and so i'm trying lsp-mode again
+** LSP
 #+BEGIN_SRC emacs-lisp
   (use-package lsp-mode
     :init
     (setq lsp-keymap-prefix "C-c l")
+    (setq lsp-log-io t)
     :config
     (define-key lsp-mode-map (kbd "M-<return>") #'lsp-code-actions-at-point)
-    (define-key lsp-mode-map (kbd "C-M-l") #'lsp-format-buffer)
-    :hook
-    (lsp-mode . lsp-enable-which-key-integration))
+    (define-key lsp-mode-map (kbd "C-M-l") #'lsp-format-buffer))
 
   (use-package lsp-ui)
-
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; (define-key eglot-mode-map (kbd "C-c c r") #'eglot-find-implementation) ;;
-  ;; (define-key eglot-mode-map (kbd "C-c c d") #'xref-find-definitions)	   ;;
-  ;; (define-key eglot-mode-map (kbd "C-c c f") #'eglot-format-buffer)	   ;;
-  ;; (define-key eglot-mode-map (kbd "C-c c R") #'eglot-rename)		   ;;
-  ;; (define-key eglot-mode-map (kbd "C-M-l") #'eglot-format-buffer)	   ;;
-  ;; (define-key eglot-mode-map (kbd "M-<return>") #'eglot-code-actions)	   ;;
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-#+END_SRC
-
-Treesit is also now part of emacs and we will use it too
-#+BEGIN_SRC emacs-lisp
-  (defun own/treesit-install-langs()
-    (interactive)
-    (mapc #'treesit-install-language-grammar (mapcar #'car treesit-language-source-alist)))
-
-  (setq treesit-language-source-alist
-	'((bash "https://github.com/tree-sitter/tree-sitter-bash")
-	  (cmake "https://github.com/uyha/tree-sitter-cmake")
-	  (css "https://github.com/tree-sitter/tree-sitter-css")
-	  (elisp "https://github.com/Wilfred/tree-sitter-elisp")
-	  (go "https://github.com/tree-sitter/tree-sitter-go")
-	  (gomod "https://github.com/camdencheek/tree-sitter-go-mod")
-	  (html "https://github.com/tree-sitter/tree-sitter-html")
-	  (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
-	  (json "https://github.com/tree-sitter/tree-sitter-json")
-	  (make "https://github.com/alemuller/tree-sitter-make")
-	  (markdown "https://github.com/ikatyang/tree-sitter-markdown")
-	  (python "https://github.com/tree-sitter/tree-sitter-python")
-	  (toml "https://github.com/tree-sitter/tree-sitter-toml")
-	  (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
-	  (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")))
-
-  (setq major-mode-remap-alist
-   '((bash-mode . bash-ts-mode)
-     (js2-mode . js-ts-mode)
-     (typescript-mode . typescript-ts-mode)
-     (json-mode . json-ts-mode)
-     (css-mode . css-ts-mode)
-     (python-mode . python-ts-mode)
-     (go-mode . go-ts-mode)))
-
-  (global-set-key (kbd "C-c t i") 'own/treesit-install-langs)
-#+END_SRC
-** Debugging
-#+BEGIN_SRC emacs-lisp
   (use-package dap-mode)
+#+END_SRC
+** Golang
+#+BEGIN_SRC emacs-lisp
+  (use-package go-mode
+    :hook
+    ((go-mode . lsp-deferred)))
+#+END_SRC
+
+** Typescript/Vue
+
+#+BEGIN_SRC emacs-lisp
+  (use-package typescript-mode
+    :config
+    (add-hook 'typescript-mode-hook 'lsp-deferred))
+
+  (use-package web-mode
+    :custom
+    (web-mode-markup-indent-offset 2)
+    (web-mode-css-indent-offset 2)
+    (web-mode-auto-close-style 2)
+    (web-mode-enable-auto-closing t)
+    :config
+    (define-derived-mode vue-mode web-mode "Vue")
+    (add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode)))
+
 #+END_SRC
 ** Org
 #+begin_src emacs-lisp
@@ -481,22 +376,6 @@ Treesit is also now part of emacs and we will use it too
 #+BEGIN_SRC emacs-lisp
   (use-package yaml-mode)
 #+END_SRC
-** Golang
-#+BEGIN_SRC emacs-lisp
-  (use-package go-mode
-    :if (and (require 'treesit)
-	     (treesit-available-p))
-    :hook
-    ((go-ts-mode . lsp-deferred))
-    :custom
-    (go-ts-mode-hook go-mode-hook)
-    :init
-    (defun own/eglot-format-buffer-on-save ()
-      (add-hook 'before-save-hook #'eglot-format-buffer -10 t))
-    (defun own/eglot-organize-imports ()
-      (interactive)
-      (with-demoted-errors (eglot-code-actions nil nil "source.organizeImports" t))))
-#+END_SRC
 ** Docker
 #+BEGIN_SRC emacs-lisp
   (use-package docker)
@@ -506,64 +385,9 @@ Treesit is also now part of emacs and we will use it too
 #+BEGIN_SRC emacs-lisp
   (use-package nix-mode)
 #+END_SRC
-** Hashicorp Stuff (Terraform, Nomad, etc)
-#+BEGIN_SRC emacs-lisp
-  (use-package hcl-mode)
-  (use-package terraform-mode
-    :mode ("\\.tf\\'" . terraform-mode)
-    :hook (terraform-mode . eglot-ensure))
-#+END_SRC
-** Typescript (mainly Vue)
-#+BEGIN_SRC emacs-lisp
-  (use-package typescript-mode
-    :config
-    (add-hook 'typescript-ts-mode-hook 'eglot-ensure))
-
-  (use-package web-mode
-    :if (and (require 'treesit)
-	     (require 'eglot))
-    :custom
-    (web-mode-markup-indent-offset 2)
-    (web-mode-css-indent-offset 2)
-    (web-mode-auto-close-style 2)
-    (web-mode-enable-auto-closing t)
-    :config
-    (define-derived-mode vue-mode web-mode "Vue")
-    (add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode))
-
-    (defun vue-eglot-init-options ()
-      (let ((tsdk-path (expand-file-name
-			"lib"
-			(shell-command-to-string "npm list --global --parseable typescript | head -n1 | tr -d \"\n\""))))
-	`(:typescript (:tsdk ,tsdk-path
-			     :languageFeatures (:completion
-						(:defaultTagNameCase "both"
-								     :defaultAttrNameCase "kebabCase"
-								     :getDocumentNameCasesRequest nil
-								     :getDocumentSelectionRequest nil)
-						:diagnostics
-						(:getDocumentVersionRequest nil))
-			     :documentFeatures (:documentFormatting
-						(:defaultPrintWidth 100
-								    :getDocumentPrintWidthRequest nil)
-						:documentSymbol t
-						:documentColor t))))))
-#+END_SRC
 ** Puppet
 #+BEGIN_SRC emacs-lisp
   (use-package puppet-mode)
-#+END_SRC
-** Platformio
-#+BEGIN_SRC emacs-lisp
-  (use-package platformio-mode)
-#+END_SRC
-** OpenSCAD
-#+BEGIN_SRC emacs-lisp
-  (use-package scad-mode
-    :config
-    (add-to-list 'eglot-server-programs
-		 '(scad-mode . ("openscad-lsp" "--stdio")))
-    (add-hook 'scad-mode-hook 'eglot-ensure))
 #+END_SRC
 ** Powershell
 #+BEGIN_SRC emacs-lisp
