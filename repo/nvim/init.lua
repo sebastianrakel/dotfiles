@@ -27,6 +27,9 @@ vim.opt.tabstop = 4
 
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
+vim.opt.title = true
+vim.opt.titlestring = "nvim - %{fnamemodify(getcwd(), ':t')}"
+vim.opt.clipboard = "unnamedplus"
 
 require("lazy").setup({
 	{
@@ -136,6 +139,7 @@ require("lazy").setup({
 				vim.keymap.set('n', '[Lsp]a', vim.lsp.buf.code_action, opts)
 
 				vim.keymap.set('n', '[Lsp]f', function() vim.lsp.buf.format({async = false}) end, opts)
+				vim.keymap.set('n', '<leader>b', '<C-o>', opts)
 			end
 
 			local function get_typescript_server_path()
@@ -219,6 +223,18 @@ require("lazy").setup({
 				draw = { animation = require('mini.indentscope').gen_animation.none() },
 			})
 			require('mini.comment').setup()
+		end
+	},
+	{
+		"NeogitOrg/neogit",
+  		dependencies = {
+    		"nvim-lua/plenary.nvim",         -- required
+    		"sindrets/diffview.nvim",        -- optional - Diff integration
+  		},
+  		config = function()
+			local neogit = require('neogit')
+			neogit.setup {}
+			vim.keymap.set('n', '<leader>g', '<cmd>Neogit<cr>', { remap = true})
 		end
 	}
 })
