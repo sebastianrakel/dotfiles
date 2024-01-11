@@ -16,6 +16,7 @@ local has_words_before = function()
   return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
 end
 
+vim.g.mapleader = " "
 
 vim.opt.autoindent = true
 vim.opt.shiftwidth = 4
@@ -109,6 +110,11 @@ require("lazy").setup({
 			local lspconfig_util = require('lspconfig.util')
 			local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
+			vim.api.nvim_create_autocmd('BufWritePre', {
+				pattern = '*.go',
+				command = 'lua vim.lsp.buf.format()',
+			})
+
 			local on_attach = function(_, bufnr)
 				vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 
@@ -116,14 +122,10 @@ require("lazy").setup({
 
 				vim.keymap.set('n', '[Lsp]', '[Nop]', opts)
 				vim.keymap.set('n', '<leader>l', '[Lsp]', { remap = true, unpack(opts) })
-				vim.keymap.set('n', '[Lsp]dd', vim.lsp.buf.definition, opts)
+				vim.keymap.set('n', '[Lsp]d', vim.lsp.buf.definition, opts)
 				vim.keymap.set('n', '[Lsp]a', vim.lsp.buf.code_action, opts)
 
-				if client.resolved_capabilities.document_formatting then
-    				buf_set_keymap("n", "[Lsp]f", vim.lsp.buf.formatting(), opts)
-  				elseif client.resolved_capabilities.document_range_formatting then
-    				buf_set_keymap("n", "[Lsp]f", vim.lsp.buf.range_formatting(), opts)
-  				end
+				vim.keymap.set('n', '[Lsp]f', function() vim.lsp.buf.format({async = false}) end, opts)
 			end
 
 			local function get_typescript_server_path()
@@ -162,6 +164,7 @@ require("lazy").setup({
 				            shadow = true,
 				        },
 			    	    staticcheck = true,
+						gofumpt = true,
 					},
 		        },
 			}
