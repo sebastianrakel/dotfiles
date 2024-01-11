@@ -16,6 +16,7 @@ local has_words_before = function()
   return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
 end
 
+vim.wo.wrap = false
 vim.g.mapleader = " "
 
 vim.opt.autoindent = true
@@ -43,11 +44,20 @@ require("lazy").setup({
 		end
 	},
 	{
+		'nvim-telescope/telescope-fzf-native.nvim',
+		build = 'make',
+	},
+	{
 		"nvim-telescope/telescope.nvim",
-		dependencies = { 'nvim-lua/plenary.nvim' },
+		dependencies = {
+			'nvim-lua/plenary.nvim',
+		},
 		config = function()
-			local builtin = require('telescope.builtin')
-			vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
+			vim.keymap.set('n', '[Telescope]', '<Nop>')
+			vim.keymap.set('n', '<leader>f', '[Telescope]', {remap = true})
+
+			vim.keymap.set('n', '[Telescope]f', '<cmd>Telescope find_files<cr>')
+			vim.keymap.set('n', '[Telescope]b', '<cmd>Telescope buffers<cr>')
 		end
 	},
 	{
@@ -177,6 +187,11 @@ require("lazy").setup({
 						tsdk = get_typescript_server_path()
 					},
 				},
+			})
+
+			lspconfig.tsserver.setup({
+				on_attach = on_attach,
+				capabilities = capabilities,
 			})
 		end
 	},

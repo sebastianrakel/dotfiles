@@ -32,6 +32,13 @@ I don't want to have backup/autosave files in my project dirs
 #+END_SRC
 
 * Really Basic Stuff
+Performance
+#+BEGIN_SRC emacs-lisp
+  (setq gc-cons-threshold 100000000)
+  (setq read-process-output-max (* 1024 1024))
+
+#+END_SRC
+
 No warnings, most of them are warnings from plugins and i can't do anything
 #+BEGIN_SRC emacs-lisp
   (setq native-comp-async-report-warnings-errors nil)
@@ -224,7 +231,8 @@ I love the look of the doom emacs modeline, luckily it's a sepperate package
     (projectile-indexing-method 'hybrid)
     :config
     (add-to-list 'projectile-globally-ignored-directories "node_modules")
-    (projectile-mode +1))
+    (projectile-mode +1)
+    (global-set-key (kbd "C-c R") '("reload projects" . (lambda () (interactive) (projectile-discover-projects-in-directory "~/projects/" 4)))))
 #+END_SRC
 
 * Completion
@@ -246,6 +254,13 @@ I love the look of the doom emacs modeline, luckily it's a sepperate package
     :bind
     (:map org-mode-map
 	  ("C-c j" . consult-org-heading)))
+
+  (use-package orderless
+    :custom
+    (completion-styles '(orderless basic))
+    (completion-category-overrides '((file (styles basic partial-completion))))
+    :config
+    (setq completion-category-overrides '((eglot (styles orderless)))))
 #+END_SRC
 
 * Coding
@@ -320,15 +335,30 @@ I want vertical lines to show which block i'm currently editing
     :config
     (direnv-mode))
 #+END_SRC
+*** Format all the stuff
+#+BEGIN_SRC emacs-lisp
+  (use-package apheleia
+    :ensure t
+    :config
+    (apheleia-global-mode +1))
+#+END_SRC
 ** LSP
 #+BEGIN_SRC emacs-lisp
   (use-package lsp-mode
     :init
     (setq lsp-keymap-prefix "C-c l")
-    (setq lsp-log-io t)
+    (setq lsp-log-io nil)
+    (setq lsp-idle-delay 0.500)
     :config
     (define-key lsp-mode-map (kbd "M-<return>") #'lsp-code-actions-at-point)
-    (define-key lsp-mode-map (kbd "C-M-l") #'lsp-format-buffer))
+    (define-key lsp-mode-map (kbd "C-M-l") #'lsp-format-buffer)
+    (lsp-register-custom-settings
+   '(("typescript.tsdk"
+      (lambda ()
+	(expand-file-name
+	 "lib"
+	 (shell-command-to-string "npm list --global --parseable typescript | head -n1 | tr -d \"\n\"")))
+      t))))
 
   (use-package lsp-ui)
   (use-package dap-mode)
@@ -397,3 +427,4 @@ I want vertical lines to show which block i'm currently editing
 #+BEGIN_SRC emacs-lisp
   (use-package yuck-mode)
 #+END_SRC
+
