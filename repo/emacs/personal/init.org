@@ -427,4 +427,8 @@ I want vertical lines to show which block i'm currently editing
 #+BEGIN_SRC emacs-lisp
   (use-package yuck-mode)
 #+END_SRC
-
+** Cloud Stuff (terraform, hashicorp)
+#+BEGIN_SRC emacs-lisp
+  (use-package terraform-mode)
+  (use-package hcl-mode)
+#+END_SRC
