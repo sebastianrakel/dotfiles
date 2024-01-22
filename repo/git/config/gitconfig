@@ -13,7 +13,7 @@
     tool = kdiff3
 
 [core]
-    editor = emacsclient -n
+    editor = emacsclient -t
     excludesfile = /home/sebastian/.config/gitignore
 
 [alias]
