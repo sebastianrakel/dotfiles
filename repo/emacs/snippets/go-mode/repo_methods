@@ -4,7 +4,7 @@
 # --
 var Err$2NotFound = errors.New("$2 not found")
 
-func (r *$1) $2FindAll() ([]model.$2, error) {
+func (r $1) $2FindAll() ([]model.$2, error) {
 	var items []model.$2
 	db, err := r.env.DatabaseManager.GetConnection()
 	if err != nil {
@@ -19,7 +19,7 @@ func (r *$1) $2FindAll() ([]model.$2, error) {
 	return items, result.Error
 }
 
-func (r $1) $2FindById(id uuid.UUID) (model.$2, error) {
+func (r $1) $2FindById(id $3) (model.$2, error) {
 	db, err := r.env.DatabaseManager.GetConnection()
 	if err != nil {
 		return model.$2{}, err

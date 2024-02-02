@@ -1,0 +1,22 @@
+# -*- mode: snippet -*-
+# name: repo filter single
+# key: reposingle
+# --
+func (r $1) $2FindBy$3($4 $5) (model.$2, error) {
+	db, err := r.env.DatabaseManager.GetConnection()
+	if err != nil {
+		return model.$2{}, err
+	}
+	defer r.env.DatabaseManager.CloseConnection(db)
+
+	var item model.$2
+	result := db.Find(&item, "$4 = ?", $4)
+	if result.Error != nil {
+		return model.$2{}, result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return model.$2{}, Err$2NotFound
+	}
+	return item, result.Error
+}

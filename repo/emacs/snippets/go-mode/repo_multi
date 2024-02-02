@@ -1,0 +1,18 @@
+# -*- mode: snippet -*-
+# name: repo method multi
+# key: repomulti
+# --
+func (r $1) $2FindBy$3($4 $5) ([]model.$2, error) {
+	var items []model.$2
+	db, err := r.env.DatabaseManager.GetConnection()
+	if err != nil {
+		return items, err
+	}
+	defer r.env.DatabaseManager.CloseConnection(db)
+
+	result := db.Find(&items, "$4 = ?", $4)
+	if result.Error != nil {
+		return items, result.Error
+	}
+	return items, result.Error
+}

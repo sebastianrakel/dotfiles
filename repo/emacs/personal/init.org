@@ -350,7 +350,7 @@ I want vertical lines to show which block i'm currently editing
     (setq lsp-log-io nil)
     (setq lsp-idle-delay 0.500)
     :config
-    (define-key lsp-mode-map (kbd "M-<return>") #'lsp-code-actions-at-point)
+    (define-key lsp-mode-map (kbd "M-<return>") #'lsp-execute-code-action)
     (define-key lsp-mode-map (kbd "C-M-l") #'lsp-format-buffer)
     (lsp-register-custom-settings
    '(("typescript.tsdk"
