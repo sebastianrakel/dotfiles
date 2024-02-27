@@ -26,6 +26,7 @@
 (use-package emacs
   :bind
   ("C-c r" . 'own/emacs-reload-config)
+  ("C-c x" . 'real-terminal-open)
   :hook
   ((prog-mode . display-line-numbers-mode)
    (conf-mode . display-line-numbers-mode))
@@ -59,7 +60,9 @@
   :init
   (defun own/emacs-reload-config()
     (interactive)
-    (load-file "~/.emacs.d/init.el")))
+    (load-file "~/.emacs.d/init.el"))
+
+  (load "~/.emacs.d/personal/conf.d/real-terminal"))
 
 (use-package savehist
   :init
