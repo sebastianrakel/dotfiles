@@ -27,6 +27,10 @@
   :bind
   ("C-c r" . 'own/emacs-reload-config)
   ("C-c x" . 'real-terminal-open)
+  ("C-c q s" . 'own/emacs-open-config)
+  ("C-c q d" . 'own/open-project-dir-dotfiles)
+  ("C-c q p" . 'own/open-project-dir-dotfiles-private)
+  ("C-c q n" . 'own/open-project-dir-nix)
   :hook
   ((prog-mode . display-line-numbers-mode)
    (conf-mode . display-line-numbers-mode))
@@ -62,7 +66,13 @@
     (interactive)
     (load-file "~/.emacs.d/init.el"))
 
-  (load "~/.emacs.d/personal/conf.d/real-terminal"))
+  (load "~/.emacs.d/personal/conf.d/real-terminal")
+  (load "~/.emacs.d/personal/conf.d/quick-jump")
+
+  (defun own/emacs-open-config() (interactive) (quick-jump-file "~/.emacs.d/init.el"))
+  (defun own/open-project-dir-nix() (interactive) (quick-jump-open-directory "~/.nix"))
+  (defun own/open-project-dir-dotfiles() (interactive) (quick-jump-open-directory "~/.dotfiles"))
+  (defun own/open-project-dir-dotfiles-private() (interactive) (quick-jump-open-directory "~/.dotfiles-private")))
 
 (use-package savehist
   :init
@@ -157,11 +167,14 @@
   (doom-modeline-icon t))
 
 (use-package projectile
+  :bind
+  ("C-c R" . own/projectile-reload-projects)
   :bind-keymap
-  ("C-c p" . projectile-command-map)
+  (("C-c p" . projectile-command-map))
   :custom
   (projectile-indexing-method 'hybrid)
   :config
+  (defun own/projectile-reload-projects() (interactive) (projectile-discover-projects-in-directory "~/projects/" 4))
   (add-to-list 'projectile-globally-ignored-directories "node_modules")
   (projectile-mode +1))
 
@@ -228,6 +241,11 @@
   :config
   (direnv-mode))
 
+(use-package org
+  :straight (:type built-in)
+  :custom
+  (org-agenda-files (list "~/.todos")))
+
 (use-package org-modern
   :after org
   :hook
@@ -243,6 +261,8 @@
 
 (use-package eglot
   :straight (:type built-in)
+  :bind
+  (("M-<return>" . eglot-code-actions))
   :custom
   (completion-category-overrides '((eglot (styles orderless))))
   (eglot-autoshutdown t)
