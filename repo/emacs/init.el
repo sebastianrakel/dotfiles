@@ -158,7 +158,6 @@
   ("C-c p" . projectile-command-map)
   :custom
   (projectile-indexing-method 'hybrid)
-  (projectile-project-search-path '(("~/projects/" . 4)))
   :config
   (add-to-list 'projectile-globally-ignored-directories "node_modules")
   (projectile-mode +1))
