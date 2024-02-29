@@ -5,3 +5,7 @@ fi
 if hash redshift-gtk 2>/dev/null; then
    redshift-gtk &
 fi
+
+if hash nextcloud 2>/dev/null; then
+   nextcloud --background &
+fi
