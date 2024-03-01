@@ -72,15 +72,40 @@
   (defun own/emacs-open-config() (interactive) (quick-jump-file "~/.emacs.d/init.el"))
   (defun own/open-project-dir-nix() (interactive) (quick-jump-open-directory "~/.nix"))
   (defun own/open-project-dir-dotfiles() (interactive) (quick-jump-open-directory "~/.dotfiles"))
-  (defun own/open-project-dir-dotfiles-private() (interactive) (quick-jump-open-directory "~/.dotfiles-private")))
+  (defun own/open-project-dir-dotfiles-private() (interactive) (quick-jump-open-directory "~/.dotfiles-private"))
+  (defun own/treesit-install-langs()
+    (interactive)
+    (mapcar #'treesit-install-language-grammar (mapcar #'car treesit-language-source-alist)))
+
+  (setq treesit-language-source-alist
+	'((bash "https://github.com/tree-sitter/tree-sitter-bash")
+	  (cmake "https://github.com/uyha/tree-sitter-cmake")
+	  (css "https://github.com/tree-sitter/tree-sitter-css")
+	  (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+	  (go "https://github.com/tree-sitter/tree-sitter-go")
+	  (gomod "https://github.com/camdencheek/tree-sitter-go-mod")
+	  (html "https://github.com/tree-sitter/tree-sitter-html")
+	  (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+	  (json "https://github.com/tree-sitter/tree-sitter-json")
+	  (make "https://github.com/alemuller/tree-sitter-make")
+	  (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+	  (python "https://github.com/tree-sitter/tree-sitter-python")
+	  (toml "https://github.com/tree-sitter/tree-sitter-toml")
+	  (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+	  (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")))
+
+  (setq major-mode-remap-alist
+	'((bash-mode . bash-ts-mode)
+	  (js2-mode . js-ts-mode)
+	  (typescript-mode . typescript-ts-mode)
+	  (json-mode . json-ts-mode)
+	  (css-mode . css-ts-mode)
+	  (python-mode . python-ts-mode)
+	  (go-mode . go-ts-mode))))
 
 (use-package savehist
   :init
   (savehist-mode))
-
-(use-package treesit-auto
-  :config
-  (global-treesit-auto-mode))
 
 (use-package base16-theme
   :demand
@@ -151,6 +176,25 @@
   (corfu-auto t)
   :init
   (global-corfu-mode))
+
+(use-package cape
+  :init
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-elisp-block)
+  :config
+  (defun own/eglot-capf ()
+    (setq-local completion-at-point-functions
+		(list (cape-super-capf
+		       #'eglot-completion-at-point
+		       #'yasnippet-capf))))
+
+  (add-hook 'eglot-managed-mode-hook #'own/eglot-capf))
+
+(use-package yasnippet-capf
+  :after cape
+  :config
+  (add-to-list 'completion-at-point-functions #'yasnippet-capf))
 
 (use-package which-key
   :custom
@@ -259,6 +303,16 @@
 
 (use-package magit)
 
+(use-package yasnippet
+  :init
+  (yas-global-mode 1)
+  :config
+  (advice-add 'yas--modes-to-activate :around
+	      (defun yas--get-snippet-tables@tree-sitter (orig-fn &optional mode)
+		(funcall orig-fn
+			 (or (car-safe (rassq (or mode major-mode) major-mode-remap-alist))
+			     mode)))))
+
 (use-package eglot
   :straight (:type built-in)
   :bind
@@ -274,6 +328,8 @@
   :after eglot
   :hook
   ((go-ts-mode . own/eglot-format-buffer-on-save))
+  :custom
+  (go-ts-mode-hook go-mode-hook)
   :init
   (defun own/eglot-format-buffer-on-save ()
     (add-hook 'before-save-hook #'eglot-format-buffer -10 t)))
