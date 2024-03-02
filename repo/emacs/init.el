@@ -324,6 +324,11 @@
   :hook
   (go-ts-mode . eglot-ensure))
 
+(use-package eglot-booster
+  :after eglot
+  :config
+  (eglot-booster-mode))
+
 (use-package go-mode
   :after eglot
   :hook
