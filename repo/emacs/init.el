@@ -347,6 +347,9 @@
 (use-package yuck-mode)
 (use-package terraform-mode)
 (use-package hcl-mode)
+(use-package dart-mode
+  :config
+  (add-hook 'dart-mode-hook 'eglot-ensure))
 
 (use-package typescript-mode
   :config
@@ -385,3 +388,17 @@
   (add-to-list 'eglot-server-programs
 	       `(vue-mode . ("vue-language-server" "--stdio" :initializationOptions ,(vue-eglot-init-options))))
   (add-hook 'vue-mode-hook 'eglot-ensure))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(safe-local-variable-values
+   '((eval setq lsp-dart-flutter-sdk-dir
+	   (getenv "FLUTTER_ROOT")))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
