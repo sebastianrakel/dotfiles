@@ -325,6 +325,7 @@
   (go-ts-mode . eglot-ensure))
 
 (use-package eglot-booster
+  :straight (eglot-booster :type git :host github :repo "jdtsmith/eglot-booster")
   :after eglot
   :config
   (eglot-booster-mode))
@@ -333,8 +334,6 @@
   :after eglot
   :hook
   ((go-ts-mode . own/eglot-format-buffer-on-save))
-  :custom
-  (go-ts-mode-hook go-mode-hook)
   :init
   (defun own/eglot-format-buffer-on-save ()
     (add-hook 'before-save-hook #'eglot-format-buffer -10 t)))
@@ -348,3 +347,41 @@
 (use-package yuck-mode)
 (use-package terraform-mode)
 (use-package hcl-mode)
+
+(use-package typescript-mode
+  :config
+  (add-hook 'typescript-ts-mode-hook 'eglot-ensure))
+
+(use-package web-mode
+  :if (and (require 'treesit)
+	   (require 'eglot))
+  :custom
+  (web-mode-markup-indent-offset 2)
+  (web-mode-css-indent-offset 2)
+  (web-mode-auto-close-style 2)
+  (web-mode-enable-auto-closing t)
+  :config
+  (define-derived-mode vue-mode web-mode "Vue")
+  (add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode))
+
+  (defun vue-eglot-init-options ()
+    (let ((tsdk-path (expand-file-name
+		      "lib"
+		      (shell-command-to-string "npm list --global --parseable typescript | head -n1 | tr -d \"\n\""))))
+      `(:typescript (:tsdk ,tsdk-path
+			   :languageFeatures (:completion
+					      (:defaultTagNameCase "both"
+								   :defaultAttrNameCase "kebabCase"
+								   :getDocumentNameCasesRequest nil
+								   :getDocumentSelectionRequest nil)
+					      :diagnostics
+					      (:getDocumentVersionRequest nil))
+			   :documentFeatures (:documentFormatting
+					      (:defaultPrintWidth 100
+								  :getDocumentPrintWidthRequest nil)
+					      :documentSymbol t
+					      :documentColor t)))))
+
+  (add-to-list 'eglot-server-programs
+	       `(vue-mode . ("vue-language-server" "--stdio" :initializationOptions ,(vue-eglot-init-options))))
+  (add-hook 'vue-mode-hook 'eglot-ensure))
