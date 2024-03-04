@@ -288,7 +288,7 @@
 (use-package org
   :straight (:type built-in)
   :custom
-  (org-agenda-files (list "~/.todos")))
+  (org-agenda-files (list "~/Nextcloud/Documents/Todos/")))
 
 (use-package org-modern
   :after org
