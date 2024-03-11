@@ -388,6 +388,10 @@
   (add-to-list 'eglot-server-programs
 	       `(vue-mode . ("vue-language-server" "--stdio" :initializationOptions ,(vue-eglot-init-options))))
   (add-hook 'vue-mode-hook 'eglot-ensure))
+
+(use-package markdown-mode)
+
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
