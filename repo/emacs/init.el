@@ -48,6 +48,7 @@
   (show-trailing-whitespace t)
   (tab-always-indent 'complete)
   (completion-cycle-threshold 3)
+  (warning-minimum-level :emergency)
 
   :config
   (tool-bar-mode -1)
@@ -153,6 +154,9 @@
 
 (use-package vertico-posframe
   :config
+  (setq vertico-posframe-parameters
+	'((left-fringe . 8)
+	  (right-fringe . 8)))
   (vertico-posframe-mode 1))
 
 
@@ -206,7 +210,7 @@
   :hook
   (after-init . doom-modeline-mode)
   :custom
-  (doom-modeline-height 20)
+  (doom-modeline-height 40)
   (doom-modeline-project-detection 'truncate-with-project)
   (doom-modeline-icon t))
 
@@ -303,6 +307,12 @@
 
 (use-package magit)
 
+(use-package parrot
+  :custom
+  (parrot-set-parrot-type 'science)
+  :config
+  (parrot-mode))
+
 (use-package yasnippet
   :init
   (yas-global-mode 1)
@@ -322,7 +332,9 @@
   (eglot-autoshutdown t)
   :commands eglot
   :hook
-  (go-ts-mode . eglot-ensure))
+  (go-ts-mode . eglot-ensure)
+  :config
+  (fset #'jsonrpc--log-event #'ignore))
 
 (use-package eglot-booster
   :straight (eglot-booster :type git :host github :repo "jdtsmith/eglot-booster")
@@ -337,6 +349,8 @@
   :init
   (defun own/eglot-format-buffer-on-save ()
     (add-hook 'before-save-hook #'eglot-format-buffer -10 t)))
+
+(use-package olivetti)
 
 (use-package nix-mode)
 (use-package puppet-mode)
