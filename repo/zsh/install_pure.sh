@@ -5,4 +5,4 @@ if [ -d "${destination_path}" ]; then
     exit 0
 fi
 
-git clone https://github.com/sindresorhus/pure.git 
+git clone https://github.com/sindresorhus/pure.git "${destination_path}"
