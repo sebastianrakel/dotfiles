@@ -63,7 +63,9 @@
   (setopt use-short-answers t)
 
   (windmove-default-keybindings 'meta)
-  (add-to-list 'default-frame-alist '(font . "MonaspaceNeonLight-12"))
+  (if (member (system-name) '("odin" "sulu"))
+      (add-to-list 'default-frame-alist '(font . "MonaspaceNeonExtraLight-16"))
+    (add-to-list 'default-frame-alist '(font . "MonaspaceNeonExtraLight-12")))
   :init
   (defun own/emacs-reload-config()
     (interactive)
