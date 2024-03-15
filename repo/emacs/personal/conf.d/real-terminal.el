@@ -7,6 +7,7 @@
     (shell-command command)))
 
 (defun real-terminal--open-with-current-directory()
+  (interactive)
   (message "Open Terminal with current directory path")
   (real-terminal--open-path(file-name-directory (buffer-file-name))))
 

@@ -27,10 +27,12 @@
   :bind
   ("C-c r" . 'own/emacs-reload-config)
   ("C-c x" . 'real-terminal-open)
+  ("C-c X" . 'real-terminal--open-with-current-directory)
   ("C-c q s" . 'own/emacs-open-config)
   ("C-c q d" . 'own/open-project-dir-dotfiles)
   ("C-c q p" . 'own/open-project-dir-dotfiles-private)
   ("C-c q n" . 'own/open-project-dir-nix)
+  ("C-c q k" . 'own/open-known-hosts)
   :hook
   ((prog-mode . display-line-numbers-mode)
    (conf-mode . display-line-numbers-mode))
@@ -71,6 +73,7 @@
   (load "~/.emacs.d/personal/conf.d/quick-jump")
 
   (defun own/emacs-open-config() (interactive) (quick-jump-file "~/.emacs.d/init.el"))
+  (defun own/open-known-hosts() (interactive) (quick-jump-file "~/.ssh/known_hosts"))
   (defun own/open-project-dir-nix() (interactive) (quick-jump-open-directory "~/.nix"))
   (defun own/open-project-dir-dotfiles() (interactive) (quick-jump-open-directory "~/.dotfiles"))
   (defun own/open-project-dir-dotfiles-private() (interactive) (quick-jump-open-directory "~/.dotfiles-private"))
