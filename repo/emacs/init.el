@@ -259,6 +259,11 @@
   (nerd-icons-completion-mode)
   (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
 
+(use-package editorconfig
+  :ensure t
+  :config
+  (editorconfig-mode 1))
+
 (use-package dashboard
   :after (nerd-icons)
   :config

@@ -26,6 +26,7 @@
 		 'tools',
 		 'eww',
 		 'nvim',
+		 'hyprland',
 	]
 
 [configurations.3d]

@@ -1,0 +1,7 @@
+[[files]]
+source = "./hyprland.conf"
+dest   = "~/.config/hypr/hyprland.conf"
+
+[[files]]
+source     = "./hyprpaper.conf"
+collection = "~/.config/hypr/hyprpaper.conf"

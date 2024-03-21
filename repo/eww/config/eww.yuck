@@ -17,7 +17,7 @@
        (eventbox :onhover "eww update show_date_full=true"   
   		 :onhoverlost "eww update show_date_full=false"
 		 (box
-		  :spacing "0px"
+		  :spacing "0"
 		  :orientation "h"
 		  :space-evenly false
 		  :halign "end"
@@ -52,7 +52,7 @@
        :space-evenly true
        :halign "start"
        :spacing 10
-       (hlwm)))
+       ))
 
 (defwidget hlwm []
 	   (literal :content workspace_0))
@@ -66,6 +66,7 @@
 (defwindow odin
 	   :monitor 0
 	   :windowtype "dock"
+	   :exclusive true
 	   :geometry (geometry :x "0%"
 			       :width "100%"
 			       :anchor "top center")

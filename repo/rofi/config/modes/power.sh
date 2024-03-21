@@ -2,7 +2,11 @@
 
 if [ x"${@}" = x"lock" ]
 then
-    xscreensaver-command -lock > /dev/null &
+    if [ "${XDG_CURRENT_DESKTOP}" = "Hyprland" ]; then
+        swaylock -f -c 000000
+    else
+	xscreensaver-command -lock > /dev/null &
+    fi
     exit 0
 fi
 
@@ -24,13 +28,20 @@ then
     exit 0
 fi
 
-if [ x"${@}" = x"hlwm quit" ]
+if [ x"${@}" = x"wm quit" ]
 then
-    herbstclient quit
-    exit 0
+    if [ "${XDG_CURRENT_DESKTOP}" = "Hyprland" ]; then
+	hyprctl dispatch exit
+	exit 0
+    else
+	herbstclient quit
+	exit 0
+    fi
+
+    exit 1
 fi
 echo "lock"
 echo "reboot"
 echo "suspend"
 echo "shutdown"
-echo "hlwm quit"
+echo "wm quit"
