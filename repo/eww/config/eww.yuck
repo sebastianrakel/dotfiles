@@ -52,7 +52,7 @@
        :space-evenly true
        :halign "start"
        :spacing 10
-       ))
+       (hlwm)))
 
 (defwidget hlwm []
 	   (literal :content workspace_0))
