@@ -414,6 +414,7 @@
   (add-hook 'vue-mode-hook 'eglot-ensure))
 
 (use-package markdown-mode)
+(use-package scad-mode)
 
 
 (custom-set-variables
