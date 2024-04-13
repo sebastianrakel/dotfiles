@@ -15,6 +15,7 @@ Mod=Mod4   # Use the super key as the main modifier
 hc keybind $Mod-Shift-q close
 hc keybind $Mod-Shift-r reload
 hc keybind $Mod-Return spawn "${TERMINAL:-xterm}" # use your $TERMINAL with xterm as fallback
+hc keybind $Mod-Shift-Return spawn "${HOME}/.config/herbstluftwm/scripts/q3terminal.sh"
 hc keybind $Mod-d spawn rofi -show combi -combi-modi drun,run -show-icons
 hc keybind $Mod-w spawn rofi -show window -window-command 'herbstclient bring {window}'
 hc keybind $Mod-Shift-e spawn rofi -show pw -modes "pw:${HOME}/.config/rofi/modes/power.sh"
