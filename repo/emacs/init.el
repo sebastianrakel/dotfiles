@@ -85,6 +85,7 @@
 
   (setq treesit-language-source-alist
 	'((bash "https://github.com/tree-sitter/tree-sitter-bash")
+	  (csharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
 	  (cmake "https://github.com/uyha/tree-sitter-cmake")
 	  (css "https://github.com/tree-sitter/tree-sitter-css")
 	  (elisp "https://github.com/Wilfred/tree-sitter-elisp")
@@ -102,6 +103,7 @@
 
   (setq major-mode-remap-alist
 	'((bash-mode . bash-ts-mode)
+	  (csharp-mode . csharp-ts-mode)
 	  (js2-mode . js-ts-mode)
 	  (typescript-mode . typescript-ts-mode)
 	  (json-mode . json-ts-mode)
@@ -343,8 +345,11 @@
   :commands eglot
   :hook
   (go-ts-mode . eglot-ensure)
+  (csharp-ts-mode . eglot-ensure)
   :config
-  (fset #'jsonrpc--log-event #'ignore))
+  (fset #'jsonrpc--log-event #'ignore)
+  (add-to-list 'eglot-server-programs
+               `(csharp-ts-mode . ("OmniSharp" "-lsp" "-stdio"))))
 
 (use-package eglot-booster
   :straight (eglot-booster :type git :host github :repo "jdtsmith/eglot-booster")
@@ -357,8 +362,12 @@
   :hook
   ((go-ts-mode . own/eglot-format-buffer-on-save))
   :init
+  (defun own/eglot-organize-imports()
+    (call-interactively 'eglot-code-action-organize-imports))
   (defun own/eglot-format-buffer-on-save ()
-    (add-hook 'before-save-hook #'eglot-format-buffer -10 t)))
+    (add-hook 'before-save-hook #'eglot-format-buffer -10 t))
+  :config
+  (add-hook 'before-save-hook 'own/eglot-organize-imports nil t))
 
 (use-package olivetti)
 
