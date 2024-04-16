@@ -3,6 +3,7 @@
 (defpoll time :interval "10s" "date '+%H:%M %b %d, %Y'")
 (defpoll memory :interval "15s" "scripts/memory.sh")
 (defpoll network :interval "5s" "scripts/network.pl")
+(defpoll audio :interval "2s" "scripts/audio.pl")
 
 (defwidget bat []
 	   (button :class "info-button"
@@ -26,6 +27,7 @@
 			    :duration "550ms"
 			    (label :text {formattime(EWW_TIME, "%Y-%m-%d ")}))
 		  (label :text {formattime(EWW_TIME, "%H:%M")})))))
+
 (defvar show_date_full false)
 
 (defwidget left []
@@ -36,6 +38,7 @@
 		:class "left"
 		(box :class "info"
 		     (net_button)
+		     (audio_button)
 		     (children))))
 
 (defwidget right []
@@ -60,8 +63,14 @@
 (defwidget net_button []
 	   (button :class "info-button" :onclick "scripts/popup.sh network" "󰈀"))
 
+(defwidget audio_button []
+	   (button :class "info-button" :onclick "scripts/popup.sh audio" ""))
+
 (defwidget net []
 	   (literal :content network))
+
+(defwidget audio_popup []
+	   (literal :content audio))
 
 (defwindow odin
 	   :monitor 0
@@ -108,3 +117,9 @@
 			       :y "45px"
 			       :anchor "top left")
 	   (box :class "popup" (net)))
+
+(defwindow audio
+	   :geometry (geometry :x "40px" 
+			       :y "45px"
+			       :anchor "top left")
+	   (box :class "popup" (audio_popup)))

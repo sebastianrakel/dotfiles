@@ -1,73 +1,72 @@
-@import 'active_theme.scss';
+@import "active_theme.scss";
 
 * {
-    all: unset;
-    font-family: Monaspace Krypton;
-    box-shadow: 0 -10px 10px 10px #ffff;
+	all: unset;
+	font-family: Monaspace Krypton;
+	box-shadow: 0 -10px 10px 10px #ffff;
 }
 
 tooltip.background {
-    background-color: $base06;
-    font-size: 18px;
-    border-radius: 10px;
-    color: $base00;
+	background-color: $base06;
+	font-size: 18px;
+	border-radius: 10px;
+	color: $base00;
 }
 
 tooltip label {
-    margin: 6px;
+	margin: 6px;
 }
 
 //Global Styles
 .bar {
-    background-color: $base00;
-    color: $base05;
-    font-size: 20px;
-    box-shadow: inset 0 -2px $base01;
+	background-color: $base00;
+	color: $base05;
+	font-size: 20px;
+	box-shadow: inset 0 -2px $base01;
 }
 
 .popup {
-    background-color: $base00;
-    color: $base05;
-    border-radius: 5px;
+	background-color: $base00;
+	color: $base05;
+	border-radius: 5px;
 }
 
 // Workspaces
 
 .workspace-button {
-    font-size: 20px;
-    margin: 4px 8px;
+	font-size: 20px;
+	margin: 4px 8px;
 }
 
 .color-selected {
-    color: $base07;
+	color: $base07;
 }
 
 .color-vnonfocus {
-    color: $base07;
+	color: $base07;
 }
 
 .color-vother {
-    color: $base07;
+	color: $base07;
 }
 
 .color-urgent {
-    color: $base08;
+	color: $base08;
 }
 
 .color-empty {
-    color: $base02;
+	color: $base02;
 }
 
 // Right
 .right {
-    padding: 0px 8px 0px 0px;
+	padding: 0px 8px 0px 0px;
 }
 
 // Left
 .left {
-    padding: 0px 0px 0px 8px;
+	padding: 0px 0px 0px 8px;
 }
-
 
 // Clock
 .clock {
@@ -75,36 +74,77 @@ tooltip label {
 
 // Info Area
 .info {
-    font-size: 16px;
-    background: $base02;
-    margin: 4px 0px;
-    padding: 2px 5px 0px 5px;
-    border-radius: 4px;
+	font-size: 16px;
+	background: $base02;
+	margin: 4px 0px;
+	padding: 2px 5px 0px 5px;
+	border-radius: 4px;
 }
 
 .info-button {
-    padding-right: 5px;
-    min-width: 24px;
-    min-height: 24px;
-    font-size: 22px;
+	padding-right: 5px;
+	min-width: 24px;
+	min-height: 24px;
+	font-size: 22px;
+}
+
+.popup-box {
+	border: 2px solid $base03;
+	border-radius: 5px;
 }
 
 .network-label {
-    background: $base04;
-    font-size: 20px;
-    padding: 5px;
-    margin: 5px 10px;
-    border-radius: 5px;
+	background: $base04;
+	font-size: 20px;
+	padding: 5px;
+	margin: 5px 10px;
+	border-radius: 5px;
 }
 
 .network-box {
-    border: 2px solid $base03;
-    border-radius: 5px;
+	border: 2px solid $base03;
+	border-radius: 5px;
 }
 
 .network-button {
-    background: $base01;
-    margin: 5px;
-    border-radius: 5px;
-    padding: 0px 20px;
+	background: $base01;
+	margin: 5px;
+	border-radius: 5px;
+	padding: 0px 20px;
+}
+
+.audio-thumb {
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
+	padding: 20px;
+	margin: 20px;
+}
+
+.audio-media-buttons {
+	background: $base01;
+	border-radius: 10px;
+	padding: 10px;
+}
+
+.audio-media-button {
+	background: $base03;
+	border-radius: 50%;
+	padding: 15px 20px;
+	font-size: 20px;
+}
+
+.audio-metadata {
+	padding: 20px;
+}
+
+.audio-player {
+	background: $base02;
+	margin: 10px;
+}
+
+.audio-player-label {
+	font-size: 16px;
+	font-weight: bold;
 }
