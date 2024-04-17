@@ -26,7 +26,7 @@ sub run {
 	my $image_url = playerctl('-p', $player,'metadata','mpris:artUrl');
 
 	print qq(\(box :orientation "h" :class "audio-player" :space-evenly false);
-	print qq(\(box :width 256 :height 256 :class "audio-thumb" :style 'background-image: url("$image_url")'\));
+	print qq(\(box :width 256 :height 128 :class "audio-thumb" :style 'background-image: url("$image_url")'\));
 	print qq(\(box :halign "center" :valign "center" :orientation "v" :class "audio-metadata" :space-evenly false :spacing 20);
 	player_label($player);
 	for my $item (split(';', $metadata)) {
@@ -34,15 +34,15 @@ sub run {
 	}
 
 	print qq(\(box :halign "center" :space-evenly false :height 32);
-	print qq(\(box :halign "center" :orientation "h" :class "audio-media-buttons" :space-evenly false :spacing 10 :width 200);
-	print qq(\(button :class "audio-media-button" :onclick "playerctl -p ${player} previous" ''\));
+	print qq(\(box :halign "center" :orientation "h" :class "audio-media-buttons" :space-evenly true :spacing 15 :width 200);
+	print qq(\(button :class "audio-media-button" :onclick "playerctl -p ${player} previous" (label :justify "center" :text '')\));
 	if(playerctl('-p', $player, 'status') eq 'Playing') {
-	    print qq(\(button :class "audio-media-button" :width 20 :height 20 :onclick "playerctl -p ${player} pause" ''\));
+	    print qq(\(button :class "audio-media-button" :width 20 :height 20 :onclick "playerctl -p ${player} pause" (label :justify "center" :text '')\));
 	} else {
-	    print qq(\(button :class "audio-media-button" :onclick "playerctl -p ${player} play" ''\));
+	    print qq(\(button :class "audio-media-button" :onclick "playerctl -p ${player} play" (label :justify "center" :text '')\));
 	}
-	print qq(\(button :class "audio-media-button" :onclick "playerctl -p ${player} stop" ''\));
-	print qq(\(button :class "audio-media-button" :onclick "playerctl -p ${player} next" ''\));
+	print qq(\(button :class "audio-media-button" :onclick "playerctl -p ${player} stop" (label :justify "center" :text '')\));
+	print qq(\(button :class "audio-media-button" :onclick "playerctl -p ${player} next" (label :justify "center" :text '')\));
 
 	print qq(\)\)\)\));
     }
