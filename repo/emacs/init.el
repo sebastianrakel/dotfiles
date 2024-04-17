@@ -33,6 +33,7 @@
   ("C-c q p" . 'own/open-project-dir-dotfiles-private)
   ("C-c q n" . 'own/open-project-dir-nix)
   ("C-c q k" . 'own/open-known-hosts)
+  ("C-<tab>" . 'completion-at-point)
   :hook
   ((prog-mode . display-line-numbers-mode)
    (conf-mode . display-line-numbers-mode))
@@ -49,7 +50,7 @@
   (enable-recursive-minibuffers t)
   (show-trailing-whitespace t)
   (tab-always-indent 'complete)
-  (completion-cycle-threshold 3)
+  (completion-cycle-threshold 2)
   (warning-minimum-level :emergency)
 
   :config
@@ -59,6 +60,7 @@
   (set-fringe-mode 10)
   (scroll-bar-mode -1)
   (set-default 'truncate-lines t)
+  (electric-pair-mode 1)
   (defalias 'yes-or-no-p 'y-or-n-p)
   (setopt use-short-answers t)
 
@@ -185,21 +187,34 @@
 (use-package corfu
   :custom
   (corfu-auto t)
+  :config
+  (setq corfu-popupinfo-delay 0.5
+	corfu-popupinfo-direction "right")
   :init
-  (global-corfu-mode))
+  (global-corfu-mode)
+  (corfu-popupinfo-mode))
+
+
+(use-package nerd-icons-corfu
+  :after corfu
+  :config
+  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
 (use-package cape
   :init
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
   (add-to-list 'completion-at-point-functions #'cape-file)
   (add-to-list 'completion-at-point-functions #'cape-elisp-block)
+  (add-to-list 'completion-at-point-functions #'yasnippet-capf)
   :config
   (defun own/eglot-capf ()
     (setq-local completion-at-point-functions
-		(list (cape-super-capf
+		(list (cape-capf-super
 		       #'eglot-completion-at-point
+		       #'cape-dabbrev
+		       #'cape-file
 		       #'yasnippet-capf))))
-
+  (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster)
   (add-hook 'eglot-managed-mode-hook #'own/eglot-capf))
 
 (use-package yasnippet-capf
@@ -236,12 +251,6 @@
 (use-package rainbow-delimiters
   :hook
   (prog-mode . rainbow-delimiters-mode))
-
-(use-package smartparens
-  :config
-  (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)
-
-  (smartparens-global-mode t))
 
 (use-package highlight-indent-guides
   :hook
@@ -335,6 +344,9 @@
 			 (or (car-safe (rassq (or mode major-mode) major-mode-remap-alist))
 			     mode)))))
 
+(use-package yasnippet-snippets
+  :after yasnippet)
+
 (use-package eglot
   :straight (:type built-in)
   :bind
@@ -360,14 +372,15 @@
 (use-package go-mode
   :after eglot
   :hook
-  ((go-ts-mode . own/eglot-format-buffer-on-save))
+  ((go-ts-mode . own/eglot-format-buffer-on-save)
+   (go-ts-mode . own/eglot-organize-imports-add-hook))
   :init
   (defun own/eglot-organize-imports()
     (call-interactively 'eglot-code-action-organize-imports))
+  (defun own/eglot-organize-imports-add-hook()
+    (add-hook 'before-save-hook 'own/eglot-organize-imports nil t))
   (defun own/eglot-format-buffer-on-save ()
-    (add-hook 'before-save-hook #'eglot-format-buffer -10 t))
-  :config
-  (add-hook 'before-save-hook 'own/eglot-organize-imports nil t))
+    (add-hook 'before-save-hook #'eglot-format-buffer -10 t)))
 
 (use-package olivetti)
 
