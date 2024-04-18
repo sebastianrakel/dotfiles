@@ -34,6 +34,7 @@
   ("C-c q n" . 'own/open-project-dir-nix)
   ("C-c q k" . 'own/open-known-hosts)
   ("C-<tab>" . 'completion-at-point)
+  ("C-<down-mouse-1>" . 'xref-find-definitions-at-mouse)
   :hook
   ((prog-mode . display-line-numbers-mode)
    (conf-mode . display-line-numbers-mode))
@@ -111,7 +112,8 @@
 	  (json-mode . json-ts-mode)
 	  (css-mode . css-ts-mode)
 	  (python-mode . python-ts-mode)
-	  (go-mode . go-ts-mode))))
+	  (go-mode . go-ts-mode)))
+  (global-unset-key (kbd "C-<down-mouse-1>")))
 
 (use-package savehist
   :init
@@ -182,7 +184,13 @@
   (("C-s" . consult-line)
    ("C-c s" . consult-ripgrep)
    ("C-c b" . consult-buffer)
-   ("C-c t t" . consult-org-agenda)))
+   ("C-c j e" . consult-flymake)
+   ("C-c j l" . consult-line)))
+
+(use-package consult-eglot
+  :after consult
+  :bind
+  (("C-c j s" . consult-eglot-symbols)))
 
 (use-package corfu
   :custom
@@ -262,6 +270,7 @@
 (use-package apheleia
   :ensure t
   :config
+  (setq apheleia-log-debug-info 1)
   (apheleia-global-mode +1))
 
 (use-package nerd-icons-completion
@@ -328,6 +337,20 @@
 
 (use-package magit)
 
+(use-package treemacs
+  :bind
+  (:map global-map
+	("M-0" . treemacs-select-window)
+	("C-x t t" . treemacs)))
+
+(use-package treemacs-projectile
+  :after (treemacs projectile)
+  :ensure t)
+
+(use-package treemacs-magit
+  :after (treemacs magit)
+  :ensure t)
+
 (use-package parrot
   :custom
   (parrot-set-parrot-type 'science)
@@ -350,7 +373,8 @@
 (use-package eglot
   :straight (:type built-in)
   :bind
-  (("M-<return>" . eglot-code-actions))
+  (("M-<return>" . eglot-code-actions)
+   ("C-c l f" . eglot-format-buffer))
   :custom
   (completion-category-overrides '((eglot (styles orderless))))
   (eglot-autoshutdown t)
