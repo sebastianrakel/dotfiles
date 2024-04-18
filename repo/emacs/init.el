@@ -270,6 +270,14 @@
 (use-package apheleia
   :ensure t
   :config
+  ;; (push '(eslint-typescript
+  ;; 	  . ("apheleia-npx" "eslint" filepath
+  ;; 	     "--fix-dry-run"))
+  ;; 	apheleia-formatters)
+  
+  ;; (setf (alist-get 'typescript-ts-mode apheleia-mode-alist)
+  ;; 	'(eslint-typescript))
+
   (setq apheleia-log-debug-info 1)
   (apheleia-global-mode +1))
 
@@ -385,7 +393,7 @@
   :config
   (fset #'jsonrpc--log-event #'ignore)
   (add-to-list 'eglot-server-programs
-               `(csharp-ts-mode . ("OmniSharp" "-lsp" "-stdio"))))
+	       `(csharp-ts-mode . ("OmniSharp" "-lsp" "-stdio"))))
 
 (use-package eglot-booster
   :straight (eglot-booster :type git :host github :repo "jdtsmith/eglot-booster")
@@ -424,6 +432,18 @@
 (use-package typescript-mode
   :config
   (add-hook 'typescript-ts-mode-hook 'eglot-ensure))
+
+(use-package flymake-eslint
+  :straight `(flymake-eslint :type git :host github :repo "orzechowskid/flymake-eslint"
+			     :fork (:host github
+					  :repo "aecepoglu/flymake-eslint"))
+  :hook
+  (eglot-managed-mode . (lambda ()
+                          (when (derived-mode-p 'typescript-ts-mode 'web-mode 'js-mode 'vue-mode)
+                            (flymake-eslint-enable))))
+  :config
+  (setq flymake-eslint-executable '("npx" "eslint")
+	flymake-eslint-prefer-json-diagnostics 1))
 
 (use-package web-mode
   :if (and (require 'treesit)
