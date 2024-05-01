@@ -269,6 +269,8 @@
 
 (use-package apheleia
   :ensure t
+  :hook
+  ((typescript-ts-mode . (lambda() (apheleia-mode -1))))
   :config
   ;; (push '(eslint-typescript
   ;; 	  . ("apheleia-npx" "eslint" filepath
@@ -442,8 +444,7 @@
                           (when (derived-mode-p 'typescript-ts-mode 'web-mode 'js-mode 'vue-mode)
                             (flymake-eslint-enable))))
   :config
-  (setq flymake-eslint-executable '("npx" "eslint")
-	flymake-eslint-prefer-json-diagnostics 1))
+  (setq flymake-eslint-executable '("npx" "eslint")))
 
 (use-package web-mode
   :if (and (require 'treesit)
