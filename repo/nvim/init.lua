@@ -61,6 +61,33 @@ require("lazy").setup({
 
 			vim.keymap.set('n', '[Telescope]f', '<cmd>Telescope find_files<cr>')
 			vim.keymap.set('n', '[Telescope]b', '<cmd>Telescope buffers<cr>')
+			vim.keymap.set('n', '[Telescope]s', '<cmd>Telescope live_grep<cr>')
+
+			local telescope = require('telescope')
+
+			telescope.setup({
+				defaults = {
+					file_ignore_patterns = {"node_modules", "bin", "obj", ".git"}
+				}
+			})
+		end
+	},
+	{
+		"nvim-neo-tree/neo-tree.nvim",
+    	dependencies = {
+      		"nvim-lua/plenary.nvim",
+      		"nvim-tree/nvim-web-devicons",
+      		"MunifTanjim/nui.nvim",
+    	},
+		config = function ()
+			local nt = require('neo-tree')
+
+			vim.keymap.set('n', '<leader>t', '<cmd>Neotree toggle<cr>', { remap = true})
+
+			nt.setup({
+				enable_git_status = true,
+				close_if_last_window = false,
+			})
 		end
 	},
 	{
@@ -108,7 +135,7 @@ require("lazy").setup({
 		"nvim-treesitter/nvim-treesitter",
 		config = function()
 			require'nvim-treesitter.configs'.setup {
-				ensure_installed = { "lua", "vim", "go", "typescript", "vue" },
+				ensure_installed = { "lua", "vim", "go", "typescript", "vue", "c_sharp" },
 				auto_install = true,
 				highlight = {
 					enable = true,
@@ -196,6 +223,10 @@ require("lazy").setup({
 			lspconfig.tsserver.setup({
 				on_attach = on_attach,
 				capabilities = capabilities,
+			})
+
+			lspconfig.omnisharp.setup({
+				cmd = { "OmniSharp", "-lsp", "-stdio" },
 			})
 		end
 	},
