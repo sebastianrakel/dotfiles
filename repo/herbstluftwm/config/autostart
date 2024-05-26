@@ -179,12 +179,18 @@ hc set tree_style '╾│ ├└╼─┐'
 # unlock, just to be sure
 hc unlock
 
-hc detect_monitors
+hostname=$(hostnamectl hostname)
+
+
+if [[ "${hostname}" != "quarktasche" ]]; then
+    hc detect_monitors
+fi
 
 feh --bg-fill "${HOME}/Pictures/Wallpaper/gravity_falls_neon.jpg"
 
 eww kill
+
 #for monitor in $(herbstclient list_monitors | cut -d: -f1) ; do
-    echo "Start panel for monitor ${monitor}"
-    eww open "$(hostnamectl hostname)"
+echo "Start panel for monitor ${monitor}"
+eww open "${hostname}"
 #done

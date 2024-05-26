@@ -85,6 +85,19 @@
 		      (left)
 		      (workspaces)
 		      (right)))
+(defwindow quarktasche
+	   :monitor 1
+	   :windowtype "dock"
+	   :exclusive true
+	   :geometry (geometry :x "50%"
+			       :width "200%"
+			       :anchor "top center")
+	   :reserve (struts :side "top" :distance "40px")
+	   (centerbox :class "bar"
+		      :orientation "h"
+		      (left)
+		      (workspaces)
+		      (right)))
 
 (defwindow ostara
 	   :monitor 0

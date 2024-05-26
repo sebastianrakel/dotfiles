@@ -46,6 +46,12 @@
 		'3d',
 	]
 
+[configurations.quarktasche]
+	dependencies = [
+		'workstation',
+		'3d',
+	]
+
 [configurations.ostara]
 	dependencies = [
 		     'workstation',
