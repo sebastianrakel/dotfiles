@@ -5,6 +5,37 @@
 (defpoll network :interval "5s" "scripts/network.pl")
 (defpoll audio :interval "2s" "scripts/audio.pl")
 
+(defwidget stat-module [icon]
+	   (box :class "stat-module"
+		:orientation "h"
+		:halign "end"
+		:space-evenly false
+		:visible true
+	   (label :class "stat-module-icon" :text "${icon}")
+	   (children)))
+
+(defwidget cpu []
+  (stat-module :icon ""
+	       (label :text "${round(EWW_CPU.avg, 0)}%")))
+
+(defwidget cpu_temp []
+  (stat-module :icon " "
+	       (label :text "${round(EWW_TEMPS.K10TEMP_TCTL, 2)}C")))
+
+(defwidget nvme_temp []
+  (stat-module :icon " "
+    (label :text "${round(EWW_TEMPS.NVME_COMPOSITE_SEAGATE_FIRECUDA_530_ZP1000GM30013_TEMP1, 2)}C")))
+
+(defwidget stats []
+	   (box :orientation "h"
+		:space-evenly false
+		:halign "start"
+		:spacing 15
+		:class "stats"
+		(cpu)
+		(cpu_temp)
+		(nvme_temp)))
+
 (defwidget bat []
 	   (button :class "info-button"
 		   :tooltip "${ EWW_BATTERY['BAT1'].capacity }% remaining"
@@ -15,15 +46,15 @@
        :space-evenly false
        :halign "end"
        :class "clock"
-       (eventbox :onhover "eww update show_date_full=true"   
+       (eventbox :onhover "eww update show_date_full=true"
   		 :onhoverlost "eww update show_date_full=false"
 		 (box
 		  :spacing "0"
 		  :orientation "h"
 		  :space-evenly false
 		  :halign "end"
-		  (revealer :transition "slideleft" 
-			    :reveal show_date_full   
+		  (revealer :transition "slideleft"
+			    :reveal show_date_full
 			    :duration "550ms"
 			    (label :text {formattime(EWW_TIME, "%Y-%m-%d ")}))
 		  (label :text {formattime(EWW_TIME, "%H:%M")})))))
@@ -47,7 +78,9 @@
 		:halign "end"
 		:spacing 15
 		:class "right"
-		(clock)))
+		(stats)
+		(clock)
+		(systray)))
 
 (defwidget workspaces []
   (box :class "workspaces"

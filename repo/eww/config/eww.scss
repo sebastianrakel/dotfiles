@@ -148,3 +148,18 @@ tooltip label {
 	font-size: 16px;
 	font-weight: bold;
 }
+
+.stat-module {
+	font-size: 16px;
+	background: $base02;
+	margin: 0px 0px 4px 0px;
+	padding: 0px 10px 0px 0px;
+	border-radius: 4px;
+}
+
+.stat-module-icon {
+	margin: 0px 15px 0px 0px;
+	min-width: 24px;
+	min-height: 24px;
+	font-size: 22px;
+}
