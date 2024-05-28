@@ -1,0 +1,20 @@
+import = ["/home/sebastian/.config/alacritty/theme.toml"]
+
+[font]
+size = 14
+
+[font.bold]
+family = "monospace"
+style = "Bold"
+
+[font.bold_italic]
+family = "monospace"
+style = "Bold Italic"
+
+[font.italic]
+family = "monospace"
+style = "Italic"
+
+[font.normal]
+family = "monospace"
+style = "Regular"
