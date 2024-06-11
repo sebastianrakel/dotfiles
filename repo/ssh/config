@@ -3,6 +3,8 @@ Include ~/.ssh/host.d/*
 Host *
 	AddKeysToAgent yes
 	HashKnownHosts no
+	IdentityFile ~/.ssh/id_ed25519
+	IdentitiesOnly yes
 
 Host ssh.dev.azure.com
 	ControlMaster false
