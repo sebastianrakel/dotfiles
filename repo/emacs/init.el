@@ -168,7 +168,7 @@
   (setq vertico-posframe-parameters
 	'((left-fringe . 8)
 	  (right-fringe . 8)))
-  (vertico-posframe-mode 1))
+  (vertico-posframe-mode 0))
 
 
 (use-package orderless
