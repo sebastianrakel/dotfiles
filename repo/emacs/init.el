@@ -77,6 +77,10 @@
   (load "~/.emacs.d/personal/conf.d/real-terminal")
   (load "~/.emacs.d/personal/conf.d/quick-jump")
 
+  (let ((personal-settings "~/.emacs.d/init.personal.el"))
+    (when (file-exists-p personal-settings)
+      (load-file personal-settings)))
+
   (defun own/emacs-open-config() (interactive) (quick-jump-file "~/.emacs.d/init.el"))
   (defun own/open-known-hosts() (interactive) (quick-jump-file "~/.ssh/known_hosts"))
   (defun own/open-project-dir-nix() (interactive) (quick-jump-open-directory "~/.nix"))
