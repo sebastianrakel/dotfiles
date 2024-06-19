@@ -374,6 +374,8 @@
 (use-package yasnippet
   :init
   (yas-global-mode 1)
+  :bind
+  (("S-<Tab>" . 'yas-next-field))
   :config
   (advice-add 'yas--modes-to-activate :around
 	      (defun yas--get-snippet-tables@tree-sitter (orig-fn &optional mode)
