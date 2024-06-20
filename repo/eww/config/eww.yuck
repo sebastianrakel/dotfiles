@@ -24,7 +24,7 @@
 
 (defwidget nvme_temp []
   (stat-module :icon " "
-    (label :text "${round(EWW_TEMPS.NVME_COMPOSITE_SEAGATE_FIRECUDA_530_ZP1000GM30013_TEMP1, 2)}C")))
+    (label :text "${round(EWW_TEMPS.NVME_COMPOSITE_WD_BLACK_SN850X_2000GB_TEMP1, 2)}C")))
 
 (defwidget stats []
 	   (box :orientation "h"
@@ -119,11 +119,11 @@
 		      (workspaces)
 		      (right)))
 (defwindow quarktasche
-	   :monitor 1
+	   :monitor 0
 	   :windowtype "dock"
 	   :exclusive true
-	   :geometry (geometry :x "50%"
-			       :width "200%"
+	   :geometry (geometry :x "0%"
+			       :width "100%"
 			       :anchor "top center")
 	   :reserve (struts :side "top" :distance "40px")
 	   (centerbox :class "bar"
