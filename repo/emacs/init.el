@@ -387,8 +387,9 @@
 (use-package eglot
   :straight (:type built-in)
   :bind
-  (("M-<return>" . eglot-code-actions)
-   ("C-c l f" . eglot-format-buffer))
+  (:map eglot-mode-map
+	("M-<return>" . eglot-code-actions)
+	("C-c l f" . eglot-format-buffer))
   :custom
   (completion-category-overrides '((eglot (styles orderless))))
   (eglot-autoshutdown t)
