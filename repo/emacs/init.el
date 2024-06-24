@@ -96,7 +96,7 @@
 	  (cmake "https://github.com/uyha/tree-sitter-cmake")
 	  (css "https://github.com/tree-sitter/tree-sitter-css")
 	  (elisp "https://github.com/Wilfred/tree-sitter-elisp")
-	  (go "https://github.com/tree-sitter/tree-sitter-go")
+	  (go "https://github.com/tree-sitter/tree-sitter-go" "v0.21.0")
 	  (gomod "https://github.com/camdencheek/tree-sitter-go-mod")
 	  (html "https://github.com/tree-sitter/tree-sitter-html")
 	  (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
