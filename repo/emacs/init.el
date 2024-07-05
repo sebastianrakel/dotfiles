@@ -490,6 +490,16 @@
 (use-package markdown-mode)
 (use-package scad-mode)
 
+(use-package openai
+  :straight (openai :type git :host github :repo "emacs-openai/openai")
+  :config
+  (setq openai-key (getenv "OPENAI_API_KEY")))
+
+(use-package chatgpt
+  :straight (chatgpt :type git :host github :repo "emacs-openai/chatgpt")
+  :after openai
+  :config
+  (setq chatgpt-model "gpt-4o"))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
